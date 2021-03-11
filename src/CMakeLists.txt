@@ -1,12 +1,4 @@
-set(NAME vixl)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-add_definitions(-DVIXL_INCLUDE_TARGET_AARCH64=1)
-add_definitions(-DVIXL_CODE_BUFFER_MMAP=1)
-add_definitions(-DVIXL_INCLUDE_SIMULATOR_AARCH64=0)
-
-if(CMAKE_BUILD_TYPE MATCHES DEBUG)
-  add_definitions(-DVIXL_DEBUG=1)
-endif()
 
 set(SRCS
   code-buffer-vixl.cc
@@ -25,5 +17,15 @@ set(SRCS
   aarch64/operands-aarch64.cc
   aarch64/pointer-auth-aarch64.cc
   )
-add_library(${NAME} STATIC ${SRCS})
+add_library(vixl STATIC ${SRCS})
 
+# This is only refrenced by .cc files, so it can be private
+target_compile_definitions(vixl PRIVATE -DVIXL_CODE_BUFFER_MMAP=1)
+
+# These are refrenced by all the .h files
+# we need to export them as public so any target linking vixl
+# will alo define these
+target_compile_definitions(vixl PUBLIC -DVIXL_INCLUDE_TARGET_AARCH64=1)
+if(CMAKE_BUILD_TYPE MATCHES DEBUG)
+  target_compile_definitions(vixl PUBLIC -DVIXL_DEBUG=1)
+endif()
