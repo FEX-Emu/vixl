@@ -29,3 +29,18 @@ target_compile_definitions(vixl PUBLIC -DVIXL_INCLUDE_TARGET_AARCH64=1)
 if(CMAKE_BUILD_TYPE MATCHES DEBUG)
   target_compile_definitions(vixl PUBLIC -DVIXL_DEBUG=1)
 endif()
+
+target_compile_options(vixl PRIVATE -ffunction-sections)
+set_target_properties(vixl PROPERTIES C_VISIBILITY_PRESET hidden)
+set_target_properties(vixl PROPERTIES CXX_VISIBILITY_PRESET hidden)
+set_target_properties(vixl PROPERTIES VISIBILITY_INLINES_HIDDEN TRUE)
+
+if (CMAKE_BUILD_TYPE MATCHES "RELEASE")
+  target_link_options(vixl
+    PRIVATE
+    "LINKER:--gc-sections"
+    "LINKER:--strip-all"
+    "LINKER:--as-needed"
+  )
+endif()
+
