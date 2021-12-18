@@ -107,6 +107,8 @@ namespace vixl {
   V(kFrintToFixedSizedInt,"Frint (bounded)",        NULL)                      \
   /* Unaligned single-copy atomicity and atomic functions                   */ \
   V(kAT,                  "AT",                     NULL)                      \
+  /* Alternate floating-point behaviour                                     */ \
+  V(kAFP,                 "AFP",                    NULL)                      \
 
 // clang-format on
 

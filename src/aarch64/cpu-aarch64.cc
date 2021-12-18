@@ -70,6 +70,8 @@ const IDRegister::Field AA64ISAR1::kSB(36);
 const IDRegister::Field AA64ISAR1::kSPECRES(40);
 
 const IDRegister::Field AA64MMFR1::kLO(16);
+const IDRegister::Field AA64MMFR1::kAFP(44);
+
 const IDRegister::Field AA64MMFR2::kAT(32);
 
 CPUFeatures AA64PFR0::GetCPUFeatures() const {
