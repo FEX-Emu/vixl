@@ -4056,6 +4056,39 @@ void Assembler::mvni(const VRegister& vd,
 }
 
 
+void Assembler::aese(const VRegister& vd, const VRegister& vn) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kFP, CPUFeatures::kNEON));
+  VIXL_ASSERT(CPUHas(CPUFeatures::kAES));
+
+  VIXL_ASSERT(vd.Is16B());
+  Emit(NEON_AESE | Rn(vn) | Rd(vd));
+}
+
+void Assembler::aesd(const VRegister& vd, const VRegister& vn) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kFP, CPUFeatures::kNEON));
+  VIXL_ASSERT(CPUHas(CPUFeatures::kAES));
+
+  VIXL_ASSERT(vd.Is16B());
+  Emit(NEON_AESD | Rn(vn) | Rd(vd));
+}
+
+void Assembler::aesmc(const VRegister& vd, const VRegister& vn) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kFP, CPUFeatures::kNEON));
+  VIXL_ASSERT(CPUHas(CPUFeatures::kAES));
+
+  VIXL_ASSERT(vd.Is16B());
+  Emit(NEON_AESMC | Rn(vn) | Rd(vd));
+}
+
+void Assembler::aesimc(const VRegister& vd, const VRegister& vn) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kFP, CPUFeatures::kNEON));
+  VIXL_ASSERT(CPUHas(CPUFeatures::kAES));
+
+  VIXL_ASSERT(vd.Is16B());
+  Emit(NEON_AESIMC | Rn(vn) | Rd(vd));
+}
+
+
 void Assembler::NEONFPByElement(const VRegister& vd,
                                 const VRegister& vn,
                                 const VRegister& vm,
