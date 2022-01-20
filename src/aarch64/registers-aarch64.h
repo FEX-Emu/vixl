@@ -575,6 +575,9 @@ class VRegister : public CPURegister {
   VRegister V1D() const;
   VRegister V2D() const;
   VRegister S4B() const;
+  VRegister VCast(uint8_t reg_size, uint8_t element_count) const {
+    return VRegister(code_, reg_size, element_count);
+  }
 
   bool IsValid() const { return IsValidVRegister(); }
 
