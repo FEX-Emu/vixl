@@ -500,7 +500,8 @@ enum SystemRegister {
   NZCV = SystemRegisterEncoder<3, 3, 4, 2, 0>::value,
   FPCR = SystemRegisterEncoder<3, 3, 4, 4, 0>::value,
   RNDR = SystemRegisterEncoder<3, 3, 2, 4, 0>::value,    // Random number.
-  RNDRRS = SystemRegisterEncoder<3, 3, 2, 4, 1>::value   // Reseeded random number.
+  RNDRRS = SystemRegisterEncoder<3, 3, 2, 4, 1>::value,  // Reseeded random number.
+  CNTVCT_EL0 = SystemRegisterEncoder<3, 3, 14, 0, 2>::value
 };
 
 template<int op1, int crn, int crm, int op2>
