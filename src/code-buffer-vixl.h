@@ -66,10 +66,21 @@ class CodeBuffer {
     return GetCursorOffset();
   }
 
+  void SetCursorOffset(ptrdiff_t offset) {
+    byte* rewound_cursor = buffer_ + offset;
+    cursor_ = rewound_cursor;
+  }
+
   void Rewind(ptrdiff_t offset) {
     byte* rewound_cursor = buffer_ + offset;
     VIXL_ASSERT((buffer_ <= rewound_cursor) && (rewound_cursor <= cursor_));
     cursor_ = rewound_cursor;
+  }
+
+  void CursorForward(ptrdiff_t offset) {
+    byte* forward_cursor = cursor_ + offset;
+    VIXL_ASSERT((buffer_ <= forward_cursor) && (forward_cursor >= cursor_));
+    cursor_ = forward_cursor;
   }
 
   template <typename T>
