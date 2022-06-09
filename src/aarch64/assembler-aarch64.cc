@@ -2423,8 +2423,6 @@ void Assembler::NEON3DifferentHN(const VRegister& vd,
 
 // clang-format off
 #define NEON_3DIFF_LONG_LIST(V) \
-  V(pmull,  NEON_PMULL,  vn.IsVector() && vn.Is8B())                           \
-  V(pmull2, NEON_PMULL2, vn.IsVector() && vn.Is16B())                          \
   V(saddl,  NEON_SADDL,  vn.IsVector() && vn.IsD())                            \
   V(saddl2, NEON_SADDL2, vn.IsVector() && vn.IsQ())                            \
   V(sabal,  NEON_SABAL,  vn.IsVector() && vn.IsD())                            \
@@ -2472,6 +2470,46 @@ void Assembler::FN(const VRegister& vd,               \
 }
 NEON_3DIFF_LONG_LIST(VIXL_DEFINE_ASM_FUNC)
 #undef VIXL_DEFINE_ASM_FUNC
+
+template <typename Fn>
+static void PMULLImpl(Assembler& as,
+                      const VRegister& vd,
+                      const VRegister& vn,
+                      const VRegister& vm,
+                      uint32_t vop,
+                      Fn fn) {
+  VIXL_ASSERT(AreSameFormat(vn, vm));
+  VIXL_ASSERT((vd.Is1Q() && vn.Is2D()) ||
+              (vd.Is8H() && (vn.Is16B() || vn.Is8B())));
+
+  Instr format = format = as.VFormat(vn);
+  Instr op = vop;
+
+  fn(format | op | as.Rm(vm) | as.Rn(vn) | as.Rd(vd));
+}
+ 
+void Assembler::pmull(const VRegister& vd,
+                      const VRegister& vn,
+                      const VRegister& vm) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kNEON));
+  VIXL_ASSERT(vn.IsVector() && (vn.Is8B() || vn.Is2D()));
+
+  PMULLImpl(*this, vd, vn, vm, NEON_PMULL, [this](uint32_t op) {
+    op &= ~(1U << 30);
+    Emit(op);
+  });
+}
+
+void Assembler::pmull2(const VRegister& vd,
+                       const VRegister& vn,
+                       const VRegister& vm) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kNEON));
+  VIXL_ASSERT(vn.IsVector() && (vn.Is8B() || vn.Is2D()));
+
+  PMULLImpl(*this, vd, vn, vm, NEON_PMULL2, [this](uint32_t op) {
+    Emit(op);
+  });
+}
 
 // clang-format off
 #define NEON_3DIFF_HN_LIST(V)         \
