@@ -281,8 +281,9 @@ CPUFeatures CPU::InferCPUFeaturesFromOS(
        CPUFeatures::kSVEBitPerm,
        CPUFeatures::kSVESHA3,
        CPUFeatures::kSVESM4,
-       CPUFeatures::kFrintToFixedSizedInt,
+       CPUFeatures::kAXFlag,
        // Bits 40-47
+       CPUFeatures::kFrintToFixedSizedInt,
        CPUFeatures::kSVEI8MM,
        CPUFeatures::kSVEF32MM,
        CPUFeatures::kSVEF64MM,
@@ -290,8 +291,8 @@ CPUFeatures CPU::InferCPUFeaturesFromOS(
        CPUFeatures::kI8MM,
        CPUFeatures::kBF16,
        CPUFeatures::kDGH,
-       CPUFeatures::kRNG,
        // Bits 48+
+       CPUFeatures::kRNG,
        CPUFeatures::kBTI,
        CPUFeatures::kMTE,
        CPUFeatures::kNone,   // "ECV"
