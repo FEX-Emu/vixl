@@ -24,6 +24,7 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+#include "aarch64/instructions-aarch64.h"
 #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
 
 #include <errno.h>
@@ -6611,8 +6612,9 @@ void Simulator::VisitSystem(const Instruction* instr) {
 
 void Simulator::VisitException(const Instruction* instr) {
   switch (instr->Mask(ExceptionMask)) {
-    case HLT:
-      switch (instr->GetImmException()) {
+    case HLT: {
+      auto imm = instr->GetImmException();
+      switch (imm) {
         case kUnreachableOpcode:
           DoUnreachable(instr);
           return;
@@ -6627,6 +6629,9 @@ void Simulator::VisitException(const Instruction* instr) {
           return;
         case kRuntimeCallOpcode:
           DoRuntimeCall(instr);
+          return;
+        case kRuntimeCallIndirectOpcodeFirst ... kRuntimeCallIndirectOpcodeLast:
+          DoRuntimeIndirectCall(instr, imm - kRuntimeCallIndirectOpcodeFirst);
           return;
         case kSetCPUFeaturesOpcode:
         case kEnableCPUFeaturesOpcode:
@@ -6643,6 +6648,7 @@ void Simulator::VisitException(const Instruction* instr) {
           HostBreakpoint();
           return;
       }
+    }
     case BRK:
       HostBreakpoint();
       return;
@@ -13995,6 +14001,17 @@ void Simulator::DoRuntimeCall(const Instruction* instr) {
   }
   runtime_call_wrapper(this, function_address);
   // Read the return address from `lr` and write it into `pc`.
+  WritePc(ReadRegister<Instruction*>(kLinkRegCode));
+}
+void Simulator::DoRuntimeIndirectCall(const Instruction* instr, unsigned int XReg) {
+  uintptr_t call_wrapper_address = MemRead<uintptr_t>(instr + 1 * kInstructionSize);
+
+  uintptr_t function_address = ReadRegister<uint64_t>(XReg);
+  WriteRegister(kLinkRegCode, instr->GetInstructionAtOffset(kInstructionSize + sizeof(call_wrapper_address)));
+
+  auto runtime_call_wrapper = reinterpret_cast<void (*)(Simulator*, uintptr_t)>(call_wrapper_address);
+
+  runtime_call_wrapper(this, function_address);
   WritePc(ReadRegister<Instruction*>(kLinkRegCode));
 }
 #else
