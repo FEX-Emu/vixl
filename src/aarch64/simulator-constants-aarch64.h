@@ -51,6 +51,7 @@ enum DebugHltOpcode {
   kTraceOpcode,
   kLogOpcode,
   kRuntimeCallOpcode,
+  kIndirectRuntimeCallOpcode,
   kSetCPUFeaturesOpcode,
   kEnableCPUFeaturesOpcode,
   kDisableCPUFeaturesOpcode,
@@ -157,6 +158,16 @@ const unsigned kRuntimeCallFunctionOffset =
 const unsigned kRuntimeCallTypeOffset =
     kRuntimeCallFunctionOffset + kRuntimeCallAddressSize;
 const unsigned kRuntimeCallLength = kRuntimeCallTypeOffset + sizeof(uint32_t);
+
+// Indirect runtime call simulation - kIndirectRuntimeCallOpcode
+const unsigned kIndirectRuntimeCallWrapperOffset = 1 * kInstructionSize;
+// The size of a pointer on host.
+const unsigned kIndirectRuntimeRegisterSize = sizeof(uint32_t);
+const unsigned kIndirectRuntimeCallFunctionOffset =
+    kIndirectRuntimeCallWrapperOffset + kRuntimeCallAddressSize;
+const unsigned kIndirectRuntimeCallTypeOffset =
+    kIndirectRuntimeCallFunctionOffset + kIndirectRuntimeRegisterSize;
+const unsigned kIndirectRuntimeCallLength = kIndirectRuntimeCallTypeOffset + sizeof(uint32_t);
 
 // Enable or disable CPU features - kSetCPUFeaturesOpcode
 //                                - kEnableCPUFeaturesOpcode
