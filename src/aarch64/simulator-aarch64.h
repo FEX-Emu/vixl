@@ -2663,10 +2663,27 @@ class Simulator : public DecoderVisitor {
     ABI abi;
     std::tuple<P...> argument_operands{
         ReadGenericOperand<P>(abi.GetNextParameterGenericOperand<P>())...};
-    R return_value = DoRuntimeCall(function,
-                                   argument_operands,
-                                   __local_index_sequence_for<P...>{});
-    WriteGenericOperand(abi.GetReturnGenericOperand<R>(), return_value);
+    if constexpr (sizeof(R) == 16) {
+      R return_value = DoRuntimeCall(function,
+                                     argument_operands,
+                                     __local_index_sequence_for<P...>{});
+
+      uint64_t lower_bits = return_value;
+      uint64_t upper_bits = return_value >> 64;
+
+      ABI abi(sp);
+      GenericOperand result_lower = abi.GetNextParameterGenericOperand<uint64_t>();
+      GenericOperand result_upper = abi.GetNextParameterGenericOperand<uint64_t>();
+      WriteGenericOperand(result_lower, lower_bits);
+      WriteGenericOperand(result_upper, upper_bits);
+    }
+    else {
+      R return_value = DoRuntimeCall(function,
+                                     argument_operands,
+                                     __local_index_sequence_for<P...>{});
+
+      WriteGenericOperand(abi.GetReturnGenericOperand<R>(), return_value);
+    }
   }
 
   template <typename R, typename... P>
