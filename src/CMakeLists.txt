@@ -1,6 +1,6 @@
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_library(vixl STATIC
+set (SRCS
   code-buffer-vixl.cc
   compiler-intrinsics-vixl.cc
   cpu-features.cc
@@ -9,16 +9,29 @@ add_library(vixl STATIC
   aarch64/assembler-sve-aarch64.cc
   aarch64/cpu-aarch64.cc
   aarch64/instructions-aarch64.cc
-  aarch64/logic-aarch64.cc
   aarch64/macro-assembler-aarch64.cc
   aarch64/macro-assembler-sve-aarch64.cc
   aarch64/operands-aarch64.cc
   aarch64/pointer-auth-aarch64.cc
-  aarch64/registers-aarch64.cc
-)
+  aarch64/registers-aarch64.cc)
+
+if (ENABLE_VIXL_SIMULATOR)
+  list(APPEND SRCS
+    aarch64/cpu-features-auditor-aarch64.cc
+    aarch64/decoder-aarch64.cc
+    aarch64/disasm-aarch64.cc
+    aarch64/logic-aarch64.cc
+    aarch64/simulator-aarch64.cc)
+endif()
+
+add_library(vixl STATIC ${SRCS})
 
 # This is only refrenced by .cc files, so it can be private
 target_compile_definitions(vixl PRIVATE -DVIXL_CODE_BUFFER_MMAP=1)
+
+if (ENABLE_VIXL_SIMULATOR)
+  target_compile_definitions(vixl PRIVATE -DVIXL_INCLUDE_SIMULATOR_AARCH64=1)
+endif()
 
 # These are refrenced by all the .h files
 # we need to export them as public so any target linking vixl
