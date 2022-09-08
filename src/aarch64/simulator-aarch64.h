@@ -2999,13 +2999,36 @@ class Simulator : public DecoderVisitor {
     ABI abi;
     std::tuple<P...> argument_operands{
         ReadGenericOperand<P>(abi.GetNextParameterGenericOperand<P>())...};
-    R return_value = DoRuntimeCall(function,
-                                   argument_operands,
-                                   __local_index_sequence_for<P...>{});
-    bool succeeded =
-        WriteGenericOperand(abi.GetReturnGenericOperand<R>(), return_value);
-    USE(succeeded);
-    VIXL_ASSERT(succeeded);
+    if constexpr (sizeof(R) == 16) {
+      R return_value = DoRuntimeCall(function,
+                                     argument_operands,
+                                     __local_index_sequence_for<P...>{});
+
+      uint64_t lower_bits = return_value;
+      uint64_t upper_bits = return_value >> 64;
+
+      ABI abi(sp);
+      GenericOperand result_lower = abi.GetNextParameterGenericOperand<uint64_t>();
+      GenericOperand result_upper = abi.GetNextParameterGenericOperand<uint64_t>();
+      bool lower_write = WriteGenericOperand(result_lower, lower_bits);
+      bool upper_write = WriteGenericOperand(result_upper, upper_bits);
+
+      USE(lower_write);
+      USE(upper_write);
+
+      VIXL_ASSERT(lower_write);
+      VIXL_ASSERT(upper_write);
+    }
+    else {
+      R return_value = DoRuntimeCall(function,
+                                     argument_operands,
+                                     __local_index_sequence_for<P...>{});
+
+      bool succeeded =
+         WriteGenericOperand(abi.GetReturnGenericOperand<R>(), return_value);
+      USE(succeeded);
+      VIXL_ASSERT(succeeded);
+    }
   }
 
   template <typename R, typename... P>
