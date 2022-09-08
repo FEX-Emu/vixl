@@ -7020,6 +7020,9 @@ void Simulator::VisitException(const Instruction* instr) {
         case kRuntimeCallOpcode:
           DoRuntimeCall(instr);
           return;
+        case kIndirectRuntimeCallOpcode:
+          DoIndirectRuntimeCall(instr);
+          return;
         case kSetCPUFeaturesOpcode:
         case kEnableCPUFeaturesOpcode:
         case kDisableCPUFeaturesOpcode:
@@ -14803,8 +14806,45 @@ void Simulator::DoRuntimeCall(const Instruction* instr) {
   // Read the return address from `lr` and write it into `pc`.
   WritePc(ReadRegister<Instruction*>(kLinkRegCode));
 }
+
+void Simulator::DoIndirectRuntimeCall(const Instruction* instr) {
+  VIXL_STATIC_ASSERT(kIndirectRuntimeRegisterSize == sizeof(uint32_t));
+  // The appropriate `Simulator::SimulateRuntimeCall()` wrapper and the function
+  // to call are passed inlined in the assembly.
+  VIXL_DEFINE_OR_RETURN(call_wrapper_address,
+                        MemRead<uintptr_t>(instr + kIndirectRuntimeCallWrapperOffset));
+  VIXL_DEFINE_OR_RETURN(function_address_register,
+                        MemRead<uint32_t>(instr + kIndirectRuntimeCallFunctionOffset));
+  VIXL_DEFINE_OR_RETURN(call_type,
+                        MemRead<uint32_t>(instr + kIndirectRuntimeCallTypeOffset));
+
+  VIXL_STATIC_ASSERT(kIndirectRuntimeCallWrapperOffset == 4);
+  VIXL_STATIC_ASSERT(kIndirectRuntimeCallFunctionOffset == 12);
+  VIXL_STATIC_ASSERT(kIndirectRuntimeCallTypeOffset == 16);
+
+  uintptr_t function_address = ReadRegister<uintptr_t>(function_address_register);
+
+  auto runtime_call_wrapper =
+      reinterpret_cast<void (*)(Simulator*, uintptr_t)>(call_wrapper_address);
+
+  if (static_cast<RuntimeCallType>(call_type) == kCallRuntime) {
+    uint64_t NewLR = (uint64_t)instr->GetInstructionAtOffset(kIndirectRuntimeCallLength);
+    WriteRegister(kLinkRegCode,
+                  instr->GetInstructionAtOffset(kIndirectRuntimeCallLength));
+  }
+  runtime_call_wrapper(this, function_address);
+  uint64_t LR = ReadRegister<uint64_t>(kLinkRegCode);
+  // Read the return address from `lr` and write it into `pc`.
+  WritePc(ReadRegister<Instruction*>(kLinkRegCode));
+}
+
 #else
 void Simulator::DoRuntimeCall(const Instruction* instr) {
+  USE(instr);
+  VIXL_UNREACHABLE();
+}
+
+void Simulator::DoIndirectRuntimeCall(const Instruction* instr) {
   USE(instr);
   VIXL_UNREACHABLE();
 }
