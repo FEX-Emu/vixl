@@ -6910,6 +6910,7 @@ void Simulator::VisitSystem(const Instruction* instr) {
       }
       break;
     case "nop_hi_hints"_h:
+    case "yield_hi_hints"_h:
     case "esb_hi_hints"_h:
     case "csdb_hi_hints"_h:
       break;
