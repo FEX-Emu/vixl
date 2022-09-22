@@ -6571,6 +6571,7 @@ void Simulator::VisitSystem(const Instruction* instr) {
     VIXL_ASSERT(instr->Mask(SystemHintMask) == HINT);
     switch (instr->GetImmHint()) {
       case NOP:
+      case YIELD:
       case ESB:
       case CSDB:
       case BTI_jc:
