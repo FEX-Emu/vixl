@@ -198,6 +198,7 @@ bool Instruction::CanTakeSVEMovprfx(uint32_t form_hash,
     case Hash("decd_z_zs"):
     case Hash("dech_z_zs"):
     case Hash("decw_z_zs"):
+    case Hash("ext_z_zi_des"):
     case Hash("faddp_z_p_zz"):
     case Hash("fmaxnmp_z_p_zz"):
     case Hash("fmaxp_z_p_zz"):
