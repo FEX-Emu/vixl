@@ -211,7 +211,6 @@ bool Instruction::CanTakeSVEMovprfx(uint32_t form_hash,
     case Hash("insr_z_v"):
     case Hash("smaxp_z_p_zz"):
     case Hash("sminp_z_p_zz"):
-    case Hash("splice_z_p_zz_con"):
     case Hash("splice_z_p_zz_des"):
     case Hash("sqcadd_z_zz"):
     case Hash("sqdecd_z_zs"):
