@@ -18,13 +18,17 @@ set (SRCS
 if (ENABLE_VIXL_SIMULATOR)
   list(APPEND SRCS
     aarch64/cpu-features-auditor-aarch64.cc
-    aarch64/decoder-aarch64.cc
-    aarch64/disasm-aarch64.cc
     aarch64/logic-aarch64.cc
     aarch64/simulator-aarch64.cc)
 endif()
 
-add_library(vixl STATIC ${SRCS})
+if (ENABLE_VIXL_DISASSEMBLER OR ENABLE_VIXL_SIMULATOR)
+  list(APPEND SRCS
+    aarch64/decoder-aarch64.cc
+    aarch64/disasm-aarch64.cc)
+endif()
+
+add_library(vixl OBJECT ${SRCS})
 
 # This is only refrenced by .cc files, so it can be private
 target_compile_definitions(vixl PRIVATE -DVIXL_CODE_BUFFER_MMAP=1)
