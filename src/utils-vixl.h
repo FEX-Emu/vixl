@@ -664,6 +664,19 @@ inline void AssignBits(Td& dst,  // NOLINT(runtime/references)
 
 class VFP {
  public:
+  static uint32_t FP16ToImm8(Float16 imm) {
+    // Half: aBbb.cdef.gh00.0000 (16 bits)
+    uint16_t bits = Float16ToRawbits(imm);
+    // bit7: a000.0000
+    uint16_t bit7 = ((bits >> 15) & 0x1) << 7;
+    // bit6: 0b00.0000
+    uint16_t bit6 = ((bits >> 13) & 0x1) << 6;
+    // bit5_to_0: 00cd.efgh
+    uint16_t bit5_to_0 = (bits >> 6) & 0x3f;
+    uint32_t result = static_cast<uint32_t>(bit7 | bit6 | bit5_to_0);
+    return result;
+  }
+
   static uint32_t FP32ToImm8(float imm) {
     // bits: aBbb.bbbc.defg.h000.0000.0000.0000.0000
     uint32_t bits = FloatToRawbits(imm);
