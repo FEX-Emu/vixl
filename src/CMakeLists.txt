@@ -22,7 +22,7 @@ if (ENABLE_VIXL_SIMULATOR)
     aarch64/simulator-aarch64.cc)
 endif()
 
-if (ENABLE_VIXL_DISASSEMBLER OR ENABLE_VIXL_SIMULATOR)
+if (COMPILE_VIXL_DISASSEMBLER OR ENABLE_VIXL_DISASSEMBLER OR ENABLE_VIXL_SIMULATOR)
   list(APPEND SRCS
     aarch64/decoder-aarch64.cc
     aarch64/disasm-aarch64.cc)
