@@ -1,15 +1,16 @@
-VIXL: ARMv8 Runtime Code Generation Library
-===========================================
+VIXL: Arm Runtime Code Generation Library
+=========================================
 
 Contents:
 
- * Overview
- * Licence
- * Requirements
- * Known limitations
- * Bug reports
- * Usage
-
+ * [Overview](#overview)
+ * [Licence](#licence)
+ * [Requirements](#requirements)
+ * [Versioning](#versioning)
+ * [Supported Arm Architecture Features](#supported-arm-architecture-features)
+ * [Known limitations](#known-limitations)
+ * [Bug reports](#bug-reports)
+ * [Usage](#usage)
 
 Overview
 ========
@@ -17,21 +18,16 @@ Overview
 VIXL contains three components.
 
  1. Programmatic **assemblers** to generate A64, A32 or T32 code at runtime. The
-    assemblers abstract some of the constraints of each ISA; for example, most
+    assemblers abstract some of the constraints of each ISA; for example, some
     instructions support any immediate.
  2. **Disassemblers** that can print any instruction emitted by the assemblers.
- 3. A **simulator** that can simulate any instruction emitted by the A64
+ 3. An **A64 simulator** that can simulate any instruction emitted by the A64
     assembler. The simulator allows generated code to be run on another
     architecture without the need for a full ISA model.
 
-The VIXL git repository can be found [on GitHub][vixl].
+The VIXL git repository can be found [on GitLab][vixl].
 
-Build and Test Status
----------------------
-
-  * [![Build Status](https://ci.linaro.org/buildStatus/icon?job=linaro-art-vixlpresubmit)](https://ci.linaro.org/job/linaro-art-vixlpresubmit/) Simulator
-  * [![Build Status](https://ci.linaro.org/buildStatus/icon?job=linaro-art-vixlpresubmit-native-armv8)](https://ci.linaro.org/job/linaro-art-vixlpresubmit-native-armv8/) Native
-  * [![Build Status](https://ci.linaro.org/buildStatus/icon?job=linaro-art-vixlpresubmit-macos)](https://ci.linaro.org/job/linaro-art-vixlpresubmit-macos/) MacOS
+ Build status: [![Build Status](https://gitlab.arm.com/runtimes/vixl/badges/main/pipeline.svg)](https://gitlab.arm.com/runtimes/vixl/-/pipelines)
 
 
 Licence
@@ -69,34 +65,42 @@ Refer to the 'Usage' section for details.
 Note that in Ubuntu 18.04, clang-tidy-4.0 will only work if the clang-4.0
 package is also installed.
 
+Versioning
+==========
+
+VIXL uses [Semantic Versioning 2.0.0][semver] - see [VERSIONS](VERSIONS.md) for details.
+
 Supported Arm Architecture Features
 ===================================
 
-| Feature    | VIXL CPUFeatures Flag | Notes                           |
-|------------|-----------------------|---------------------------------|
-| BTI        | kBTI                  | Per-page enabling not supported |
-| DotProd    | kDotProduct           |                                 |
-| FCMA       | kFcma                 |                                 |
-| FHM        | kFHM                  |                                 |
-| FP16       | kFPHalf, kNEONHalf    |                                 |
-| FRINTTS    | kFrintToFixedSizedInt |                                 |
-| FlagM      | kFlagM                |                                 |
-| FlagM2     | kAXFlag               |                                 |
-| I8MM       | kI8MM                 |                                 |
-| JSCVT      | kJSCVT                |                                 |
-| LOR        | kLORegions            |                                 |
-| LRCPC      | kRCpc                 |                                 |
-| LRCPC2     | kRCpcImm              |                                 |
-| LSE        | kAtomics              |                                 |
-| PAuth      | kPAuth, kPAuthGeneric | Not ERETAA, ERETAB              |
-| RAS        | kRAS                  |                                 |
-| RDM        | kRDM                  |                                 |
-| SVE        | kSVE                  |                                 |
-| SVE2       | kSVE2                 |                                 |
-| SVEBitPerm | kSVEBitPerm           |                                 |
-| SVEF32MM   | kSVEF32MM             |                                 |
-| SVEF64MM   | kSVEF64MM             |                                 |
-| SVEI8MM    | kSVEI8MM              |                                 |
+| Feature    | VIXL CPUFeatures Flag         | Notes                           |
+|------------|-------------------------------|---------------------------------|
+| BTI        | kBTI                          | Per-page enabling not supported |
+| CSSC       | kCSSC                         |                                 |
+| DotProd    | kDotProduct                   |                                 |
+| FCMA       | kFcma                         |                                 |
+| FHM        | kFHM                          |                                 |
+| FP16       | kFPHalf, kNEONHalf            |                                 |
+| FRINTTS    | kFrintToFixedSizedInt         |                                 |
+| FlagM      | kFlagM                        |                                 |
+| FlagM2     | kAXFlag                       |                                 |
+| I8MM       | kI8MM                         |                                 |
+| JSCVT      | kJSCVT                        |                                 |
+| LOR        | kLORegions                    |                                 |
+| LRCPC      | kRCpc                         |                                 |
+| LRCPC2     | kRCpcImm                      |                                 |
+| LSE        | kAtomics                      |                                 |
+| MOPS       | kMOPS                         |                                 |
+| MTE        | kMTEInstructions, kMTE, kMTE3 |                                 |
+| PAuth      | kPAuth, kPAuthGeneric         | Not ERETAA, ERETAB              |
+| RAS        | kRAS                          |                                 |
+| RDM        | kRDM                          |                                 |
+| SVE        | kSVE                          |                                 |
+| SVE2       | kSVE2                         |                                 |
+| SVEBitPerm | kSVEBitPerm                   |                                 |
+| SVEF32MM   | kSVEF32MM                     |                                 |
+| SVEF64MM   | kSVEF64MM                     |                                 |
+| SVEI8MM    | kSVEI8MM                      |                                 |
 
 Enable generating code for an architecture feature by combining a flag with
 the MacroAssembler's defaults. For example, to generate code for SVE, use
@@ -202,7 +206,7 @@ selection.
 Bug reports
 ===========
 
-Bug reports may be made in the Issues section of GitHub, or sent to
+Bug reports may be made in the Issues section of GitLab, or sent to
 vixl@arm.com. Please provide any steps required to recreate a bug, along with
 build environment and host system information.
 
@@ -257,8 +261,11 @@ aarch32_examples` or `scons aarch64_examples` from the root directory, or use
 [cpplint]: https://github.com/google/styleguide/tree/gh-pages/cpplint
            "Google's cpplint.py script."
 
-[vixl]: https://github.com/Linaro/vixl
-        "The VIXL repository on GitHub."
+[vixl]: https://gitlab.arm.com/runtimes/vixl
+        "The VIXL repository on GitLab."
+
+[semver]: https://semver.org/spec/v2.0.0.html
+          "Semantic Versioning 2.0.0 Specification"
 
 [getting-started-aarch32]: doc/aarch32/getting-started-aarch32.md
                            "Introduction to VIXL for AArch32."
