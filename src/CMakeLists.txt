@@ -31,7 +31,7 @@ endif()
 add_library(vixl OBJECT ${SRCS})
 
 # This is only refrenced by .cc files, so it can be private
-target_compile_definitions(vixl PRIVATE -DVIXL_CODE_BUFFER_MMAP=1)
+target_compile_definitions(vixl PRIVATE -DVIXL_CODE_BUFFER_MALLOC=1)
 
 if (ENABLE_VIXL_SIMULATOR)
   target_compile_definitions(vixl PRIVATE -DVIXL_INCLUDE_SIMULATOR_AARCH64=1)
