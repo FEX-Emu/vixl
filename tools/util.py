@@ -107,7 +107,7 @@ def GetHostArch(env):
     return "i386"
   elif "__arm__" in directives:
     return "aarch32"
-  elif "__aarch64__" in directives:
+  elif "__aarch64__" in directives or "__arm64ec__" in directives:
     return "aarch64"
   else:
     raise Exception("Unsupported architecture")
