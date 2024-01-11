@@ -392,20 +392,20 @@ CPUFeatures CPU::InferCPUFeaturesFromOS(
 }
 
 
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__arm64ec__)
 #define VIXL_READ_ID_REG(NAME, MRS_ARG)        \
   NAME CPU::Read##NAME() {                     \
     uint64_t value = 0;                        \
     __asm__("mrs %0, " MRS_ARG : "=r"(value)); \
     return NAME(value);                        \
   }
-#else  // __aarch64__
+#else  // __aarch64__ || __arm64ec__
 #define VIXL_READ_ID_REG(NAME, MRS_ARG) \
   NAME CPU::Read##NAME() {              \
     VIXL_UNREACHABLE();                 \
     return NAME(0);                     \
   }
-#endif  // __aarch64__
+#endif  // __aarch64__ || __arm64ec__
 
 VIXL_AARCH64_ID_REG_LIST(VIXL_READ_ID_REG)
 
@@ -441,7 +441,7 @@ void CPU::SetUp() {
 
 
 uint32_t CPU::GetCacheType() {
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__arm64ec__)
   uint64_t cache_type_register;
   // Copy the content of the cache type register to a core register.
   __asm__ __volatile__("mrs %[ctr], ctr_el0"  // NOLINT(runtime/references)
@@ -458,7 +458,7 @@ uint32_t CPU::GetCacheType() {
 
 // Query the SVE vector length. This requires CPUFeatures::kSVE.
 int CPU::ReadSVEVectorLengthInBits() {
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__arm64ec__)
   uint64_t vl;
   // To support compilers that don't understand `rdvl`, encode the value
   // directly and move it manually.
@@ -478,7 +478,7 @@ int CPU::ReadSVEVectorLengthInBits() {
 
 
 void CPU::EnsureIAndDCacheCoherency(void* address, size_t length) {
-#ifdef __aarch64__
+#if defined(__aarch64__) || defined(__arm64ec__)
   // Implement the cache synchronisation for all targets where AArch64 is the
   // host, even if we're building the simulator for an AAarch64 host. This
   // allows for cases where the user wants to simulate code as well as run it
