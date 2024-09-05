@@ -29,7 +29,7 @@ if (COMPILE_VIXL_DISASSEMBLER OR ENABLE_VIXL_DISASSEMBLER OR ENABLE_VIXL_SIMULAT
     aarch64/disasm-aarch64.cc)
 endif()
 
-add_library(vixl OBJECT ${SRCS})
+add_library(vixl STATIC ${SRCS})
 
 # This is only refrenced by .cc files, so it can be private
 target_compile_definitions(vixl PRIVATE -DVIXL_CODE_BUFFER_MALLOC=1)
