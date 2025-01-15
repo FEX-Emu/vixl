@@ -8,6 +8,8 @@ set (SRCS
   aarch64/assembler-aarch64.cc
   aarch64/assembler-sve-aarch64.cc
   aarch64/debugger-aarch64.cc
+  aarch64/decoder-aarch64.cc
+  aarch64/disasm-aarch64.cc
   aarch64/cpu-aarch64.cc
   aarch64/instructions-aarch64.cc
   aarch64/macro-assembler-aarch64.cc
@@ -21,12 +23,6 @@ if (ENABLE_VIXL_SIMULATOR)
     aarch64/cpu-features-auditor-aarch64.cc
     aarch64/logic-aarch64.cc
     aarch64/simulator-aarch64.cc)
-endif()
-
-if (COMPILE_VIXL_DISASSEMBLER OR ENABLE_VIXL_DISASSEMBLER OR ENABLE_VIXL_SIMULATOR)
-  list(APPEND SRCS
-    aarch64/decoder-aarch64.cc
-    aarch64/disasm-aarch64.cc)
 endif()
 
 add_library(vixl OBJECT ${SRCS})
