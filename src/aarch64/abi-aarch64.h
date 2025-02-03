@@ -37,6 +37,14 @@
 #ifndef VIXL_AARCH64_ABI_AARCH64_H_
 #define VIXL_AARCH64_ABI_AARCH64_H_
 
+#ifdef __x86_64__
+#include <xmmintrin.h>
+#else
+// Can't use uint8x16_t directly from arm_neon.h here.
+// Overrides softfloat-3e's defines which causes problems.
+using uint8x16_t = __attribute__((neon_vector_type(16))) uint8_t;
+#endif
+
 #include <algorithm>
 #include <type_traits>
 
@@ -88,22 +96,33 @@ class ABI {
     const bool is_integral_type =
         std::is_integral<T>::value || std::is_enum<T>::value;
     const bool is_pointer_type = std::is_pointer<T>::value;
+    const bool is_vector_type =
+#ifdef __x86_64__
+      std::is_same_v<T, __m128i>;
+#elif defined(__aarch64__)
+      std::is_same_v<T, uint8x16_t>;
+#else
+      false;
+#endif
     int type_alignment = std::alignment_of<T>::value;
 
     // We only support basic types.
-    VIXL_ASSERT(is_floating_point_type || is_integral_type || is_pointer_type);
+    VIXL_ASSERT(is_floating_point_type || is_integral_type || is_pointer_type || is_vector_type);
 
     // To ensure we get the correct type of operand when simulating on a 32-bit
     // host, force the size of pointer types to the native AArch64 pointer size.
     unsigned size = is_pointer_type ? 8 : sizeof(T);
     // The size of the 'operand' reserved for the argument.
     unsigned operand_size = AlignUp(size, kWRegSizeInBytes);
-    if (size > 8) {
+    if (!is_vector_type && size > 8) {
       VIXL_UNIMPLEMENTED();
       return GenericOperand();
     }
 
     // Stage C.1
+    if (is_vector_type && (NSRN_ < 8)) {
+      return GenericOperand(VRegister(NSRN_++, size * kBitsPerByte));
+    }
     if (is_floating_point_type && (NSRN_ < 8)) {
       return GenericOperand(VRegister(NSRN_++, size * kBitsPerByte));
     }
