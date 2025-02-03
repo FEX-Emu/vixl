@@ -42,6 +42,14 @@
 #include "instructions-aarch64.h"
 #include "simulator-constants-aarch64.h"
 
+#ifdef __x86_64__
+#include <xmmintrin.h>
+#else
+// Can't use uint8x16_t directly from arm_neon.h here.
+// Overrides softfloat-3e's defines which causes problems.
+using uint8x16_t = __attribute__((neon_vector_type(16))) uint8_t;
+#endif
+
 #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
 
 // These are only used for the ABI feature, and depend on checks performed for
@@ -2999,6 +3007,22 @@ class Simulator : public DecoderVisitor {
     ABI abi;
     std::tuple<P...> argument_operands{
         ReadGenericOperand<P>(abi.GetNextParameterGenericOperand<P>())...};
+#ifdef __x86_64__
+    if constexpr (std::is_same_v<R, __m128i>) {
+#elif defined(__aarch64__)
+    if constexpr (std::is_same_v<R, uint8x16_t>) {
+#else
+    if constexpr (false) {
+#endif
+      R return_value = DoRuntimeCall(function,
+                                     argument_operands,
+                                     __local_index_sequence_for<P...>{});
+      ABI abi(sp);
+      GenericOperand result = abi.GetNextParameterGenericOperand<double>();
+
+      WriteVRegister<R>(result.GetCPURegister().V(), return_value);
+    }
+    else
     if constexpr (sizeof(R) == 16) {
       R return_value = DoRuntimeCall(function,
                                      argument_operands,
