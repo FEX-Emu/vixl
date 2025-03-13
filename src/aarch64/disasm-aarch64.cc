@@ -1900,8 +1900,12 @@ void Disassembler::VisitConditionalBranch(const Instruction *instr) {
   // We can't use the mnemonic directly here, as there's no space between it and
   // the condition. Assert that we have the correct mnemonic, then use "b"
   // explicitly for formatting the output.
-  VIXL_ASSERT(form_hash_ == "b_only_condbranch"_h);
-  Format(instr, "b.'CBrn", "'TImmCond");
+  if (form_hash_ == "bc_only_condbranch"_h) {
+    Format(instr, "bc.'CBrn", "'TImmCond");
+  } else {
+    VIXL_ASSERT(form_hash_ == "b_only_condbranch"_h);
+    Format(instr, "b.'CBrn", "'TImmCond");
+  }
 }
 
 

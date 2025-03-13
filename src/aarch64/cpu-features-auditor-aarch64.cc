@@ -331,6 +331,9 @@ void CPUFeaturesAuditor::VisitCompareBranch(const Instruction* instr) {
 void CPUFeaturesAuditor::VisitConditionalBranch(const Instruction* instr) {
   RecordInstructionFeaturesScope scope(this);
   USE(instr);
+  if (form_hash_ == "bc_only_condbranch"_h) {
+    scope.Record(CPUFeatures::kHBC);
+  }
 }
 
 void CPUFeaturesAuditor::VisitConditionalCompareImmediate(

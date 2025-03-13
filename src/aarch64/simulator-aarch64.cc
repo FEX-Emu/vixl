@@ -3938,7 +3938,8 @@ void Simulator::VisitUnconditionalBranch(const Instruction* instr) {
 
 
 void Simulator::VisitConditionalBranch(const Instruction* instr) {
-  VIXL_ASSERT(instr->Mask(ConditionalBranchMask) == B_cond);
+  VIXL_ASSERT((form_hash_ == "b_only_condbranch"_h) ||
+              (form_hash_ == "bc_only_condbranch"_h));
   if (ConditionPassed(instr->GetConditionBranch())) {
     WritePc(instr->GetImmPCOffsetTarget());
   }

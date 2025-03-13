@@ -538,11 +538,17 @@ class Assembler : public vixl::internal::AssemblerBase {
   // Conditional branch to label.
   void b(Label* label, Condition cond);
 
+  // Conditional branch consistent to label.
+  void bc(Label* label, Condition cond);
+
   // Unconditional branch to PC offset.
   void b(int64_t imm26);
 
   // Conditional branch to PC offset.
   void b(int64_t imm19, Condition cond);
+
+  // Conditional branch consistent to PC offset.
+  void bc(int64_t imm19, Condition cond);
 
   // Branch with link to label.
   void bl(Label* label);

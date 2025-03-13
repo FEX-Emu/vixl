@@ -3879,5 +3879,7 @@ TEST_FEAT(bfcvtn, bfcvtn(v0.V4H(), v10.V4S()))
 TEST_FEAT(bfcvtn2, bfcvtn2(v0.V8H(), v10.V4S()))
 #undef TEST_FEAT
 
+TEST_TEMPLATE(CPUFeatures(CPUFeatures::kHBC), HBC_bc, bc(40, ne))
+
 }  // namespace aarch64
 }  // namespace vixl

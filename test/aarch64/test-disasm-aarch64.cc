@@ -969,6 +969,11 @@ TEST(branch) {
   COMPARE(blrab(x13, x14), "blrab x13, x14");
   COMPARE(blrab(x15, sp), "blrab x15, sp");
 
+  COMPARE_PREFIX(bc(INST_OFF(0xffffc), eq), "bc.eq #+0xffffc");
+  COMPARE_PREFIX(bc(INST_OFF(-0x100000), mi), "bc.mi #-0x100000");
+  COMPARE_PREFIX(bc(INST_OFF(0xffffc), al), "bc.al #+0xffffc");
+  COMPARE_PREFIX(bc(INST_OFF(-0x100000), nv), "bc.nv #-0x100000");
+
   CLEANUP();
 }
 

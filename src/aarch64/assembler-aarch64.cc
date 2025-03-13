@@ -263,6 +263,10 @@ void Assembler::b(int64_t imm19, Condition cond) {
   Emit(B_cond | ImmCondBranch(imm19) | cond);
 }
 
+void Assembler::bc(int64_t imm19, Condition cond) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kHBC));
+  Emit(B_cond | ImmCondBranch(imm19) | (1 << 4) | cond);
+}
 
 void Assembler::b(Label* label) {
   int64_t offset = LinkAndGetInstructionOffsetTo(label);
@@ -277,6 +281,11 @@ void Assembler::b(Label* label, Condition cond) {
   b(static_cast<int>(offset), cond);
 }
 
+void Assembler::bc(Label* label, Condition cond) {
+  int64_t offset = LinkAndGetInstructionOffsetTo(label);
+  VIXL_ASSERT(Instruction::IsValidImmPCOffset(CondBranchType, offset));
+  bc(static_cast<int>(offset), cond);
+}
 
 void Assembler::bl(int64_t imm26) { Emit(BL | ImmUncondBranch(imm26)); }
 

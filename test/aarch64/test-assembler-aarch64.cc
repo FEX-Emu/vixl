@@ -2452,6 +2452,30 @@ TEST(branch_cond) {
   }
 }
 
+TEST(branch_consistent) {
+  SETUP_WITH_FEATURES(CPUFeatures::kHBC);
+
+  START();
+  Label l0, l1, exit;
+  __ Mov(x0, 0);
+  __ Cmp(x0, 0);
+  __ Bc(eq, &l1);
+  __ Bind(&l0);
+  __ B(&exit);
+
+  __ Bind(&l1);
+  __ Mov(x0, 1);
+  __ Cmp(x0, 0);
+  __ Bc(ne, &l0);
+  __ Bind(&exit);
+  END();
+
+  if (CAN_RUN()) {
+    RUN();
+
+    ASSERT_EQUAL_64(1, x0);
+  }
+}
 
 TEST(branch_to_reg) {
   SETUP();

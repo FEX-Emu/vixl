@@ -822,6 +822,7 @@
       {"ubfm_32m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
       {"ubfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
       {"b_only_condbranch"_h, &VISITORCLASS::VisitConditionalBranch},          \
+      {"bc_only_condbranch"_h, &VISITORCLASS::VisitConditionalBranch},         \
       {"csel_32_condsel"_h, &VISITORCLASS::VisitConditionalSelect},            \
       {"csel_64_condsel"_h, &VISITORCLASS::VisitConditionalSelect},            \
       {"csinc_32_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \

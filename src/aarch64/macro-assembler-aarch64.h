@@ -1099,11 +1099,24 @@ class MacroAssembler : public Assembler, public MacroAssemblerInterface {
     }
   }
 
+  void B(Label* label);
   void B(Label* label, BranchType type, Register reg = NoReg, int bit = -1);
 
-  void B(Label* label);
-  void B(Label* label, Condition cond);
+  void B(Label* label, Condition cond) {
+    Bcommon(label, cond, /* use_bc = */ false);
+  }
+  void Bc(Label* label, Condition cond) {
+    Bcommon(label, cond, /* use_bc = */ true);
+  }
+  // Aliases that match the instruction set ordering.
   void B(Condition cond, Label* label) { B(label, cond); }
+  void Bc(Condition cond, Label* label) { Bc(label, cond); }
+
+ private:
+  // Common method for B and Bc.
+  void Bcommon(Label* label, Condition cond, bool use_bc);
+
+ public:
   void Bfm(const Register& rd,
            const Register& rn,
            unsigned immr,
