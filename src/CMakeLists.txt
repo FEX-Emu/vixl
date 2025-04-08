@@ -18,7 +18,7 @@ set (SRCS
   aarch64/pointer-auth-aarch64.cc
   aarch64/registers-aarch64.cc)
 
-if (ENABLE_VIXL_SIMULATOR)
+if (ENABLE_VIXL_SIMULATOR OR ENABLE_VIXL_DISASSEMBLER)
   list(APPEND SRCS
     aarch64/cpu-features-auditor-aarch64.cc
     aarch64/logic-aarch64.cc
