@@ -14710,7 +14710,7 @@ TEST(mops_cpyf) {
   __ Ldp(x10, x11, MemOperand(x0));
   __ Mrs(x20, NZCV);
 
-  // Copy last eight bytes to overlapping offset where src < dst.
+  // Copy last eight bytes to overlapping offset where src > dst.
   __ Add(x4, x0, 8);  // src = &buf[8]
   __ Add(x5, x0, 6);  // dst = &buf[6]
   __ Mov(x6, 8);      // count = 8
@@ -14718,7 +14718,7 @@ TEST(mops_cpyf) {
   __ Ldp(x12, x13, MemOperand(x0));
   __ Mrs(x21, NZCV);
 
-  // Copy first eight bytes to overlapping offset where src > dst.
+  // Copy first eight bytes to overlapping offset where src < dst.
   __ Mov(x7, x0);     // src = &buf[0]
   __ Add(x8, x0, 4);  // dst = &buf[4]
   __ Mov(x9, 8);      // count = 8
