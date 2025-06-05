@@ -3933,33 +3933,28 @@ TEST(architecture_features) {
   COMPARE_PREFIX(dci(0xd500405f), "axflag");  // AXFLAG_M_pstate
 
   // ARMv8.5 - MTE
-  // COMPARE_PREFIX(dci(0x68800000), "stgp");   // STGP_64_ldstpair_post
-  // COMPARE_PREFIX(dci(0x69000000), "stgp");   // STGP_64_ldstpair_off
-  // COMPARE_PREFIX(dci(0x69800000), "stgp");   // STGP_64_ldstpair_pre
-  // COMPARE_PREFIX(dci(0x91800000), "addg");   // ADDG_64_addsub_immtags
-  // COMPARE_PREFIX(dci(0x9ac00000), "subp");   // SUBP_64S_dp_2src
-  // COMPARE_PREFIX(dci(0x9ac01000), "irg");   // IRG_64I_dp_2src
-  // COMPARE_PREFIX(dci(0x9ac01400), "gmi");   // GMI_64G_dp_2src
-  // COMPARE_PREFIX(dci(0xbac00000), "subps");   // SUBPS_64S_dp_2src
-  // COMPARE_PREFIX(dci(0xd1800000), "subg");   // SUBG_64_addsub_immtags
-  // COMPARE_PREFIX(dci(0xd9200400), "stg");   // STG_64Spost_ldsttags
-  // COMPARE_PREFIX(dci(0xd9200800), "stg");   // STG_64Soffset_ldsttags
-  // COMPARE_PREFIX(dci(0xd9200c00), "stg");   // STG_64Spre_ldsttags
-  // COMPARE_PREFIX(dci(0xd9600000), "ldg");   // LDG_64Loffset_ldsttags
-  // COMPARE_PREFIX(dci(0xd9600400), "stzg");   // STZG_64Spost_ldsttags
-  // COMPARE_PREFIX(dci(0xd9600800), "stzg");   // STZG_64Soffset_ldsttags
-  // COMPARE_PREFIX(dci(0xd9600c00), "stzg");   // STZG_64Spre_ldsttags
-  // COMPARE_PREFIX(dci(0xd9a00400), "st2g");   // ST2G_64Spost_ldsttags
-  // COMPARE_PREFIX(dci(0xd9a00800), "st2g");   // ST2G_64Soffset_ldsttags
-  // COMPARE_PREFIX(dci(0xd9a00c00), "st2g");   // ST2G_64Spre_ldsttags
-  // COMPARE_PREFIX(dci(0xd9e00400), "stz2g");   // STZ2G_64Spost_ldsttags
-  // COMPARE_PREFIX(dci(0xd9e00800), "stz2g");   // STZ2G_64Soffset_ldsttags
-  // COMPARE_PREFIX(dci(0xd9e00c00), "stz2g");   // STZ2G_64Spre_ldsttags
-
-  // ARMv8.5 - MTE2
-  // COMPARE_PREFIX(dci(0xd9200000), "stzgm");   // STZGM_64bulk_ldsttags
-  // COMPARE_PREFIX(dci(0xd9a00000), "stgm");   // STGM_64bulk_ldsttags
-  // COMPARE_PREFIX(dci(0xd9e00000), "ldgm");   // LDGM_64bulk_ldsttags
+  COMPARE_PREFIX(dci(0x68800000), "stgp");   // STGP_64_ldstpair_post
+  COMPARE_PREFIX(dci(0x69000000), "stgp");   // STGP_64_ldstpair_off
+  COMPARE_PREFIX(dci(0x69800000), "stgp");   // STGP_64_ldstpair_pre
+  COMPARE_PREFIX(dci(0x91800000), "addg");   // ADDG_64_addsub_immtags
+  COMPARE_PREFIX(dci(0x9ac00000), "subp");   // SUBP_64S_dp_2src
+  COMPARE_PREFIX(dci(0x9ac01000), "irg");    // IRG_64I_dp_2src
+  COMPARE_PREFIX(dci(0x9ac01400), "gmi");    // GMI_64G_dp_2src
+  COMPARE_PREFIX(dci(0xbac00000), "subps");  // SUBPS_64S_dp_2src
+  COMPARE_PREFIX(dci(0xd1800000), "subg");   // SUBG_64_addsub_immtags
+  COMPARE_PREFIX(dci(0xd9200400), "stg");    // STG_64Spost_ldsttags
+  COMPARE_PREFIX(dci(0xd9200800), "stg");    // STG_64Soffset_ldsttags
+  COMPARE_PREFIX(dci(0xd9200c00), "stg");    // STG_64Spre_ldsttags
+  COMPARE_PREFIX(dci(0xd9600000), "ldg");    // LDG_64Loffset_ldsttags
+  COMPARE_PREFIX(dci(0xd9600400), "stzg");   // STZG_64Spost_ldsttags
+  COMPARE_PREFIX(dci(0xd9600800), "stzg");   // STZG_64Soffset_ldsttags
+  COMPARE_PREFIX(dci(0xd9600c00), "stzg");   // STZG_64Spre_ldsttags
+  COMPARE_PREFIX(dci(0xd9a00400), "st2g");   // ST2G_64Spost_ldsttags
+  COMPARE_PREFIX(dci(0xd9a00800), "st2g");   // ST2G_64Soffset_ldsttags
+  COMPARE_PREFIX(dci(0xd9a00c00), "st2g");   // ST2G_64Spre_ldsttags
+  COMPARE_PREFIX(dci(0xd9e00400), "stz2g");  // STZ2G_64Spost_ldsttags
+  COMPARE_PREFIX(dci(0xd9e00800), "stz2g");  // STZ2G_64Soffset_ldsttags
+  COMPARE_PREFIX(dci(0xd9e00c00), "stz2g");  // STZ2G_64Spre_ldsttags
 
   // ARMv8.6 - BF16
   // COMPARE_PREFIX(dci(0x0ea16800), "bfcvtn");   // BFCVTN_asimdmisc_4S
