@@ -19,9 +19,7 @@ cache:
   - python3.8 -m venv .venv
   - source .venv/bin/activate
   - pip install --upgrade pip
-  - pip install --cache-dir=.cache/pip cpplint
   - python --version
-  - cpplint --version
 
 run-vixl-tests:
   stage: test
@@ -36,6 +34,6 @@ run-vixl-tests:
     - echo "Running VIXL tests"
     - source .venv/bin/activate
     - chmod +x tools/test.py
-    - python tools/test.py --nolint --noclang-format --noclang-tidy --nocheck-code-coverage
+    - python tools/test.py --noclang-format --noclang-tidy --nocheck-code-coverage
   tags:
     - ${TAG}

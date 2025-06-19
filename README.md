@@ -52,13 +52,10 @@ A 64-bit host machine is required, implementing an LP64 data model. VIXL has
 been tested using GCC on AArch64 Debian, GCC and Clang on amd64 Ubuntu
 systems.
 
-To run the linter and code formatting stages of the tests, the following
-software is also required:
+To run the code formatting stages of the tests, the following software is also required:
 
- 1. Git
- 2. [Google's `cpplint.py`][cpplint]
- 3. clang-format 11+
- 4. clang-tidy 11+
+ 1. clang-format 11+
+ 2. clang-tidy 11+
 
 Refer to the 'Usage' section for details.
 
@@ -221,21 +218,7 @@ with VIXL, in both release and debug mode. It is a useful script for verifying
 that all of VIXL's dependencies are in place and that VIXL is working as it
 should.
 
-By default, the `tools/test.py` script runs a linter to check that the source
-code conforms with the code style guide, and to detect several common errors
-that the compiler may not warn about. This is most useful for VIXL developers.
-The linter has the following dependencies:
-
- 1. Git must be installed, and the VIXL project must be in a valid Git
-    repository, such as one produced using `git clone`.
- 2. `cpplint.py`, [as provided by Google][cpplint], must be available (and
-    executable) on the `PATH`.
-
-It is possible to tell `tools/test.py` to skip the linter stage by passing
-`--nolint`. This removes the dependency on `cpplint.py` and Git. The `--nolint`
-option is implied if the VIXL project is a snapshot (with no `.git` directory).
-
-Additionally, `tools/test.py` tests code formatting using `clang-format-4.0`,
+By default, `tools/test.py` tests code formatting using `clang-format-4.0`,
 and performs static analysis using `clang-tidy-4.0`. If you don't have these
 tools, disable the test using `--noclang-format` or `--noclang-tidy`,
 respectively.
@@ -257,9 +240,6 @@ aarch32_examples` or `scons aarch64_examples` from the root directory, or use
 
 
 
-
-[cpplint]: https://github.com/google/styleguide/tree/gh-pages/cpplint
-           "Google's cpplint.py script."
 
 [vixl]: https://gitlab.arm.com/runtimes/vixl
         "The VIXL repository on GitLab."

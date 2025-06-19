@@ -28,11 +28,9 @@
 
 import argparse
 import fcntl
-import itertools
 import multiprocessing
 import os
 from os.path import join
-import platform
 import subprocess
 import sys
 import time
@@ -40,9 +38,7 @@ import time
 import config
 import clang_format
 import clang_tidy
-import lint
 import printer
-import test
 import test_runner
 import util
 
@@ -159,8 +155,6 @@ def BuildOptions():
                                  help='Path to clang-tidy.')
   general_arguments.add_argument('--nobench', action='store_true',
                                  help='Do not run benchmarks.')
-  general_arguments.add_argument('--nolint', action='store_true',
-                                 help='Do not run the linter.')
   general_arguments.add_argument('--noclang-format', action='store_true',
                                  help='Do not run clang-format.')
   general_arguments.add_argument('--noclang-tidy', action='store_true',
@@ -254,11 +248,6 @@ def RunCommand(command, environment_options = None):
     printer.Print(printer.COLOUR_RED + printable_command + printer.NO_COLOUR)
     printer.Print(process_output.decode())
   return rc
-
-
-def RunLinter(jobs):
-  return lint.RunLinter([join(dir_root, x) for x in util.get_source_files()],
-                        jobs = args.jobs, progress_prefix = 'cpp lint: ')
 
 
 def RunClangFormat(clang_path, jobs):
@@ -367,8 +356,6 @@ if __name__ == '__main__':
     rc.Combine(CheckCodeCoverage())
 
   tests = test_runner.TestQueue()
-  if not args.nolint and not args.dry_run:
-    rc.Combine(RunLinter(args.jobs))
 
   if not args.noclang_format and not args.dry_run:
     rc.Combine(RunClangFormat(args.clang_format, args.jobs))
