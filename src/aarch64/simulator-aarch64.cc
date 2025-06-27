@@ -566,7 +566,7 @@ Simulator::Simulator(Decoder* decoder, FILE* stream, SimStack::Allocated stack)
     : memory_(std::move(stack)),
       last_instr_(NULL),
       cpu_features_auditor_(decoder, CPUFeatures::All()),
-      gcs_(kGCSNoStack),
+      gcs_({nullptr, kGCSNoStack}),
       gcs_enabled_(false) {
   // Ensure that shift operations act as the simulator expects.
   VIXL_ASSERT((static_cast<int32_t>(-1) >> 1) == -1);
@@ -729,9 +729,7 @@ Simulator::~Simulator() {
   close(placeholder_pipe_fd_[0]);
   close(placeholder_pipe_fd_[1]);
 #endif
-  if (IsAllocatedGCS(gcs_)) {
-    GetGCSManager().FreeStack(gcs_);
-  }
+  GetGCSManager().FreeStack(GetGCSToken());
 }
 
 
@@ -1836,9 +1834,9 @@ void Simulator::PrintSystemRegister(SystemRegister id) {
 void Simulator::PrintGCS(bool is_push, uint64_t addr, size_t entry) {
   const char* arrow = is_push ? "<-" : "->";
   fprintf(stream_,
-          "# %sgcs0x%04" PRIx64 "[%zx]: %s %s 0x%016" PRIx64 "\n",
+          "# %sgcs0x%04" PRIu64 "[%zx]: %s %s 0x%016" PRIx64 "\n",
           clr_flag_name,
-          gcs_,
+          GCSManager::GetGCSIndexFromToken(GetGCSToken()),
           entry,
           clr_normal,
           arrow,
@@ -7157,10 +7155,10 @@ void Simulator::VisitSystem(const Instruction* instr) {
         uint64_t incoming_size = rt >> 32;
         // Drop upper 32 bits to get GCS index.
         uint64_t incoming_gcs = rt & 0xffffffff;
-        uint64_t outgoing_gcs = ActivateGCS(incoming_gcs);
+        GuardedControlStack outgoing_gcs = ActivateGCS(incoming_gcs);
         uint64_t incoming_seal = GCSPop();
         if (((incoming_seal ^ rt) != 1) ||
-            (GetActiveGCSPtr()->size() != incoming_size)) {
+            (GetGCSStorage()->size() != incoming_size)) {
           char msg[128];
           snprintf(msg,
                    sizeof(msg),
@@ -7168,7 +7166,7 @@ void Simulator::VisitSystem(const Instruction* instr) {
                    incoming_seal);
           ReportGCSFailure(msg);
         }
-        GCSPush(outgoing_gcs + 5);
+        GCSPush(outgoing_gcs.token + 5);
       } else if (sysop == GCSPUSHM) {
         GCSPush(ReadXRegister(instr->GetRt()));
       } else {
@@ -7194,11 +7192,11 @@ void Simulator::VisitSystem(const Instruction* instr) {
                    outgoing_gcs);
           ReportGCSFailure(msg);
         }
-        uint64_t incoming_gcs = ActivateGCS(outgoing_gcs);
         outgoing_gcs &= ~UINT64_C(0x3ff);
+        GuardedControlStack incoming_gcs = ActivateGCS(outgoing_gcs);
 
         // Encode the size into the outgoing stack seal, to check later.
-        uint64_t size = GetActiveGCSPtr()->size();
+        uint64_t size = GetGCSStorage()->size();
         VIXL_ASSERT(IsUint32(size));
         VIXL_ASSERT(IsUint32(outgoing_gcs + 1));
         uint64_t outgoing_seal = (size << 32) | (outgoing_gcs + 1);

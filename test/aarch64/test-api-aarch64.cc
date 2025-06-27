@@ -1770,8 +1770,8 @@ void AllocateAndFreeGCS() {
   Simulator s(&d);
 
   for (int i = 0; i < 100000; i++) {
-    uint64_t gcs = s.GetGCSManager().AllocateStack();
-    s.GetGCSManager().FreeStack(gcs);
+    uint64_t gcs_token = s.GetGCSManager().AllocateStack();
+    s.GetGCSManager().FreeStack(gcs_token);
   }
 }
 

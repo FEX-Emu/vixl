@@ -15192,8 +15192,8 @@ TEST(gcs_gcsss1) {
 
   START();
 #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
-  uint64_t new_gcs = simulator.GetGCSManager().AllocateStack();
-  __ Mov(x0, new_gcs);
+  uint64_t new_gcs_token = simulator.GetGCSManager().AllocateStack();
+  __ Mov(x0, new_gcs_token);
 #else
 // TODO: Request new GCS from the operating system.
 #endif
@@ -15224,8 +15224,8 @@ TEST(gcs_stack_swap) {
   START();
   Label stack_swap, sub_fn, end;
 #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
-  uint64_t new_gcs = simulator.GetGCSManager().AllocateStack();
-  __ Mov(x0, new_gcs);
+  uint64_t new_gcs_token = simulator.GetGCSManager().AllocateStack();
+  __ Mov(x0, new_gcs_token);
 #else
 // TODO: Request new GCS from the operating system.
 #endif
