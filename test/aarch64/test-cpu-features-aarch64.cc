@@ -3871,5 +3871,13 @@ TEST_FEAT(pmullt, pmullt(z12.VnQ(), z21.VnD(), z12.VnD()))
 TEST_FEAT(bfcvt, bfcvt(h0, s0))
 #undef TEST_FEAT
 
+#define TEST_FEAT(NAME, ASM)                                         \
+  TEST_TEMPLATE(CPUFeatures(CPUFeatures::kNEON, CPUFeatures::kBF16), \
+                BF16_##NAME,                                         \
+                ASM)
+TEST_FEAT(bfcvtn, bfcvtn(v0.V4H(), v10.V4S()))
+TEST_FEAT(bfcvtn2, bfcvtn2(v0.V8H(), v10.V4S()))
+#undef TEST_FEAT
+
 }  // namespace aarch64
 }  // namespace vixl

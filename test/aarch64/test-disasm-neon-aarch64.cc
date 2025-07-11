@@ -4061,6 +4061,8 @@ TEST(neon_bfloat16) {
   SETUP();
 
   COMPARE_MACRO(Bfcvt(h10, s5), "bfcvt h10, s5");
+  COMPARE_MACRO(Bfcvtn(v0.V4H(), v1.V4S()), "bfcvtn v0.4h, v1.4s");
+  COMPARE_MACRO(Bfcvtn2(v2.V8H(), v3.V4S()), "bfcvtn2 v2.8h, v3.4s");
 
   CLEANUP();
 }

@@ -1195,6 +1195,26 @@ class MacroAssembler : public Assembler, public MacroAssemblerInterface {
     SingleEmissionCheckScope guard(this);
     bfcvt(vd, vn);
   }
+  void Bfcvtn(const VRegister& vd, const VRegister& vn) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfcvtn(vd, vn);
+  }
+  void Bfcvtn2(const VRegister& vd, const VRegister& vn) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfcvtn2(vd, vn);
+  }
+  void Bfcvt(const ZRegister& zd, const PRegisterM& pg, const ZRegister& zn) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfcvt(zd, pg, zn);
+  }
+  void Bfcvtnt(const ZRegister& zd, const PRegisterM& pg, const ZRegister& zn) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfcvtnt(zd, pg, zn);
+  }
   void Braa(const Register& xn, const Register& xm) {
     VIXL_ASSERT(allow_macro_instructions_);
     SingleEmissionCheckScope guard(this);

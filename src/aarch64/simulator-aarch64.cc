@@ -158,6 +158,7 @@ const Simulator::FormToVisitorFnMap* Simulator::GetFormToVisitorFnMap() {
       {"fcvtxn_asimdmisc_n"_h, &Simulator::SimulateNEONFPConvert},
       {"fcvtzs_asimdmisc_r"_h, &Simulator::SimulateNEONFPConvert},
       {"fcvtzu_asimdmisc_r"_h, &Simulator::SimulateNEONFPConvert},
+      {"bfcvtn_asimdmisc_4s"_h, &Simulator::SimulateNEONFPConvert},
       {"frint32x_asimdmisc_r"_h, &Simulator::SimulateNEONRoundIntToSize},
       {"frint32z_asimdmisc_r"_h, &Simulator::SimulateNEONRoundIntToSize},
       {"frint64x_asimdmisc_r"_h, &Simulator::SimulateNEONRoundIntToSize},
@@ -235,6 +236,8 @@ const Simulator::FormToVisitorFnMap* Simulator::GetFormToVisitorFnMap() {
       {"fcvtlt_z_p_z_h2s"_h, &Simulator::SimulateSVEFPConvertLong},
       {"fcvtlt_z_p_z_s2d"_h, &Simulator::SimulateSVEFPConvertLong},
       {"fcvtnt_z_p_z_d2s"_h, &Simulator::Simulate_ZdS_PgM_ZnD},
+      {"bfcvt_z_p_z_s2bf"_h, &Simulator::Simulate_ZdH_PgM_ZnS},
+      {"bfcvtnt_z_p_z_s2bf"_h, &Simulator::Simulate_ZdH_PgM_ZnS},
       {"fcvtnt_z_p_z_s2h"_h, &Simulator::Simulate_ZdH_PgM_ZnS},
       {"fcvtx_z_p_z_d2s"_h, &Simulator::Simulate_ZdS_PgM_ZnD},
       {"fcvtxnt_z_p_z_d2s"_h, &Simulator::Simulate_ZdS_PgM_ZnD},
@@ -2565,14 +2568,23 @@ void Simulator::Simulate_ZdH_PgM_ZnS(const Instruction* instr) {
   SimPRegister& pg = ReadPRegister(instr->GetPgLow8());
   SimVRegister& zd = ReadVRegister(instr->GetRd());
   SimVRegister& zn = ReadVRegister(instr->GetRn());
-  SimVRegister result, zd_b;
+  SimVRegister result, zd_b, zero;
 
+  zero.Clear();
   pack_even_elements(kFormatVnH, zd_b, zd);
 
   switch (form_hash_) {
     case "fcvtnt_z_p_z_s2h"_h:
       fcvt(kFormatVnH, kFormatVnS, result, pg, zn);
       pack_even_elements(kFormatVnH, result, result);
+      zip1(kFormatVnH, result, zd_b, result);
+      break;
+    case "bfcvt_z_p_z_s2bf"_h:
+      bfcvtn(kFormatVnH, result, zn);
+      zip1(kFormatVnH, result, result, zero);
+      break;
+    case "bfcvtnt_z_p_z_s2bf"_h:
+      bfcvtn(kFormatVnH, result, zn);
       zip1(kFormatVnH, result, zd_b, result);
       break;
     default:
@@ -7646,6 +7658,10 @@ void Simulator::SimulateNEONFPConvert(const Instruction* instr) {
     case "fcvtxn_asimdmisc_n"_h:
       handler = is_q ? &Simulator::fcvtxn2 : &Simulator::fcvtxn;
       handler(this, vf_fcvtn, rd, rn);
+      break;
+    case "bfcvtn_asimdmisc_4s"_h:
+      handler = is_q ? &Simulator::bfcvtn2 : &Simulator::bfcvtn;
+      handler(this, is_q ? kFormat8H : kFormat4H, rd, rn);
       break;
   }
 }

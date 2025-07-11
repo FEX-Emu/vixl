@@ -140,6 +140,7 @@ const Disassembler::FormToVisitorFnMap *Disassembler::GetFormToVisitorFnMap() {
       {"fcvtl_asimdmisc_l"_h, &Disassembler::DisassembleNEON2RegFPConvert},
       {"fcvtn_asimdmisc_n"_h, &Disassembler::DisassembleNEON2RegFPConvert},
       {"fcvtxn_asimdmisc_n"_h, &Disassembler::DisassembleNEON2RegFPConvert},
+      {"bfcvtn_asimdmisc_4s"_h, &Disassembler::DisassembleNEON2RegFPConvert},
       {"fabs_asimdmisc_r"_h, &Disassembler::DisassembleNEON2RegFP},
       {"fcvtas_asimdmisc_r"_h, &Disassembler::DisassembleNEON2RegFP},
       {"fcvtau_asimdmisc_r"_h, &Disassembler::DisassembleNEON2RegFP},
@@ -402,6 +403,8 @@ const Disassembler::FormToVisitorFnMap *Disassembler::GetFormToVisitorFnMap() {
       {"fcvtlt_z_p_z_s2d"_h, &Disassembler::Disassemble_ZdD_PgM_ZnS},
       {"fcvtnt_z_p_z_d2s"_h, &Disassembler::Disassemble_ZdS_PgM_ZnD},
       {"fcvtnt_z_p_z_s2h"_h, &Disassembler::Disassemble_ZdH_PgM_ZnS},
+      {"bfcvt_z_p_z_s2bf"_h, &Disassembler::Disassemble_ZdH_PgM_ZnS},
+      {"bfcvtnt_z_p_z_s2bf"_h, &Disassembler::Disassemble_ZdH_PgM_ZnS},
       {"fcvtx_z_p_z_d2s"_h, &Disassembler::Disassemble_ZdS_PgM_ZnD},
       {"fcvtxnt_z_p_z_d2s"_h, &Disassembler::Disassemble_ZdS_PgM_ZnD},
       {"flogb_z_p_z"_h, &Disassembler::DisassembleSVEFlogb},
@@ -2323,7 +2326,6 @@ void Disassembler::DisassembleNEON2RegFPConvert(const Instruction *instr) {
   static const NEONFormatMap map_cvt_tb = {{22, 30},
                                            {NF_4H, NF_8H, NF_2S, NF_4S}};
   NEONFormatDecoder nfd(instr, &map_cvt_tb, &map_cvt_ta);
-
   VectorFormat vform_dst = nfd.GetVectorFormat(0);
   switch (form_hash_) {
     case "fcvtl_asimdmisc_l"_h:
@@ -2333,6 +2335,9 @@ void Disassembler::DisassembleNEON2RegFPConvert(const Instruction *instr) {
       if ((vform_dst != kFormat2S) && (vform_dst != kFormat4S)) {
         mnemonic = NULL;
       }
+      break;
+    case "bfcvtn_asimdmisc_4s"_h:
+      form = "'Vd.'?30:84h, 'Vn.4s";
       break;
   }
   Format(instr, nfd.Mnemonic(mnemonic), nfd.Substitute(form));

@@ -3695,6 +3695,18 @@ void Assembler::bfcvt(const VRegister& vd, const VRegister& vn) {
   Emit(0x1e634000 | Rn(vn) | Rd(vd));
 }
 
+void Assembler::bfcvtn(const VRegister& vd, const VRegister& vn) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kNEON, CPUFeatures::kBF16));
+  VIXL_ASSERT(vn.Is4S() && vd.Is4H());
+  Emit(0x0ea16800 | Rn(vn) | Rd(vd));
+}
+
+void Assembler::bfcvtn2(const VRegister& vd, const VRegister& vn) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kNEON, CPUFeatures::kBF16));
+  VIXL_ASSERT(vn.Is4S() && vd.Is8H());
+  Emit(0x4ea16800 | Rn(vn) | Rd(vd));
+}
+
 void Assembler::NEONFPConvertToInt(const Register& rd,
                                    const VRegister& vn,
                                    Instr op) {

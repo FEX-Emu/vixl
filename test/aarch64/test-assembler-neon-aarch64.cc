@@ -10993,6 +10993,24 @@ TEST(neon_pmull_regression_test) {
   }
 }
 
+TEST(neon_bfcvtn) {
+  SETUP_WITH_FEATURES(CPUFeatures::kFP, CPUFeatures::kNEON, CPUFeatures::kBF16);
+
+  START();
+  // Test vector bfcvt using simple inputs (2.5, 1.5, -2.5, -1.5).
+  __ Movi(v0.V4S(), 0x402000003fc00000, 0xc0200000bfc00000);
+
+  __ Bfcvtn(v1.V4H(), v0.V4S());
+  __ Bfcvtn2(v1.V8H(), v0.V4S());
+
+  END();
+
+  if (CAN_RUN()) {
+    RUN();
+    ASSERT_EQUAL_128(0x40203fc0c020bfc0, 0x40203fc0c020bfc0, q1);
+  }
+}
+
 TEST(zero_high_b) {
   SETUP_WITH_FEATURES(CPUFeatures::kSVE, CPUFeatures::kNEON);
   START();

@@ -6118,6 +6118,42 @@ LogicVRegister Simulator::fcvtxn2(VectorFormat vform,
   return dst;
 }
 
+LogicVRegister Simulator::bfcvtn(VectorFormat vform,
+                                 LogicVRegister dst,
+                                 const LogicVRegister& src) {
+  SimVRegister tmp;
+  LogicVRegister srctmp = mov(kFormatVnD, tmp, src);
+  int input_lane_count = LaneCountFromFormat(vform);
+  if (IsSVEFormat(vform)) {
+    input_lane_count /= 2;
+  }
+
+  dst.ClearForWrite(vform);
+  VIXL_ASSERT(LaneSizeInBitsFromFormat(vform) == kHRegSize);
+
+  for (int i = 0; i < input_lane_count; i++) {
+    dst.SetFloat(i,
+                 BFloat16ToRawbits(FPToBFloat16(srctmp.Float<float>(i),
+                                                FPTieEven,
+                                                ReadDN())));
+  }
+  return dst;
+}
+
+LogicVRegister Simulator::bfcvtn2(VectorFormat vform,
+                                  LogicVRegister dst,
+                                  const LogicVRegister& src) {
+  VIXL_ASSERT(LaneSizeInBitsFromFormat(vform) == kHRegSize);
+  dst.ClearForWrite(vform);
+  int lane_count = LaneCountFromFormat(vform) / 2;
+  for (int i = lane_count - 1; i >= 0; i--) {
+    dst.SetFloat(i + lane_count,
+                 BFloat16ToRawbits(
+                     FPToBFloat16(src.Float<float>(i), FPTieEven, ReadDN())));
+  }
+  return dst;
+}
+
 
 // Based on reference C function recip_sqrt_estimate from ARM ARM.
 double Simulator::recip_sqrt_estimate(double a) {

@@ -2599,7 +2599,6 @@
        &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
       {"ret_64r_branch_reg"_h,                                                 \
        &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"bfcvtn_asimdmisc_4s"_h, &VISITORCLASS::VisitUnimplemented},            \
       {"bfdot_asimdelem_e"_h, &VISITORCLASS::VisitUnimplemented},              \
       {"bfdot_asimdsame2_d"_h, &VISITORCLASS::VisitUnimplemented},             \
       {"bfmlal_asimdelem_f"_h, &VISITORCLASS::VisitUnimplemented},             \
@@ -2640,8 +2639,6 @@
       {"ttest_br_systemresult"_h, &VISITORCLASS::VisitUnimplemented},          \
       {"wfet_only_systeminstrswithreg"_h, &VISITORCLASS::VisitUnimplemented},  \
       {"wfit_only_systeminstrswithreg"_h, &VISITORCLASS::VisitUnimplemented},  \
-      {"bfcvt_z_p_z_s2bf"_h, &VISITORCLASS::VisitUnimplemented},               \
-      {"bfcvtnt_z_p_z_s2bf"_h, &VISITORCLASS::VisitUnimplemented},             \
       {"bfdot_z_zzz"_h, &VISITORCLASS::VisitUnimplemented},                    \
       {"bfdot_z_zzzi"_h, &VISITORCLASS::VisitUnimplemented},                   \
       {"bfmlalb_z_zzz"_h, &VISITORCLASS::VisitUnimplemented},                  \

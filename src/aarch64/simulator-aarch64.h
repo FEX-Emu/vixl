@@ -4907,6 +4907,12 @@ class Simulator : public DecoderVisitor {
   LogicVRegister fcvtxn2(VectorFormat vform,
                          LogicVRegister dst,
                          const LogicVRegister& src);
+  LogicVRegister bfcvtn(VectorFormat vform,
+                        LogicVRegister dst,
+                        const LogicVRegister& src);
+  LogicVRegister bfcvtn2(VectorFormat vform,
+                         LogicVRegister dst,
+                         const LogicVRegister& src);
   LogicVRegister fsqrt(VectorFormat vform,
                        LogicVRegister dst,
                        const LogicVRegister& src);

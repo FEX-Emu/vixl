@@ -2453,8 +2453,15 @@ class Assembler : public vixl::internal::AssemblerBase {
   // FP convert to unsigned integer, round towards +infinity.
   void fcvtpu(const VRegister& vd, const VRegister& vn);
 
-  // Floating-point convert from single-precision to BFloat16 format.
+  // Floating-point convert from single-precision to BFloat16 format (scalar).
   void bfcvt(const VRegister& vd, const VRegister& vn);
+
+  // Floating-point convert from single-precision to BFloat16 format (vector).
+  void bfcvtn(const VRegister& vd, const VRegister& vn);
+
+  // Floating-point convert from single-precision to BFloat16 format (second
+  // part).
+  void bfcvtn2(const VRegister& vd, const VRegister& vn);
 
   // Convert signed integer or fixed point to FP.
   void scvtf(const VRegister& fd, const Register& rn, int fbits = 0);
@@ -3850,6 +3857,12 @@ class Assembler : public vixl::internal::AssemblerBase {
             const PRegisterZ& pg,
             const PRegisterWithLaneSize& pn,
             const PRegisterWithLaneSize& pm);
+
+  // Floating-point down convert to BFloat16 format (predicated).
+  void bfcvt(const ZRegister& zd, const PRegisterM& pg, const ZRegister& zn);
+
+  // Floating-point down convert and narrow to BFloat16 (top, predicated).
+  void bfcvtnt(const ZRegister& zd, const PRegisterM& pg, const ZRegister& zn);
 
   // Break after first true condition.
   void brka(const PRegisterWithLaneSize& pd,

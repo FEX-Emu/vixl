@@ -9895,5 +9895,25 @@ void Assembler::sudot(const ZRegister& zda,
   Emit(0x44a01c00 | Rx<18, 16>(zm) | (index << 19) | Rd(zda) | Rn(zn));
 }
 
+void Assembler::bfcvt(const ZRegister& zd,
+                      const PRegisterM& pg,
+                      const ZRegister& zn) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kSVE));
+  VIXL_ASSERT(CPUHas(CPUFeatures::kBF16));
+  VIXL_ASSERT(zd.IsLaneSizeH() && zn.IsLaneSizeS());
+
+  Emit(0x658aa000 | Rd(zd) | PgLow8(pg) | Rn(zn));
+}
+
+void Assembler::bfcvtnt(const ZRegister& zd,
+                        const PRegisterM& pg,
+                        const ZRegister& zn) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kSVE));
+  VIXL_ASSERT(CPUHas(CPUFeatures::kBF16));
+  VIXL_ASSERT(zd.IsLaneSizeH() && zn.IsLaneSizeS());
+
+  Emit(0x648aa000 | Rd(zd) | PgLow8(pg) | Rn(zn));
+}
+
 }  // namespace aarch64
 }  // namespace vixl

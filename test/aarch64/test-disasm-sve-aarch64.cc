@@ -8748,5 +8748,16 @@ TEST(sve_usdot_sudot) {
 
   CLEANUP();
 }
+
+TEST(sve_bfcvt) {
+  SETUP();
+
+  COMPARE_MACRO(Bfcvt(z0.VnH(), p0.Merging(), z1.VnS()),
+                "bfcvt z0.h, p0/m, z1.s");
+  COMPARE_MACRO(Bfcvtnt(z0.VnH(), p1.Merging(), z1.VnS()),
+                "bfcvtnt z0.h, p1/m, z1.s");
+
+  CLEANUP();
+}
 }  // namespace aarch64
 }  // namespace vixl

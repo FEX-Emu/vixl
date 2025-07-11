@@ -3957,7 +3957,7 @@ TEST(architecture_features) {
   COMPARE_PREFIX(dci(0xd9e00c00), "stz2g");  // STZ2G_64Spre_ldsttags
 
   // ARMv8.6 - BF16
-  // COMPARE_PREFIX(dci(0x0ea16800), "bfcvtn");   // BFCVTN_asimdmisc_4S
+  COMPARE_PREFIX(dci(0x0ea16800), "bfcvtn");  // BFCVTN_asimdmisc_4S
   // COMPARE_PREFIX(dci(0x0f40f000), "bfdot");   // BFDOT_asimdelem_E
   // COMPARE_PREFIX(dci(0x0fc0f000), "bfmlal");   // BFMLAL_asimdelem_F
   // COMPARE_PREFIX(dci(0x2e40fc00), "bfdot");   // BFDOT_asimdsame2_D
