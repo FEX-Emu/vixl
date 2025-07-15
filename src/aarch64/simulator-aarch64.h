@@ -1535,6 +1535,10 @@ class Simulator : public DecoderVisitor {
   void SimulateFPConvert(const Instruction* instr);
   void SimulateFPRoundInt(const Instruction* instr);
   void SimulateFPRoundIntToSize(const Instruction* instr);
+  void SimulateNEONRoundInt(const Instruction* instr);
+  void SimulateNEONRoundIntToSize(const Instruction* instr);
+  void SimulateNEONFPConvert(const Instruction* instr);
+  void SimulateNEONFP2RegMisc(const Instruction* instr);
 
   void VisitCryptoSM3(const Instruction* instr);
   void VisitCryptoSM4(const Instruction* instr);

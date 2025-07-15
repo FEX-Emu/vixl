@@ -2689,40 +2689,6 @@
       {"cmle_asimdmisc_z"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
       {"cmlt_asimdmisc_z"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
       {"cnt_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                 \
-      {"fabs_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
-      {"fcmeq_asimdmisc_fz"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcmge_asimdmisc_fz"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcmgt_asimdmisc_fz"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcmle_asimdmisc_fz"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcmlt_asimdmisc_fz"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtas_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtau_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtl_asimdmisc_l"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
-      {"fcvtms_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtmu_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtns_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtnu_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtn_asimdmisc_n"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
-      {"fcvtps_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtpu_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtxn_asimdmisc_n"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtzs_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fcvtzu_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"fneg_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
-      {"frecpe_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"frint32x_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},            \
-      {"frint32z_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},            \
-      {"frint64x_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},            \
-      {"frint64z_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},            \
-      {"frinta_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"frinti_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"frintm_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"frintn_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"frintp_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"frintx_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"frintz_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"frsqrte_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},             \
-      {"fsqrt_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
       {"neg_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                 \
       {"not_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                 \
       {"rbit_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
@@ -2731,7 +2697,6 @@
       {"rev64_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
       {"sadalp_asimdmisc_p"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
       {"saddlp_asimdmisc_p"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"scvtf_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
       {"shll_asimdmisc_s"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
       {"sqabs_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
       {"sqneg_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
@@ -2740,10 +2705,7 @@
       {"suqadd_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
       {"uadalp_asimdmisc_p"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
       {"uaddlp_asimdmisc_p"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"ucvtf_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
       {"uqxtn_asimdmisc_n"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
-      {"urecpe_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
-      {"ursqrte_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},             \
       {"usqadd_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
       {"xtn_asimdmisc_n"_h, &VISITORCLASS::VisitNEON2RegMisc},                 \
       {"mla_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                 \
