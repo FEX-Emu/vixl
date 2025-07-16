@@ -1522,47 +1522,9 @@
       {"fabs_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
       {"fabs_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
       {"fabs_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
-      {"fcvt_dh_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
-      {"fcvt_ds_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
-      {"fcvt_hd_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
-      {"fcvt_hs_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
-      {"fcvt_sd_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
-      {"fcvt_sh_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
-      {"fmov_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
-      {"fmov_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
-      {"fmov_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
       {"fneg_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
       {"fneg_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
       {"fneg_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
-      {"frint32x_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},  \
-      {"frint32x_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},  \
-      {"frint32z_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},  \
-      {"frint32z_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},  \
-      {"frint64x_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},  \
-      {"frint64x_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},  \
-      {"frint64z_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},  \
-      {"frint64z_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},  \
-      {"frinta_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frinta_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frinta_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frinti_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frinti_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frinti_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintm_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintm_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintm_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintn_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintn_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintn_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintp_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintp_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintp_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintx_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintx_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintx_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintz_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintz_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
-      {"frintz_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
       {"fsqrt_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
       {"fsqrt_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
       {"fsqrt_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \

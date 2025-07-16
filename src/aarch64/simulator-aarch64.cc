@@ -106,6 +106,44 @@ const Simulator::FormToVisitorFnMap* Simulator::GetFormToVisitorFnMap() {
   static const FormToVisitorFnMap form_to_visitor = {
       DEFAULT_FORM_TO_VISITOR_MAP(Simulator),
       SIM_AUD_VISITOR_MAP(Simulator),
+      {"fmov_h_floatdp1"_h, &Simulator::SimulateFPConvert},
+      {"fmov_s_floatdp1"_h, &Simulator::SimulateFPConvert},
+      {"fmov_d_floatdp1"_h, &Simulator::SimulateFPConvert},
+      {"fcvt_ds_floatdp1"_h, &Simulator::SimulateFPConvert},
+      {"fcvt_sd_floatdp1"_h, &Simulator::SimulateFPConvert},
+      {"fcvt_hs_floatdp1"_h, &Simulator::SimulateFPConvert},
+      {"fcvt_sh_floatdp1"_h, &Simulator::SimulateFPConvert},
+      {"fcvt_dh_floatdp1"_h, &Simulator::SimulateFPConvert},
+      {"fcvt_hd_floatdp1"_h, &Simulator::SimulateFPConvert},
+      {"frint32x_d_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
+      {"frint32x_s_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
+      {"frint32z_d_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
+      {"frint32z_s_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
+      {"frint64x_d_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
+      {"frint64x_s_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
+      {"frint64z_d_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
+      {"frint64z_s_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
+      {"frinta_d_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frinta_h_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frinta_s_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frinti_d_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frinti_h_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frinti_s_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintm_d_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintm_h_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintm_s_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintn_d_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintn_h_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintn_s_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintp_d_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintp_h_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintp_s_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintx_d_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintx_h_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintx_s_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintz_d_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintz_h_floatdp1"_h, &Simulator::SimulateFPRoundInt},
+      {"frintz_s_floatdp1"_h, &Simulator::SimulateFPRoundInt},
       {"smlal_asimdelem_l"_h, &Simulator::SimulateNEONMulByElementLong},
       {"smlsl_asimdelem_l"_h, &Simulator::SimulateNEONMulByElementLong},
       {"smull_asimdelem_l"_h, &Simulator::SimulateNEONMulByElementLong},
@@ -6585,151 +6623,168 @@ void Simulator::VisitFPConditionalSelect(const Instruction* instr) {
   }
 }
 
+void Simulator::SimulateFPRoundIntToSize(const Instruction* instr) {
+  AssertSupportedFPCR();
+
+  struct FPRoundInfo {
+    VectorFormat vform;
+    bool use_fpcr;
+    FrintMode frint_mode;
+  };
+
+  std::unordered_map<uint32_t, FPRoundInfo> modes = {
+      {"frint32x_d_floatdp1"_h, {kFormatD, true, kFrintToInt32}},
+      {"frint32x_s_floatdp1"_h, {kFormatS, true, kFrintToInt32}},
+      {"frint64x_d_floatdp1"_h, {kFormatD, true, kFrintToInt64}},
+      {"frint64x_s_floatdp1"_h, {kFormatS, true, kFrintToInt64}},
+      {"frint32z_d_floatdp1"_h, {kFormatD, false, kFrintToInt32}},
+      {"frint32z_s_floatdp1"_h, {kFormatS, false, kFrintToInt32}},
+      {"frint64z_d_floatdp1"_h, {kFormatD, false, kFrintToInt64}},
+      {"frint64z_s_floatdp1"_h, {kFormatS, false, kFrintToInt64}},
+  };
+  VIXL_ASSERT(modes.count(form_hash_) == 1);
+
+  auto [vform, use_fpcr, frint_mode] = modes[form_hash_];
+  FPRounding rounding_mode =
+      use_fpcr ? static_cast<FPRounding>(ReadFpcr().GetRMode()) : FPZero;
+  bool inexact_exception = true;
+
+  unsigned fd = instr->GetRd();
+  SimVRegister& rd = ReadVRegister(fd);
+  SimVRegister& rn = ReadVRegister(instr->GetRn());
+
+  frint(vform, rd, rn, rounding_mode, inexact_exception, frint_mode);
+  // Explicitly log the register update whilst we have type information.
+  LogVRegister(fd, GetPrintRegisterFormatFP(vform));
+}
+
+void Simulator::SimulateFPRoundInt(const Instruction* instr) {
+  AssertSupportedFPCR();
+
+  struct FPRoundInfo {
+    VectorFormat vform;
+    bool use_fpcr;
+    FPRounding rounding_mode;
+    bool inexact_exception;
+  };
+
+  std::unordered_map<uint32_t, FPRoundInfo> modes =
+      {{"frinta_d_floatdp1"_h, {kFormatD, false, FPTieAway, false}},
+       {"frinta_h_floatdp1"_h, {kFormatH, false, FPTieAway, false}},
+       {"frinta_s_floatdp1"_h, {kFormatS, false, FPTieAway, false}},
+       {"frinti_d_floatdp1"_h, {kFormatD, true, FPZero, false}},
+       {"frinti_h_floatdp1"_h, {kFormatH, true, FPZero, false}},
+       {"frinti_s_floatdp1"_h, {kFormatS, true, FPZero, false}},
+       {"frintm_d_floatdp1"_h, {kFormatD, false, FPNegativeInfinity, false}},
+       {"frintm_h_floatdp1"_h, {kFormatH, false, FPNegativeInfinity, false}},
+       {"frintm_s_floatdp1"_h, {kFormatS, false, FPNegativeInfinity, false}},
+       {"frintn_d_floatdp1"_h, {kFormatD, false, FPTieEven, false}},
+       {"frintn_h_floatdp1"_h, {kFormatH, false, FPTieEven, false}},
+       {"frintn_s_floatdp1"_h, {kFormatS, false, FPTieEven, false}},
+       {"frintp_d_floatdp1"_h, {kFormatD, false, FPPositiveInfinity, false}},
+       {"frintp_h_floatdp1"_h, {kFormatH, false, FPPositiveInfinity, false}},
+       {"frintp_s_floatdp1"_h, {kFormatS, false, FPPositiveInfinity, false}},
+       {"frintx_d_floatdp1"_h, {kFormatD, true, FPZero, true}},
+       {"frintx_h_floatdp1"_h, {kFormatH, true, FPZero, true}},
+       {"frintx_s_floatdp1"_h, {kFormatS, true, FPZero, true}},
+       {"frintz_d_floatdp1"_h, {kFormatD, false, FPZero, false}},
+       {"frintz_h_floatdp1"_h, {kFormatH, false, FPZero, false}},
+       {"frintz_s_floatdp1"_h, {kFormatS, false, FPZero, false}}};
+  VIXL_ASSERT(modes.count(form_hash_) == 1);
+
+  auto [vform, use_fpcr, rounding_mode, inexact_exception] = modes[form_hash_];
+
+  rounding_mode =
+      use_fpcr ? static_cast<FPRounding>(ReadFpcr().GetRMode()) : rounding_mode;
+
+  unsigned fd = instr->GetRd();
+  SimVRegister& rd = ReadVRegister(fd);
+  SimVRegister& rn = ReadVRegister(instr->GetRn());
+
+  frint(vform, rd, rn, rounding_mode, inexact_exception);
+  // Explicitly log the register update whilst we have type information.
+  LogVRegister(fd, GetPrintRegisterFormatFP(vform));
+}
+
+void Simulator::SimulateFPConvert(const Instruction* instr) {
+  AssertSupportedFPCR();
+  unsigned fd = instr->GetRd();
+  unsigned fn = instr->GetRn();
+  UseDefaultNaN nan = ReadDN();
+
+  Float16 hn = ReadHRegister(fn);
+  float sn = ReadSRegister(fn);
+  double dn = ReadDRegister(fn);
+
+  switch (form_hash_) {
+    case "fmov_h_floatdp1"_h:
+      WriteHRegister(fd, hn);
+      break;
+    case "fmov_s_floatdp1"_h:
+      WriteSRegister(fd, sn);
+      break;
+    case "fmov_d_floatdp1"_h:
+      WriteDRegister(fd, dn);
+      break;
+    case "fcvt_ds_floatdp1"_h:
+      WriteDRegister(fd, FPToDouble(sn, nan));
+      break;
+    case "fcvt_sd_floatdp1"_h:
+      WriteSRegister(fd, FPToFloat(dn, FPTieEven, nan));
+      break;
+    case "fcvt_hs_floatdp1"_h:
+      WriteHRegister(fd, Float16ToRawbits(FPToFloat16(sn, FPTieEven, nan)));
+      break;
+    case "fcvt_sh_floatdp1"_h:
+      WriteSRegister(fd, FPToFloat(hn, nan));
+      break;
+    case "fcvt_dh_floatdp1"_h:
+      WriteDRegister(fd, FPToDouble(hn, nan));
+      break;
+    case "fcvt_hd_floatdp1"_h:
+      WriteHRegister(fd, Float16ToRawbits(FPToFloat16(dn, FPTieEven, nan)));
+      break;
+  }
+}
 
 void Simulator::VisitFPDataProcessing1Source(const Instruction* instr) {
   AssertSupportedFPCR();
 
-  FPRounding fpcr_rounding = static_cast<FPRounding>(ReadFpcr().GetRMode());
-  VectorFormat vform;
-  switch (instr->Mask(FPTypeMask)) {
-    default:
-      VIXL_UNREACHABLE_OR_FALLTHROUGH();
-    case FP64:
-      vform = kFormatD;
-      break;
-    case FP32:
-      vform = kFormatS;
-      break;
-    case FP16:
-      vform = kFormatH;
-      break;
-  }
-
+  VectorFormat vform = kFormatD;
   SimVRegister& rd = ReadVRegister(instr->GetRd());
   SimVRegister& rn = ReadVRegister(instr->GetRn());
-  bool inexact_exception = false;
-  FrintMode frint_mode = kFrintToInteger;
 
-  unsigned fd = instr->GetRd();
-  unsigned fn = instr->GetRn();
-
-  switch (instr->Mask(FPDataProcessing1SourceMask)) {
-    case FMOV_h:
-      WriteHRegister(fd, ReadHRegister(fn));
-      return;
-    case FMOV_s:
-      WriteSRegister(fd, ReadSRegister(fn));
-      return;
-    case FMOV_d:
-      WriteDRegister(fd, ReadDRegister(fn));
-      return;
-    case FABS_h:
-    case FABS_s:
-    case FABS_d:
-      fabs_(vform, ReadVRegister(fd), ReadVRegister(fn));
-      // Explicitly log the register update whilst we have type information.
-      LogVRegister(fd, GetPrintRegisterFormatFP(vform));
-      return;
-    case FNEG_h:
-    case FNEG_s:
-    case FNEG_d:
-      fneg(vform, ReadVRegister(fd), ReadVRegister(fn));
-      // Explicitly log the register update whilst we have type information.
-      LogVRegister(fd, GetPrintRegisterFormatFP(vform));
-      return;
-    case FCVT_ds:
-      WriteDRegister(fd, FPToDouble(ReadSRegister(fn), ReadDN()));
-      return;
-    case FCVT_sd:
-      WriteSRegister(fd, FPToFloat(ReadDRegister(fn), FPTieEven, ReadDN()));
-      return;
-    case FCVT_hs:
-      WriteHRegister(fd,
-                     Float16ToRawbits(
-                         FPToFloat16(ReadSRegister(fn), FPTieEven, ReadDN())));
-      return;
-    case FCVT_sh:
-      WriteSRegister(fd, FPToFloat(ReadHRegister(fn), ReadDN()));
-      return;
-    case FCVT_dh:
-      WriteDRegister(fd, FPToDouble(ReadHRegister(fn), ReadDN()));
-      return;
-    case FCVT_hd:
-      WriteHRegister(fd,
-                     Float16ToRawbits(
-                         FPToFloat16(ReadDRegister(fn), FPTieEven, ReadDN())));
-      return;
-    case FSQRT_h:
-    case FSQRT_s:
-    case FSQRT_d:
-      fsqrt(vform, rd, rn);
-      // Explicitly log the register update whilst we have type information.
-      LogVRegister(fd, GetPrintRegisterFormatFP(vform));
-      return;
-    case FRINT32X_s:
-    case FRINT32X_d:
-      inexact_exception = true;
-      frint_mode = kFrintToInt32;
-      break;  // Use FPCR rounding mode.
-    case FRINT64X_s:
-    case FRINT64X_d:
-      inexact_exception = true;
-      frint_mode = kFrintToInt64;
-      break;  // Use FPCR rounding mode.
-    case FRINT32Z_s:
-    case FRINT32Z_d:
-      inexact_exception = true;
-      frint_mode = kFrintToInt32;
-      fpcr_rounding = FPZero;
+  switch (form_hash_) {
+    case "fabs_d_floatdp1"_h:
+      fabs_(vform = kFormatD, rd, rn);
       break;
-    case FRINT64Z_s:
-    case FRINT64Z_d:
-      inexact_exception = true;
-      frint_mode = kFrintToInt64;
-      fpcr_rounding = FPZero;
+    case "fabs_h_floatdp1"_h:
+      fabs_(vform = kFormatH, rd, rn);
       break;
-    case FRINTI_h:
-    case FRINTI_s:
-    case FRINTI_d:
-      break;  // Use FPCR rounding mode.
-    case FRINTX_h:
-    case FRINTX_s:
-    case FRINTX_d:
-      inexact_exception = true;
+    case "fabs_s_floatdp1"_h:
+      fabs_(vform = kFormatS, rd, rn);
       break;
-    case FRINTA_h:
-    case FRINTA_s:
-    case FRINTA_d:
-      fpcr_rounding = FPTieAway;
+    case "fneg_d_floatdp1"_h:
+      fneg(vform = kFormatD, rd, rn);
       break;
-    case FRINTM_h:
-    case FRINTM_s:
-    case FRINTM_d:
-      fpcr_rounding = FPNegativeInfinity;
+    case "fneg_h_floatdp1"_h:
+      fneg(vform = kFormatH, rd, rn);
       break;
-    case FRINTN_h:
-    case FRINTN_s:
-    case FRINTN_d:
-      fpcr_rounding = FPTieEven;
+    case "fneg_s_floatdp1"_h:
+      fneg(vform = kFormatS, rd, rn);
       break;
-    case FRINTP_h:
-    case FRINTP_s:
-    case FRINTP_d:
-      fpcr_rounding = FPPositiveInfinity;
+    case "fsqrt_d_floatdp1"_h:
+      fsqrt(vform = kFormatD, rd, rn);
       break;
-    case FRINTZ_h:
-    case FRINTZ_s:
-    case FRINTZ_d:
-      fpcr_rounding = FPZero;
+    case "fsqrt_h_floatdp1"_h:
+      fsqrt(vform = kFormatH, rd, rn);
       break;
-    default:
-      VIXL_UNIMPLEMENTED();
+    case "fsqrt_s_floatdp1"_h:
+      fsqrt(vform = kFormatS, rd, rn);
+      break;
   }
-
-  // Only FRINT* instructions fall through the switch above.
-  frint(vform, rd, rn, fpcr_rounding, inexact_exception, frint_mode);
   // Explicitly log the register update whilst we have type information.
-  LogVRegister(fd, GetPrintRegisterFormatFP(vform));
+  LogVRegister(instr->GetRd(), GetPrintRegisterFormatFP(vform));
 }
 
 

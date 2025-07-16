@@ -1532,6 +1532,9 @@ class Simulator : public DecoderVisitor {
   void SimulateSignedMinMax(const Instruction* instr);
   void SimulateUnsignedMinMax(const Instruction* instr);
   void SimulateSHA512(const Instruction* instr);
+  void SimulateFPConvert(const Instruction* instr);
+  void SimulateFPRoundInt(const Instruction* instr);
+  void SimulateFPRoundIntToSize(const Instruction* instr);
 
   void VisitCryptoSM3(const Instruction* instr);
   void VisitCryptoSM4(const Instruction* instr);
