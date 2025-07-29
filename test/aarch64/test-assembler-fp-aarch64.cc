@@ -4993,5 +4993,55 @@ TEST(default_nan_double) {
   DefaultNaNHelper(qn, qm, qa);
 }
 
+TEST(bfcvt) {
+  SETUP_WITH_FEATURES(CPUFeatures::kFP, CPUFeatures::kBF16);
+
+  START();
+  Label done, loop, exit;
+  __ Mov(x11, 0);           // Error count.
+  __ Mov(x12, 0xffff0000);  // Test input.
+
+  __ Bind(&loop);
+  __ Mov(w0, w12);
+  __ Fmov(s0, w0);
+  __ Bfcvt(h0, s0);  // Convert with instruction under test.
+  __ Fmov(w10, s0);
+
+  // Equivalent code for bfcvt, assuming DN=0 and ties-even rounding.
+
+  __ Bic(w1, w0, 0x80000000);           // Clear sign bit.
+  __ Cmp(w1, 0x7f800000);               // Test for NaN.
+  __ Uxth(w1, w0);                      // w1 = low half of input.
+  __ Lsr(w0, w0, 16);                   // w0 = high half of input.
+  __ Cset(w2, gt);                      // Set w2 if NaN.
+  __ Orr(w0, w0, Operand(w2, LSL, 6));  // Quieten NaN using w2.
+  __ B(gt, &done);
+
+  __ Cmp(w1, 0x8000);       // Set flags based on low half.
+  __ And(w1, w0, 1);        // Get bit 16 of input
+  __ Add(w1, w1, w0);       //  and add to result
+  __ Cinc(w0, w0, gt);      // Result + 1 (for > 0x8000)
+  __ Csel(w0, w1, w0, eq);  // Select result + 1                 (gt case)
+                            //        result + ((in >> 16) & 1)  (eq case)
+  __ Bind(&done);
+
+  __ Cmp(w0, w10);        // Expected result in w0, actual in w10.
+  __ Cinc(x11, x11, ne);  // Increment error counter on mismatch.
+  uint32_t dec = (1 << 20) + (1 << 14);
+  __ Sub(x12, x12, dec);  // Test every ~10^6 value, covering all exponent
+                          //  inputs with many mantissae, infinities, NaNs.
+  __ Cmp(x12, 0);
+  __ B(ge, &loop);  // Loop until input/counter is zero.
+  __ Bind(&exit);
+
+  END();
+
+  if (CAN_RUN()) {
+    RUN();
+
+    ASSERT_EQUAL_64(0, x11);
+  }
+}
+
 }  // namespace aarch64
 }  // namespace vixl

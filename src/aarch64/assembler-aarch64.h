@@ -2453,6 +2453,9 @@ class Assembler : public vixl::internal::AssemblerBase {
   // FP convert to unsigned integer, round towards +infinity.
   void fcvtpu(const VRegister& vd, const VRegister& vn);
 
+  // Floating-point convert from single-precision to BFloat16 format.
+  void bfcvt(const VRegister& vd, const VRegister& vn);
+
   // Convert signed integer or fixed point to FP.
   void scvtf(const VRegister& fd, const Register& rn, int fbits = 0);
 

@@ -3689,6 +3689,11 @@ void Assembler::fjcvtzs(const Register& rd, const VRegister& vn) {
   Emit(FJCVTZS | Rn(vn) | Rd(rd));
 }
 
+void Assembler::bfcvt(const VRegister& vd, const VRegister& vn) {
+  VIXL_ASSERT(CPUHas(CPUFeatures::kFP, CPUFeatures::kBF16));
+  VIXL_ASSERT(vd.Is1H() && vn.Is1S());
+  Emit(0x1e634000 | Rn(vn) | Rd(vd));
+}
 
 void Assembler::NEONFPConvertToInt(const Register& rd,
                                    const VRegister& vn,

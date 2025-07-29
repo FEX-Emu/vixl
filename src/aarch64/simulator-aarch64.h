@@ -5521,8 +5521,8 @@ class Simulator : public DecoderVisitor {
         VIXL_ABORT_WITH_MSG("Tried to double free GCS ");
       } else {
         delete gcsptr;
-	// To ensure other tokens remain valid, we do not remove this element
-	// but set it to nullptr instead.
+        // To ensure other tokens remain valid, we do not remove this element
+        // but set it to nullptr instead.
         stacks_[gcs_index] = nullptr;
       }
     }

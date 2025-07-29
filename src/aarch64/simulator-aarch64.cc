@@ -115,6 +115,7 @@ const Simulator::FormToVisitorFnMap* Simulator::GetFormToVisitorFnMap() {
       {"fcvt_sh_floatdp1"_h, &Simulator::SimulateFPConvert},
       {"fcvt_dh_floatdp1"_h, &Simulator::SimulateFPConvert},
       {"fcvt_hd_floatdp1"_h, &Simulator::SimulateFPConvert},
+      {"bfcvt_bs_floatdp1"_h, &Simulator::SimulateFPConvert},
       {"frint32x_d_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
       {"frint32x_s_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
       {"frint32z_d_floatdp1"_h, &Simulator::SimulateFPRoundIntToSize},
@@ -6743,6 +6744,9 @@ void Simulator::SimulateFPConvert(const Instruction* instr) {
       break;
     case "fcvt_hd_floatdp1"_h:
       WriteHRegister(fd, Float16ToRawbits(FPToFloat16(dn, FPTieEven, nan)));
+      break;
+    case "bfcvt_bs_floatdp1"_h:
+      WriteHRegister(fd, BFloat16ToRawbits(FPToBFloat16(sn, FPTieEven, nan)));
       break;
   }
 }

@@ -3962,7 +3962,7 @@ TEST(architecture_features) {
   // COMPARE_PREFIX(dci(0x0fc0f000), "bfmlal");   // BFMLAL_asimdelem_F
   // COMPARE_PREFIX(dci(0x2e40fc00), "bfdot");   // BFDOT_asimdsame2_D
   // COMPARE_PREFIX(dci(0x2ec0fc00), "bfmlal");   // BFMLAL_asimdsame2_F_
-  // COMPARE_PREFIX(dci(0x1e634000), "bfcvt");   // BFCVT_BS_floatdp1
+  COMPARE_PREFIX(dci(0x1e634000), "bfcvt");  // BFCVT_BS_floatdp1
   // COMPARE_PREFIX(dci(0x6e40ec00), "bfmmla");   // BFMMLA_asimdsame2_E
 
   // ARMv8.6 - DGH

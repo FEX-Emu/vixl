@@ -1867,5 +1867,81 @@ TEST_SVE(neon_sm4ekey) {
   }
 }
 
+TEST_SVE(fp_bfcvt) {
+  SVE_SETUP_WITH_FEATURES(CPUFeatures::kSVE,
+                          CPUFeatures::kNEON,
+                          CPUFeatures::kCRC32,
+                          CPUFeatures::kFP,
+                          CPUFeatures::kBF16);
+  START();
+
+  SetInitialMachineState(&masm, kFpInputSet);
+  // state = 0x1e5cbcac
+
+  {
+    ExactAssemblyScope scope(&masm, 20 * kInstructionSize);
+    __ dci(0x1e6340e6);  // bfcvt h6, s7
+    // vl128 state = 0x19138b01
+    __ dci(0x1e6340f6);  // bfcvt h22, s7
+    // vl128 state = 0xd3bc6bbc
+    __ dci(0x1e63417e);  // bfcvt h30, s11
+    // vl128 state = 0xf1da3865
+    __ dci(0x1e6341ce);  // bfcvt h14, s14
+    // vl128 state = 0xb740056d
+    __ dci(0x1e63410f);  // bfcvt h15, s8
+    // vl128 state = 0x8ea2ccc9
+    __ dci(0x1e63439f);  // bfcvt h31, s28
+    // vl128 state = 0xcf994aa7
+    __ dci(0x1e63409e);  // bfcvt h30, s4
+    // vl128 state = 0x24145469
+    __ dci(0x1e63409c);  // bfcvt h28, s4
+    // vl128 state = 0xb1176b99
+    __ dci(0x1e63409d);  // bfcvt h29, s4
+    // vl128 state = 0x9521639c
+    __ dci(0x1e6342b9);  // bfcvt h25, s21
+    // vl128 state = 0xc5e5ab22
+    __ dci(0x1e6342bd);  // bfcvt h29, s21
+    // vl128 state = 0x2adafc0c
+    __ dci(0x1e6342ad);  // bfcvt h13, s21
+    // vl128 state = 0xb22252be
+    __ dci(0x1e6342ac);  // bfcvt h12, s21
+    // vl128 state = 0x28a508e6
+    __ dci(0x1e6342a4);  // bfcvt h4, s21
+    // vl128 state = 0x24744124
+    __ dci(0x1e6342c6);  // bfcvt h6, s22
+    // vl128 state = 0xbe79bb80
+    __ dci(0x1e6342d6);  // bfcvt h22, s22
+    // vl128 state = 0x3c6cf0c2
+    __ dci(0x1e6342d2);  // bfcvt h18, s22
+    // vl128 state = 0x8c2f10b6
+    __ dci(0x1e6342da);  // bfcvt h26, s22
+    // vl128 state = 0x5c115ed4
+    __ dci(0x1e6342db);  // bfcvt h27, s22
+    // vl128 state = 0x6657c63e
+    __ dci(0x1e6342d3);  // bfcvt h19, s22
+    // vl128 state = 0x0948374c
+  }
+
+  uint32_t state;
+  ComputeMachineStateHash(&masm, &state);
+  __ Mov(x0, reinterpret_cast<uint64_t>(&state));
+  __ Ldr(w0, MemOperand(x0));
+
+  END();
+  if (CAN_RUN()) {
+    RUN();
+    uint32_t expected_hashes[] = {
+        0x0948374c,
+        0x3219f32f,
+        0x4571e7d1,
+        0x9de318e3,
+        0x83558fbe,
+    };
+    ASSERT_EQUAL_64(expected_hashes[WhichPowerOf2(
+                        core.GetSVELaneCount(kQRegSize))],
+                    x0);
+  }
+}
+
 }  // namespace aarch64
 }  // namespace vixl

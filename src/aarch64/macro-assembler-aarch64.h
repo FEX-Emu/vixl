@@ -1190,6 +1190,11 @@ class MacroAssembler : public Assembler, public MacroAssemblerInterface {
     SingleEmissionCheckScope guard(this);
     retab();
   }
+  void Bfcvt(const VRegister& vd, const VRegister& vn) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfcvt(vd, vn);
+  }
   void Braa(const Register& xn, const Register& xm) {
     VIXL_ASSERT(allow_macro_instructions_);
     SingleEmissionCheckScope guard(this);

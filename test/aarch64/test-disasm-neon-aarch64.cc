@@ -4057,6 +4057,14 @@ TEST(neon_2regmisc_fp16) {
   CLEANUP();
 }
 
+TEST(neon_bfloat16) {
+  SETUP();
+
+  COMPARE_MACRO(Bfcvt(h10, s5), "bfcvt h10, s5");
+
+  CLEANUP();
+}
+
 TEST(neon_acrosslanes) {
   SETUP();
 

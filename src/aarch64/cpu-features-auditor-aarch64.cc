@@ -1953,6 +1953,8 @@ void CPUFeaturesAuditor::Visit(Metadata* metadata, const Instruction* instr) {
          CPUFeatures(CPUFeatures::kSVE2, CPUFeatures::kSVEPmull128)},
         {"pmullt_z_zz_q"_h,
          CPUFeatures(CPUFeatures::kSVE2, CPUFeatures::kSVEPmull128)},
+        {"bfcvt_bs_floatdp1"_h,
+         CPUFeatures(CPUFeatures::kFP, CPUFeatures::kBF16)},
     };
 
     if (features.count(form_hash_) > 0) {

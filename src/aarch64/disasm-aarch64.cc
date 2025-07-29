@@ -42,6 +42,7 @@ const Disassembler::FormToVisitorFnMap *Disassembler::GetFormToVisitorFnMap() {
       {"fcvt_hs_floatdp1"_h, &Disassembler::VisitFPDataProcessing1Source},
       {"fcvt_sd_floatdp1"_h, &Disassembler::VisitFPDataProcessing1Source},
       {"fcvt_sh_floatdp1"_h, &Disassembler::VisitFPDataProcessing1Source},
+      {"bfcvt_bs_floatdp1"_h, &Disassembler::VisitFPDataProcessing1Source},
       {"fmov_d_floatdp1"_h, &Disassembler::VisitFPDataProcessing1Source},
       {"fmov_h_floatdp1"_h, &Disassembler::VisitFPDataProcessing1Source},
       {"fmov_s_floatdp1"_h, &Disassembler::VisitFPDataProcessing1Source},
@@ -1974,6 +1975,9 @@ void Disassembler::VisitFPDataProcessing1Source(const Instruction *instr) {
       break;
     case "fcvt_hd_floatdp1"_h:
       form = "'Hd, 'Dn";
+      break;
+    case "bfcvt_bs_floatdp1"_h:
+      form = "'Hd, 'Sn";
       break;
   }
   FormatWithDecodedMnemonic(instr, form);

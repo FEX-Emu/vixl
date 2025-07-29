@@ -1518,7 +1518,6 @@
       {"fcsel_d_floatsel"_h, &VISITORCLASS::VisitFPConditionalSelect},         \
       {"fcsel_h_floatsel"_h, &VISITORCLASS::VisitFPConditionalSelect},         \
       {"fcsel_s_floatsel"_h, &VISITORCLASS::VisitFPConditionalSelect},         \
-      {"bfcvt_bs_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},    \
       {"fabs_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
       {"fabs_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
       {"fabs_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
