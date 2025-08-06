@@ -1446,6 +1446,7 @@ class Simulator : public DecoderVisitor {
 
 #define DECLARE(A) virtual void Visit##A(const Instruction* instr);
   VISITOR_LIST_THAT_RETURN(DECLARE)
+  SIM_AUD_VISITOR_LIST_THAT_RETURN(DECLARE)
 #undef DECLARE
 #define DECLARE(A) \
   VIXL_NO_RETURN virtual void Visit##A(const Instruction* instr);
