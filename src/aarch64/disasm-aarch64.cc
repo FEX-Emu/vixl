@@ -1911,9 +1911,7 @@ void Disassembler::VisitUnconditionalBranchToRegister(
 
   switch (form_hash_) {
     case "ret_64r_branch_reg"_h:
-      if (instr->GetRn() == kLinkRegCode) {
-        form = "";
-      }
+      form = "'(0905=30?:'Xn)";
       break;
     case "retaa_64e_branch_reg"_h:
     case "retab_64e_branch_reg"_h:
@@ -1956,79 +1954,60 @@ void Disassembler::VisitDataProcessing2Source(const Instruction *instr) {
 
 void Disassembler::VisitDataProcessing3Source(const Instruction *instr) {
   bool ra_is_zr = RaIsZROrSP(instr);
-  const char *mnemonic = "";
+  const char *mnemonic = mnemonic_.c_str();
   const char *form = "'Xd, 'Wn, 'Wm, 'Xa";
   const char *form_rrr = "'Rd, 'Rn, 'Rm";
   const char *form_rrrr = "'Rd, 'Rn, 'Rm, 'Ra";
   const char *form_xww = "'Xd, 'Wn, 'Wm";
   const char *form_xxx = "'Xd, 'Xn, 'Xm";
 
-  switch (instr->Mask(DataProcessing3SourceMask)) {
-    case MADD_w:
-    case MADD_x: {
-      mnemonic = "madd";
+  switch (form_hash_) {
+    case "madd_32a_dp_3src"_h:
+    case "madd_64a_dp_3src"_h:
       form = form_rrrr;
       if (ra_is_zr) {
         mnemonic = "mul";
         form = form_rrr;
       }
       break;
-    }
-    case MSUB_w:
-    case MSUB_x: {
-      mnemonic = "msub";
+    case "msub_32a_dp_3src"_h:
+    case "msub_64a_dp_3src"_h:
       form = form_rrrr;
       if (ra_is_zr) {
         mnemonic = "mneg";
         form = form_rrr;
       }
       break;
-    }
-    case SMADDL_x: {
-      mnemonic = "smaddl";
+    case "smaddl_64wa_dp_3src"_h:
       if (ra_is_zr) {
         mnemonic = "smull";
         form = form_xww;
       }
       break;
-    }
-    case SMSUBL_x: {
-      mnemonic = "smsubl";
+    case "smsubl_64wa_dp_3src"_h:
       if (ra_is_zr) {
         mnemonic = "smnegl";
         form = form_xww;
       }
       break;
-    }
-    case UMADDL_x: {
-      mnemonic = "umaddl";
+    case "umaddl_64wa_dp_3src"_h:
       if (ra_is_zr) {
         mnemonic = "umull";
         form = form_xww;
       }
       break;
-    }
-    case UMSUBL_x: {
-      mnemonic = "umsubl";
+    case "umsubl_64wa_dp_3src"_h:
       if (ra_is_zr) {
         mnemonic = "umnegl";
         form = form_xww;
       }
       break;
-    }
-    case SMULH_x: {
-      mnemonic = "smulh";
+    case "smulh_64_dp_3src"_h:
+    case "umulh_64_dp_3src"_h:
       form = form_xxx;
       break;
-    }
-    case UMULH_x: {
-      mnemonic = "umulh";
-      form = form_xxx;
-      break;
-    }
-    default:
-      VIXL_UNREACHABLE();
   }
+
   Format(instr, mnemonic, form);
 }
 
@@ -2305,8 +2284,7 @@ void Disassembler::VisitLoadStoreExclusive(const Instruction *instr) {
 }
 
 void Disassembler::VisitAtomicMemory(const Instruction *instr) {
-  bool is_x = (instr->ExtractBits(31, 30) == 3);
-  const char *form = is_x ? "'Xs, 'Xt" : "'Ws, 'Wt";
+  const char *form = "'(3130=3?'Xs:'Ws), '(3130=3?'Xt:'Wt)";
   const char *suffix = ", ['Xns]";
 
   std::string mnemonic = mnemonic_;
@@ -2324,7 +2302,7 @@ void Disassembler::VisitAtomicMemory(const Instruction *instr) {
       // Zero register implies a store instruction.
       if (instr->GetRt() == kZeroRegCode) {
         mnemonic.replace(0, 2, "st");
-        form = is_x ? "'Xs" : "'Ws";
+        form = "'(3130=3?'Xs:'Ws)";
       }
   }
   Format(instr, mnemonic.c_str(), form, suffix);
@@ -2379,7 +2357,7 @@ void Disassembler::VisitSystem(const Instruction *instr) {
 
   switch (form_hash_) {
     case "clrex_bn_barriers"_h:
-      form = (instr->GetCRm() == 0xf) ? "" : "'IX";
+      form = "'(1108=15?:'IX)";
       break;
     case "mrs_rs_systemmove"_h:
       form = "'Xt, 'IY";
@@ -2820,9 +2798,8 @@ void Disassembler::DisassembleNEONMulByElementLong(const Instruction *instr) {
 }
 
 void Disassembler::DisassembleNEONDotProdByElement(const Instruction *instr) {
-  const char *form = instr->ExtractBit(30) ? "'Vd.4s, 'Vn.16" : "'Vd.2s, 'Vn.8";
-  const char *suffix = "b, 'Vm.4b['u1111:2121]";
-  Format(instr, mnemonic_.c_str(), form, suffix);
+  const char *form = "'Vd.'?30:42s, 'Vn.'(3030?1)'?30:68b, 'Vm.4b['u1111:2121]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::DisassembleNEONFPMulByElement(const Instruction *instr) {
@@ -3747,15 +3724,14 @@ void Disassembler::VisitNEONShiftImmediate(const Instruction *instr) {
 
 
 void Disassembler::VisitNEONTable(const Instruction *instr) {
-  const char *mnemonic = mnemonic_.c_str();
-  const char form_1v[] = "'Vd.%%s, {'Vn.16b}, 'Vm.%%s";
-  const char form_2v[] = "'Vd.%%s, {'Vn.16b, v%d.16b}, 'Vm.%%s";
-  const char form_3v[] = "'Vd.%%s, {'Vn.16b, v%d.16b, v%d.16b}, 'Vm.%%s";
-  const char form_4v[] =
-      "'Vd.%%s, {'Vn.16b, v%d.16b, v%d.16b, v%d.16b}, 'Vm.%%s";
-  const char *form = form_1v;
-
-  NEONFormatDecoder nfd(instr, NEONFormatDecoder::LogicalFormatMap());
+  const char *form = "'Vd.'(3030?16:8)b, {'Vn.16b}, 'Vm.'(3030?16:8)b";
+  const char *form_2v =
+      "'Vd.'(3030?16:8)b, {'Vn.16b, 'Vn2.16b}, 'Vm.'(3030?16:8)b";
+  const char *form_3v =
+      "'Vd.'(3030?16:8)b, {'Vn.16b, 'Vn2.16b, 'Vn3.16b}, 'Vm.'(3030?16:8)b";
+  const char *form_4v =
+      "'Vd.'(3030?16:8)b, {'Vn.16b, 'Vn2.16b, 'Vn3.16b, 'Vn4.16b}, "
+      "'Vm.'(3030?16:8)b";
 
   switch (form_hash_) {
     case "tbl_asimdtbl_l2_2"_h:
@@ -3771,18 +3747,8 @@ void Disassembler::VisitNEONTable(const Instruction *instr) {
       form = form_4v;
       break;
   }
-  VIXL_ASSERT(form != NULL);
 
-  char re_form[sizeof(form_4v) + 6];  // 3 * two-digit substitutions => 6
-  int reg_num = instr->GetRn();
-  snprintf(re_form,
-           sizeof(re_form),
-           form,
-           (reg_num + 1) % kNumberOfVRegisters,
-           (reg_num + 2) % kNumberOfVRegisters,
-           (reg_num + 3) % kNumberOfVRegisters);
-
-  Format(instr, mnemonic, nfd.Substitute(re_form));
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 
@@ -3793,10 +3759,9 @@ void Disassembler::VisitNEONPerm(const Instruction *instr) {
 
 void Disassembler::VisitSVE32BitGatherLoad_VectorPlusImm(
     const Instruction *instr) {
-  const char *form = "{'Zt.s}, 'Pgl/z, ['Zn.s]";
-  const char *form_imm = "{'Zt.s}, 'Pgl/z, ['Zn.s, #'u2016]";
-  const char *form_imm_h = "{'Zt.s}, 'Pgl/z, ['Zn.s, #'u2016*2]";
-  const char *form_imm_w = "{'Zt.s}, 'Pgl/z, ['Zn.s, #'u2016*4]";
+  const char *form = "{'Zt.s}, 'Pgl/z, ['Zn.s'(2016?, #'u2016)]";
+  const char *form_h = "{'Zt.s}, 'Pgl/z, ['Zn.s'(2016?, #'u2016*2)]";
+  const char *form_w = "{'Zt.s}, 'Pgl/z, ['Zn.s'(2016?, #'u2016*4)]";
 
   const char *mnemonic = mnemonic_.c_str();
   switch (form_hash_) {
@@ -3804,52 +3769,41 @@ void Disassembler::VisitSVE32BitGatherLoad_VectorPlusImm(
     case "ld1sh_z_p_ai_s"_h:
     case "ldff1h_z_p_ai_s"_h:
     case "ldff1sh_z_p_ai_s"_h:
-      form_imm = form_imm_h;
+      form = form_h;
       break;
     case "ld1w_z_p_ai_s"_h:
     case "ldff1w_z_p_ai_s"_h:
-      form_imm = form_imm_w;
+      form = form_w;
       break;
   }
-  if (instr->ExtractBits(20, 16) != 0) form = form_imm;
 
   Format(instr, mnemonic, form);
 }
 
 void Disassembler::VisitSVE32BitGatherPrefetch_VectorPlusImm(
     const Instruction *instr) {
-  const char *form = (instr->ExtractBits(20, 16) != 0)
-                         ? "'prefSVEOp, 'Pgl, ['Zn.s, #'u2016]"
-                         : "'prefSVEOp, 'Pgl, ['Zn.s]";
+  const char *form = "'prefSVEOp, 'Pgl, ['Zn.s'(2016?, #'u2016)]";
   FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::VisitSVE32BitScatterStore_VectorPlusImm(
     const Instruction *instr) {
-  const char *mnemonic = "unimplemented";
   const char *form = "{'Zt.s}, 'Pgl, ['Zn.s";
   const char *suffix = NULL;
 
-  bool is_zero = instr->ExtractBits(20, 16) == 0;
-
-  switch (instr->Mask(SVE32BitScatterStore_VectorPlusImmMask)) {
-    case ST1B_z_p_ai_s:
-      mnemonic = "st1b";
-      suffix = is_zero ? "]" : ", #'u2016]";
+  switch (form_hash_) {
+    case "st1b_z_p_ai_s"_h:
+      suffix = "'(2016?, #'u2016)]";
       break;
-    case ST1H_z_p_ai_s:
-      mnemonic = "st1h";
-      suffix = is_zero ? "]" : ", #'u2016*2]";
+    case "st1h_z_p_ai_s"_h:
+      suffix = "'(2016?, #'u2016*2)]";
       break;
-    case ST1W_z_p_ai_s:
-      mnemonic = "st1w";
-      suffix = is_zero ? "]" : ", #'u2016*4]";
-      break;
-    default:
-      form = "(SVE32BitScatterStore_VectorPlusImm)";
+    case "st1w_z_p_ai_s"_h:
+      suffix = "'(2016?, #'u2016*4)]";
       break;
   }
-  Format(instr, mnemonic, form, suffix);
+
+  FormatWithDecodedMnemonic(instr, form, suffix);
 }
 
 void Disassembler::VisitSVE64BitGatherLoad_VectorPlusImm(
@@ -3876,72 +3830,42 @@ void Disassembler::VisitSVE64BitGatherLoad_VectorPlusImm(
 
 void Disassembler::VisitSVE64BitGatherPrefetch_ScalarPlus64BitScaledOffsets(
     const Instruction *instr) {
-  const char *form = "'prefSVEOp, 'Pgl, ['Xns, 'Zm.d";
-  const char *suffix = "]";
-
-  switch (form_hash_) {
-    case "prfh_i_p_bz_d_64_scaled"_h:
-      suffix = ", lsl #1]";
-      break;
-    case "prfs_i_p_bz_d_64_scaled"_h:
-      suffix = ", lsl #2]";
-      break;
-    case "prfd_i_p_bz_d_64_scaled"_h:
-      suffix = ", lsl #3]";
-      break;
-  }
-  FormatWithDecodedMnemonic(instr, form, suffix);
+  const char *form = "'prefSVEOp, 'Pgl, ['Xns, 'Zm.d'(1413?, lsl #'u1413)]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::
     VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets(
         const Instruction *instr) {
-  const char *form = "'prefSVEOp, 'Pgl, ['Xns, 'Zm.d, '?22:suxtw ";
-  const char *suffix = "]";
-
-  switch (form_hash_) {
-    case "prfh_i_p_bz_d_x32_scaled"_h:
-      suffix = "#1]";
-      break;
-    case "prfs_i_p_bz_d_x32_scaled"_h:
-      suffix = "#2]";
-      break;
-    case "prfd_i_p_bz_d_x32_scaled"_h:
-      suffix = "#3]";
-      break;
-  }
-  FormatWithDecodedMnemonic(instr, form, suffix);
+  const char *form =
+      "'prefSVEOp, 'Pgl, ['Xns, 'Zm.d, '?22:suxtw'(2423? #'u2423)]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::VisitSVE64BitGatherPrefetch_VectorPlusImm(
     const Instruction *instr) {
-  const char *form = (instr->ExtractBits(20, 16) != 0)
-                         ? "'prefSVEOp, 'Pgl, ['Zn.d, #'u2016]"
-                         : "'prefSVEOp, 'Pgl, ['Zn.d]";
-
+  const char *form = "'prefSVEOp, 'Pgl, ['Zn.d'(2016?, #'u2016)]";
   FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::VisitSVE64BitScatterStore_VectorPlusImm(
     const Instruction *instr) {
   const char *form = "{'Zt.d}, 'Pgl, ['Zn.d";
-  const char *suffix = "]";
+  const char *suffix = NULL;
 
-  if (instr->ExtractBits(20, 16) != 0) {
-    switch (form_hash_) {
-      case "st1b_z_p_ai_d"_h:
-        suffix = ", #'u2016]";
-        break;
-      case "st1h_z_p_ai_d"_h:
-        suffix = ", #'u2016*2]";
-        break;
-      case "st1w_z_p_ai_d"_h:
-        suffix = ", #'u2016*4]";
-        break;
-      case "st1d_z_p_ai_d"_h:
-        suffix = ", #'u2016*8]";
-        break;
-    }
+  switch (form_hash_) {
+    case "st1b_z_p_ai_d"_h:
+      suffix = "'(2016?, #'u2016)]";
+      break;
+    case "st1h_z_p_ai_d"_h:
+      suffix = "'(2016?, #'u2016*2)]";
+      break;
+    case "st1w_z_p_ai_d"_h:
+      suffix = "'(2016?, #'u2016*4)]";
+      break;
+    case "st1d_z_p_ai_d"_h:
+      suffix = "'(2016?, #'u2016*8)]";
+      break;
   }
   FormatWithDecodedMnemonic(instr, form, suffix);
 }
@@ -4076,42 +4000,26 @@ static bool SVEMoveMaskPreferred(uint64_t value, int lane_bytes_log2) {
 }
 
 void Disassembler::VisitSVEBroadcastBitmaskImm(const Instruction *instr) {
-  const char *mnemonic = "unimplemented";
-  const char *form = "(SVEBroadcastBitmaskImm)";
-
-  switch (instr->Mask(SVEBroadcastBitmaskImmMask)) {
-    case DUPM_z_i: {
-      uint64_t imm = instr->GetSVEImmLogical();
-      if (imm != 0) {
-        int lane_size = instr->GetSVEBitwiseImmLaneSizeInBytesLog2();
-        mnemonic = SVEMoveMaskPreferred(imm, lane_size) ? "mov" : "dupm";
-        form = "'Zd.'tl, 'ITriSvel";
-      }
-      break;
-    }
-    default:
-      break;
+  uint64_t imm = instr->GetSVEImmLogical();
+  if (imm == 0) {
+    VisitUnallocated(instr);
+  } else {
+    int lane_size = instr->GetSVEBitwiseImmLaneSizeInBytesLog2();
+    const char *mnemonic =
+        SVEMoveMaskPreferred(imm, lane_size) ? "mov" : "dupm";
+    const char *form = "'Zd.'tl, 'ITriSvel";
+    Format(instr, mnemonic, form);
   }
-  Format(instr, mnemonic, form);
 }
 
 void Disassembler::VisitSVEBroadcastFPImm_Unpredicated(
     const Instruction *instr) {
-  const char *mnemonic = "unimplemented";
-  const char *form = "(SVEBroadcastFPImm_Unpredicated)";
-
-  if (instr->GetSVEVectorFormat() != kFormatVnB) {
-    switch (instr->Mask(SVEBroadcastFPImm_UnpredicatedMask)) {
-      case FDUP_z_i:
-        // The preferred disassembly for fdup is "fmov".
-        mnemonic = "fmov";
-        form = "'Zd.'t, 'IFPSve";
-        break;
-      default:
-        break;
-    }
+  if (instr->GetSVEVectorFormat() == kFormatVnB) {
+    VisitUnallocated(instr);
+  } else {
+    // The preferred disassembly for fdup is "fmov".
+    Format(instr, "fmov", "'Zd.'t, 'IFPSve");
   }
-  Format(instr, mnemonic, form);
 }
 
 void Disassembler::VisitSVEBroadcastGeneralRegister(const Instruction *instr) {
@@ -4164,25 +4072,14 @@ void Disassembler::VisitSVEBroadcastIndexElement(const Instruction *instr) {
 
 void Disassembler::VisitSVEBroadcastIntImm_Unpredicated(
     const Instruction *instr) {
-  const char *mnemonic = "unimplemented";
-  const char *form = "(SVEBroadcastIntImm_Unpredicated)";
-
-  switch (instr->Mask(SVEBroadcastIntImm_UnpredicatedMask)) {
-    case DUP_z_i:
-      // The encoding of byte-sized lanes with lsl #8 is undefined.
-      if ((instr->GetSVEVectorFormat() == kFormatVnB) &&
-          (instr->ExtractBit(13) == 1))
-        break;
-
-      // The preferred disassembly for dup is "mov".
-      mnemonic = "mov";
-      form = (instr->ExtractBit(13) == 0) ? "'Zd.'t, #'s1205"
-                                          : "'Zd.'t, #'s1205, lsl #8";
-      break;
-    default:
-      break;
+  // The encoding of byte-sized lanes with lsl #8 is undefined.
+  if ((instr->GetSVEVectorFormat() == kFormatVnB) &&
+      (instr->ExtractBit(13) == 1)) {
+    VisitUnallocated(instr);
+  } else {
+    // The preferred disassembly for dup is "mov".
+    Format(instr, "mov", "'Zd.'t, #'s1205'(1313?, lsl #8)");
   }
-  Format(instr, mnemonic, form);
 }
 
 void Disassembler::VisitSVECompressActiveElements(const Instruction *instr) {
@@ -4207,42 +4104,30 @@ void Disassembler::VisitSVEConditionallyExtractElementToGeneralRegister(
 
 void Disassembler::VisitSVEConditionallyTerminateScalars(
     const Instruction *instr) {
-  const char *form = (instr->ExtractBit(22) == 0) ? "'Wn, 'Wm" : "'Xn, 'Xm";
-  FormatWithDecodedMnemonic(instr, form);
+  FormatWithDecodedMnemonic(instr, "'R22n, 'R22m");
 }
 
 void Disassembler::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar(
     const Instruction *instr) {
   const char *form = "{'Zt.'tlss}, 'Pgl/z, ['Xns";
-  const char *suffix = "]";
+  const char *suffix = "'(2016=31?:, 'Xm)]";
 
-  if (instr->GetRm() != kZeroRegCode) {
-    switch (form_hash_) {
-      case "ldff1b_z_p_br_u8"_h:
-      case "ldff1b_z_p_br_u16"_h:
-      case "ldff1b_z_p_br_u32"_h:
-      case "ldff1b_z_p_br_u64"_h:
-      case "ldff1sb_z_p_br_s16"_h:
-      case "ldff1sb_z_p_br_s32"_h:
-      case "ldff1sb_z_p_br_s64"_h:
-        suffix = ", 'Xm]";
-        break;
-      case "ldff1h_z_p_br_u16"_h:
-      case "ldff1h_z_p_br_u32"_h:
-      case "ldff1h_z_p_br_u64"_h:
-      case "ldff1sh_z_p_br_s32"_h:
-      case "ldff1sh_z_p_br_s64"_h:
-        suffix = ", 'Xm, lsl #1]";
-        break;
-      case "ldff1w_z_p_br_u32"_h:
-      case "ldff1w_z_p_br_u64"_h:
-      case "ldff1sw_z_p_br_s64"_h:
-        suffix = ", 'Xm, lsl #2]";
-        break;
-      case "ldff1d_z_p_br_u64"_h:
-        suffix = ", 'Xm, lsl #3]";
-        break;
-    }
+  switch (form_hash_) {
+    case "ldff1h_z_p_br_u16"_h:
+    case "ldff1h_z_p_br_u32"_h:
+    case "ldff1h_z_p_br_u64"_h:
+    case "ldff1sh_z_p_br_s32"_h:
+    case "ldff1sh_z_p_br_s64"_h:
+      suffix = "'(2016=31?:, 'Xm, lsl #1)]";
+      break;
+    case "ldff1w_z_p_br_u32"_h:
+    case "ldff1w_z_p_br_u64"_h:
+    case "ldff1sw_z_p_br_s64"_h:
+      suffix = "'(2016=31?:, 'Xm, lsl #2)]";
+      break;
+    case "ldff1d_z_p_br_u64"_h:
+      suffix = "'(2016=31?:, 'Xm, lsl #3)]";
+      break;
   }
 
   FormatWithDecodedMnemonic(instr, form, suffix);
@@ -4250,17 +4135,15 @@ void Disassembler::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar(
 
 void Disassembler::VisitSVEContiguousNonFaultLoad_ScalarPlusImm(
     const Instruction *instr) {
-  const char *form = "{'Zt.'tlss}, 'Pgl/z, ['Xns";
-  const char *suffix =
-      (instr->ExtractBits(19, 16) == 0) ? "]" : ", #'s1916, mul vl]";
-  FormatWithDecodedMnemonic(instr, form, suffix);
+  const char *form = "{'Zt.'tlss}, 'Pgl/z, ['Xns'(1916?, #'s1916, mul vl)]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm(
     const Instruction *instr) {
   const char *form = "{'Zt.b}, 'Pgl/z, ['Xns";
-  const char *suffix =
-      (instr->ExtractBits(19, 16) == 0) ? "]" : ", #'s1916, mul vl]";
+  const char *suffix = "'(1916?, #'s1916, mul vl)]";
+
   switch (form_hash_) {
     case "ldnt1d_z_p_bi_contiguous"_h:
       form = "{'Zt.d}, 'Pgl/z, ['Xns";
@@ -4278,8 +4161,7 @@ void Disassembler::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm(
 void Disassembler::VisitSVEContiguousNonTemporalStore_ScalarPlusImm(
     const Instruction *instr) {
   const char *form = "{'Zt.b}, 'Pgl, ['Xns";
-  const char *suffix =
-      (instr->ExtractBits(19, 16) == 0) ? "]" : ", #'s1916, mul vl]";
+  const char *suffix = "'(1916?, #'s1916, mul vl)]";
 
   switch (form_hash_) {
     case "stnt1d_z_p_bi_contiguous"_h:
@@ -4297,49 +4179,25 @@ void Disassembler::VisitSVEContiguousNonTemporalStore_ScalarPlusImm(
 
 void Disassembler::VisitSVEContiguousPrefetch_ScalarPlusImm(
     const Instruction *instr) {
-  const char *form = (instr->ExtractBits(21, 16) != 0)
-                         ? "'prefSVEOp, 'Pgl, ['Xns, #'s2116, mul vl]"
-                         : "'prefSVEOp, 'Pgl, ['Xns]";
+  const char *form = "'prefSVEOp, 'Pgl, ['Xns'(2116?, #'s2116, mul vl)]";
   FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::VisitSVEContiguousPrefetch_ScalarPlusScalar(
     const Instruction *instr) {
-  const char *mnemonic = "unimplemented";
-  const char *form = "(SVEContiguousPrefetch_ScalarPlusScalar)";
-
-  if (instr->GetRm() != kZeroRegCode) {
-    switch (instr->Mask(SVEContiguousPrefetch_ScalarPlusScalarMask)) {
-      case PRFB_i_p_br_s:
-        mnemonic = "prfb";
-        form = "'prefSVEOp, 'Pgl, ['Xns, 'Rm]";
-        break;
-      case PRFD_i_p_br_s:
-        mnemonic = "prfd";
-        form = "'prefSVEOp, 'Pgl, ['Xns, 'Rm, lsl #3]";
-        break;
-      case PRFH_i_p_br_s:
-        mnemonic = "prfh";
-        form = "'prefSVEOp, 'Pgl, ['Xns, 'Rm, lsl #1]";
-        break;
-      case PRFW_i_p_br_s:
-        mnemonic = "prfw";
-        form = "'prefSVEOp, 'Pgl, ['Xns, 'Rm, lsl #2]";
-        break;
-      default:
-        break;
-    }
+  if (instr->GetRm() == kZeroRegCode) {
+    VisitUnallocated(instr);
+    return;
   }
-  Format(instr, mnemonic, form);
+
+  const char *form = "'prefSVEOp, 'Pgl, ['Xns, 'Rm'(2423?, lsl #'u2423)]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::VisitSVEContiguousStore_ScalarPlusImm(
     const Instruction *instr) {
   // The 'size' field isn't in the usual place here.
-  const char *form = "{'Zt.'tls}, 'Pgl, ['Xns, #'s1916, mul vl]";
-  if (instr->ExtractBits(19, 16) == 0) {
-    form = "{'Zt.'tls}, 'Pgl, ['Xns]";
-  }
+  const char *form = "{'Zt.'tls}, 'Pgl, ['Xns'(1916?, #'s1916, mul vl)]";
   FormatWithDecodedMnemonic(instr, form);
 }
 
@@ -4382,39 +4240,14 @@ void Disassembler::VisitSVECopyGeneralRegisterToVector_Predicated(
 }
 
 void Disassembler::VisitSVECopyIntImm_Predicated(const Instruction *instr) {
-  const char *mnemonic = "unimplemented";
-  const char *form = "(SVECopyIntImm_Predicated)";
-  const char *suffix = NULL;
-
-  switch (instr->Mask(SVECopyIntImm_PredicatedMask)) {
-    case CPY_z_p_i: {
-      // The preferred disassembly for cpy is "mov".
-      mnemonic = "mov";
-      form = "'Zd.'t, 'Pm/'?14:mz, #'s1205";
-      if (instr->ExtractBit(13) != 0) suffix = ", lsl #8";
-      break;
-    }
-    default:
-      break;
-  }
-  Format(instr, mnemonic, form, suffix);
+  // The preferred disassembly for cpy is "mov".
+  const char *form = "'Zd.'t, 'Pm/'?14:mz, #'s1205'(1313?, lsl #8)";
+  Format(instr, "mov", form);
 }
 
 void Disassembler::VisitSVECopySIMDFPScalarRegisterToVector_Predicated(
     const Instruction *instr) {
-  const char *mnemonic = "unimplemented";
-  const char *form = "(SVECopySIMDFPScalarRegisterToVector_Predicated)";
-
-  switch (instr->Mask(SVECopySIMDFPScalarRegisterToVector_PredicatedMask)) {
-    case CPY_z_p_v:
-      // The preferred disassembly for cpy is "mov".
-      mnemonic = "mov";
-      form = "'Zd.'t, 'Pgl/m, 'Vnv";
-      break;
-    default:
-      break;
-  }
-  Format(instr, mnemonic, form);
+  Format(instr, "mov", "'Zd.'t, 'Pgl/m, 'Vnv");
 }
 
 void Disassembler::VisitSVEExtractElementToGeneralRegister(
@@ -4576,17 +4409,13 @@ void Disassembler::VisitSVEInsertGeneralRegister(const Instruction *instr) {
 
 void Disassembler::VisitSVEIntAddSubtractImm_Unpredicated(
     const Instruction *instr) {
-  const char *form = (instr->ExtractBit(13) == 0)
-                         ? "'Zd.'t, 'Zd.'t, #'u1205"
-                         : "'Zd.'t, 'Zd.'t, #'u1205, lsl #8";
+  const char *form = "'Zd.'t, 'Zd.'t, #'u1205'(1313?, lsl #8)";
   FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::VisitSVEIntCompareScalarCountAndLimit(
     const Instruction *instr) {
-  const char *form =
-      (instr->ExtractBit(12) == 0) ? "'Pd.'t, 'Wn, 'Wm" : "'Pd.'t, 'Xn, 'Xm";
-  FormatWithDecodedMnemonic(instr, form);
+  FormatWithDecodedMnemonic(instr, "'Pd.'t, 'R12n, 'R12m");
 }
 
 void Disassembler::VisitSVEIntConvertToFP(const Instruction *instr) {
@@ -4635,32 +4464,23 @@ void Disassembler::VisitSVEIntDivideVectors_Predicated(
 }
 
 void Disassembler::VisitSVELoadAndBroadcastElement(const Instruction *instr) {
-  const char *form = "(SVELoadAndBroadcastElement)";
-  const char *suffix_b = ", #'u2116]";
-  const char *suffix_h = ", #'u2116*2]";
-  const char *suffix_w = ", #'u2116*4]";
-  const char *suffix_d = ", #'u2116*8]";
-  const char *suffix = NULL;
+  const char *form = "{'Zt.d}, 'Pgl/z, ['Xns";
+  const char *suffix = "'(2116?, #'u2116)]";
+  const char *suffix_h = "'(2116?, #'u2116*2)]";
+  const char *suffix_w = "'(2116?, #'u2116*4)]";
+  const char *suffix_d = "'(2116?, #'u2116*8)]";
 
   switch (form_hash_) {
     case "ld1rb_z_p_bi_u8"_h:
       form = "{'Zt.b}, 'Pgl/z, ['Xns";
-      suffix = suffix_b;
       break;
     case "ld1rb_z_p_bi_u16"_h:
     case "ld1rsb_z_p_bi_s16"_h:
       form = "{'Zt.h}, 'Pgl/z, ['Xns";
-      suffix = suffix_b;
       break;
     case "ld1rb_z_p_bi_u32"_h:
     case "ld1rsb_z_p_bi_s32"_h:
       form = "{'Zt.s}, 'Pgl/z, ['Xns";
-      suffix = suffix_b;
-      break;
-    case "ld1rb_z_p_bi_u64"_h:
-    case "ld1rsb_z_p_bi_s64"_h:
-      form = "{'Zt.d}, 'Pgl/z, ['Xns";
-      suffix = suffix_b;
       break;
     case "ld1rh_z_p_bi_u16"_h:
       form = "{'Zt.h}, 'Pgl/z, ['Xns";
@@ -4673,7 +4493,6 @@ void Disassembler::VisitSVELoadAndBroadcastElement(const Instruction *instr) {
       break;
     case "ld1rh_z_p_bi_u64"_h:
     case "ld1rsh_z_p_bi_s64"_h:
-      form = "{'Zt.d}, 'Pgl/z, ['Xns";
       suffix = suffix_h;
       break;
     case "ld1rw_z_p_bi_u32"_h:
@@ -4682,18 +4501,11 @@ void Disassembler::VisitSVELoadAndBroadcastElement(const Instruction *instr) {
       break;
     case "ld1rsw_z_p_bi_s64"_h:
     case "ld1rw_z_p_bi_u64"_h:
-      form = "{'Zt.d}, 'Pgl/z, ['Xns";
       suffix = suffix_w;
       break;
     case "ld1rd_z_p_bi_u64"_h:
-      form = "{'Zt.d}, 'Pgl/z, ['Xns";
       suffix = suffix_d;
       break;
-  }
-
-  // Hide curly brackets if immediate is zero.
-  if (instr->ExtractBits(21, 16) == 0) {
-    suffix = "]";
   }
 
   FormatWithDecodedMnemonic(instr, form, suffix);
@@ -4702,17 +4514,16 @@ void Disassembler::VisitSVELoadAndBroadcastElement(const Instruction *instr) {
 void Disassembler::VisitSVELoadAndBroadcastQOWord_ScalarPlusImm(
     const Instruction *instr) {
   const char *form = "{'Zt.'tmsz}, 'Pgl/z, ['Xns";
-  const char *suffix = ", #'s1916*16]";
+  const char *suffix = "'(1916?, #'s1916*16)]";
 
   switch (form_hash_) {
     case "ld1rob_z_p_bi_u8"_h:
     case "ld1rod_z_p_bi_u64"_h:
     case "ld1roh_z_p_bi_u16"_h:
     case "ld1row_z_p_bi_u32"_h:
-      suffix = ", #'s1916*32]";
+      suffix = "'(1916?, #'s1916*32)]";
       break;
   }
-  if (instr->ExtractBits(19, 16) == 0) suffix = "]";
 
   FormatWithDecodedMnemonic(instr, form, suffix);
 }
@@ -4839,30 +4650,22 @@ void Disassembler::VisitSVEUnpackVectorElements(const Instruction *instr) {
 }
 
 void Disassembler::VisitSVEAddressGeneration(const Instruction *instr) {
-  const char *mnemonic = "adr";
   const char *form = "'Zd.d, ['Zn.d, 'Zm.d";
   const char *suffix = NULL;
 
-  bool msz_is_zero = (instr->ExtractBits(11, 10) == 0);
-
-  switch (instr->Mask(SVEAddressGenerationMask)) {
-    case ADR_z_az_d_s32_scaled:
-      suffix = msz_is_zero ? ", sxtw]" : ", sxtw #'u1110]";
+  switch (form_hash_) {
+    case "adr_z_az_d_s32_scaled"_h:
+      suffix = ", sxtw'(1110? #'u1110)]";
       break;
-    case ADR_z_az_d_u32_scaled:
-      suffix = msz_is_zero ? ", uxtw]" : ", uxtw #'u1110]";
+    case "adr_z_az_d_u32_scaled"_h:
+      suffix = ", uxtw'(1110? #'u1110)]";
       break;
-    case ADR_z_az_s_same_scaled:
-    case ADR_z_az_d_same_scaled:
+    case "adr_z_az_sd_same_scaled"_h:
       form = "'Zd.'t, ['Zn.'t, 'Zm.'t";
-      suffix = msz_is_zero ? "]" : ", lsl #'u1110]";
-      break;
-    default:
-      mnemonic = "unimplemented";
-      form = "(SVEAddressGeneration)";
+      suffix = "'(1110?, lsl #'u1110)]";
       break;
   }
-  Format(instr, mnemonic, form, suffix);
+  FormatWithDecodedMnemonic(instr, form, suffix);
 }
 
 void Disassembler::VisitSVEBitwiseLogicalUnpredicated(
@@ -5024,22 +4827,21 @@ void Disassembler::VisitSVEFPUnaryOpUnpredicated(const Instruction *instr) {
 }
 
 void Disassembler::VisitSVEIndexGeneration(const Instruction *instr) {
-  const char *form = "'Zd.'t, #'s0905, #'s2016";
-  bool w_inputs =
-      static_cast<unsigned>(instr->GetSVESize()) <= kWRegSizeInBytesLog2;
+  const char *form = "'Zd.'t, ";
+  const char *suffix = "#'s0905, #'s2016";
 
   switch (form_hash_) {
     case "index_z_ir"_h:
-      form = w_inputs ? "'Zd.'t, #'s0905, 'Wm" : "'Zd.'t, #'s0905, 'Xm";
+      suffix = "#'s0905, '(2322=3?'Xm:'Wm)";
       break;
     case "index_z_ri"_h:
-      form = w_inputs ? "'Zd.'t, 'Wn, #'s2016" : "'Zd.'t, 'Xn, #'s2016";
+      suffix = "'(2322=3?'Xn:'Wn), #'s2016";
       break;
     case "index_z_rr"_h:
-      form = w_inputs ? "'Zd.'t, 'Wn, 'Wm" : "'Zd.'t, 'Xn, 'Xm";
+      suffix = "'(2322=3?'Xn:'Wn), '(2322=3?'Xm:'Wm)";
       break;
   }
-  FormatWithDecodedMnemonic(instr, form);
+  FormatWithDecodedMnemonic(instr, form, suffix);
 }
 
 void Disassembler::VisitSVEIntMulAddUnpredicated(const Instruction *instr) {
@@ -5166,9 +4968,7 @@ void Disassembler::VisitSVEPredicateLogical(const Instruction *instr) {
 }
 
 void Disassembler::VisitSVEPredicateInitialize(const Instruction *instr) {
-  const char *form = "'Pd.'t, 'Ipc";
-  // Omit the pattern if it is the default ('ALL').
-  if (instr->ExtractBits(9, 5) == SVE_ALL) form = "'Pd.'t";
+  const char *form = "'Pd.'t'(0905=31?:, 'Ipc)";
   FormatWithDecodedMnemonic(instr, form);
 }
 
@@ -5186,10 +4986,8 @@ void Disassembler::VisitSVEVectorSelect(const Instruction *instr) {
 
 void Disassembler::VisitSVEContiguousLoad_ScalarPlusImm(
     const Instruction *instr) {
-  const char *form = "{'Zt.'tlss}, 'Pgl/z, ['Xns";
-  const char *suffix =
-      (instr->ExtractBits(19, 16) == 0) ? "]" : ", #'s1916, mul vl]";
-  FormatWithDecodedMnemonic(instr, form, suffix);
+  const char *form = "{'Zt.'tlss}, 'Pgl/z, ['Xns'(1916?, #'s1916, mul vl)]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::VisitReserved(const Instruction *instr) {
@@ -5399,9 +5197,9 @@ void Disassembler::DisassembleSVEFPPair(const Instruction *instr) {
 }
 
 void Disassembler::DisassembleSVEComplexIntAddition(const Instruction *instr) {
-  const char *form = "'Zd.'t, 'Zd.'t, 'Zn.'t, #";
-  const char *suffix = (instr->ExtractBit(10) == 0) ? "90" : "270";
-  Format(instr, mnemonic_.c_str(), form, suffix);
+  // Bit 10: 0 => #90, 1 => #270.
+  const char *form = "'Zd.'t, 'Zd.'t, 'Zn.'t, #'(1010?270:90)";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::Disassemble_ZdnT_ZdnT_ZmT_const(const Instruction *instr) {
@@ -5417,33 +5215,28 @@ void Disassembler::Disassemble_ZdnT_ZdnT_ZmT_const(const Instruction *instr) {
 }
 
 void Disassembler::Disassemble_ZtD_PgZ_ZnD_Xm(const Instruction *instr) {
-  const char *form = "{'Zt.d}, 'Pgl/z, ['Zn.d";
-  const char *suffix = instr->GetRm() == 31 ? "]" : ", 'Xm]";
-  Format(instr, mnemonic_.c_str(), form, suffix);
+  const char *form = "{'Zt.d}, 'Pgl/z, ['Zn.d'(2016=31?:, 'Xm)]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::Disassemble_ZtD_Pg_ZnD_Xm(const Instruction *instr) {
-  const char *form = "{'Zt.d}, 'Pgl, ['Zn.d";
-  const char *suffix = instr->GetRm() == 31 ? "]" : ", 'Xm]";
-  Format(instr, mnemonic_.c_str(), form, suffix);
+  const char *form = "{'Zt.d}, 'Pgl, ['Zn.d'(2016=31?:, 'Xm)]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::Disassemble_ZtS_PgZ_ZnS_Xm(const Instruction *instr) {
-  const char *form = "{'Zt.s}, 'Pgl/z, ['Zn.s";
-  const char *suffix = instr->GetRm() == 31 ? "]" : ", 'Xm]";
-  Format(instr, mnemonic_.c_str(), form, suffix);
+  const char *form = "{'Zt.s}, 'Pgl/z, ['Zn.s'(2016=31?:, 'Xm)]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::Disassemble_ZtS_Pg_ZnS_Xm(const Instruction *instr) {
-  const char *form = "{'Zt.s}, 'Pgl, ['Zn.s";
-  const char *suffix = instr->GetRm() == 31 ? "]" : ", 'Xm]";
-  Format(instr, mnemonic_.c_str(), form, suffix);
+  const char *form = "{'Zt.s}, 'Pgl, ['Zn.s'(2016=31?:, 'Xm)]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::Disassemble_XdSP_XnSP_Xm(const Instruction *instr) {
-  const char *form = "'Xds, 'Xns";
-  const char *suffix = instr->GetRm() == 31 ? "" : ", 'Xm";
-  Format(instr, mnemonic_.c_str(), form, suffix);
+  const char *form = "'Xds, 'Xns'(2016=31?:, 'Xm)";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::Disassemble_XdSP_XnSP_uimm6_uimm4(const Instruction *instr) {
@@ -5466,7 +5259,7 @@ void Disassembler::DisassembleMTEStoreTagPair(const Instruction *instr) {
   const char *suffix = NULL;
   switch (form_hash_) {
     case Hash("stgp_64_ldstpair_off"):
-      suffix = ", #'s2115*16]";
+      suffix = "'(2115?, #'s2115*16)]";
       break;
     case Hash("stgp_64_ldstpair_post"):
       suffix = "], #'s2115*16";
@@ -5477,10 +5270,6 @@ void Disassembler::DisassembleMTEStoreTagPair(const Instruction *instr) {
     default:
       mnemonic_ = "unimplemented";
       break;
-  }
-
-  if (instr->GetImmLSPair() == 0) {
-    suffix = "]";
   }
 
   Format(instr, mnemonic_.c_str(), form, suffix);
@@ -5494,7 +5283,7 @@ void Disassembler::DisassembleMTEStoreTag(const Instruction *instr) {
     case Hash("stg_64soffset_ldsttags"):
     case Hash("stz2g_64soffset_ldsttags"):
     case Hash("stzg_64soffset_ldsttags"):
-      suffix = ", #'s2012*16]";
+      suffix = "'(2012?, #'s2012*16)]";
       break;
     case Hash("st2g_64spost_ldsttags"):
     case Hash("stg_64spost_ldsttags"):
@@ -5513,17 +5302,12 @@ void Disassembler::DisassembleMTEStoreTag(const Instruction *instr) {
       break;
   }
 
-  if (instr->GetImmLS() == 0) {
-    suffix = "]";
-  }
-
   Format(instr, mnemonic_.c_str(), form, suffix);
 }
 
 void Disassembler::DisassembleMTELoadTag(const Instruction *instr) {
-  const char *form =
-      (instr->GetImmLS() == 0) ? "'Xt, ['Xns]" : "'Xt, ['Xns, #'s2012*16]";
-  Format(instr, mnemonic_.c_str(), form);
+  const char *form = "'Xt, ['Xns'(2012?, #'s2012*16)]";
+  FormatWithDecodedMnemonic(instr, form);
 }
 
 void Disassembler::DisassembleCpy(const Instruction *instr) {
@@ -5691,10 +5475,16 @@ void Disassembler::Format(const Instruction *instr,
     if (format0[0] != 0) {  // Not a zero-length string.
       VIXL_ASSERT(buffer_pos_ < buffer_size_);
       buffer_[buffer_pos_++] = ' ';
-      Substitute(instr, format0);
+      int chars_written = Substitute(instr, format0);
       // TODO: consider using a zero-length string here, too.
       if (format1 != NULL) {
-        Substitute(instr, format1);
+        chars_written += Substitute(instr, format1);
+      }
+
+      if (chars_written == 0) {
+        // Erase the space written earlier, as there are no arguments to the
+        // instruction.
+        buffer_pos_--;
       }
     }
     VIXL_ASSERT(buffer_pos_ < buffer_size_);
@@ -5709,7 +5499,8 @@ void Disassembler::FormatWithDecodedMnemonic(const Instruction *instr,
   Format(instr, mnemonic_.c_str(), format0, format1);
 }
 
-void Disassembler::Substitute(const Instruction *instr, const char *string) {
+int Disassembler::Substitute(const Instruction *instr, const char *string) {
+  uint32_t buffer_pos_init = buffer_pos_;
   char chr = *string++;
   while (chr != '\0') {
     if (chr == '\'') {
@@ -5720,6 +5511,7 @@ void Disassembler::Substitute(const Instruction *instr, const char *string) {
     }
     chr = *string++;
   }
+  return static_cast<int>(buffer_pos_ - buffer_pos_init);
 }
 
 
@@ -5772,6 +5564,8 @@ int Disassembler::SubstituteField(const Instruction *instr,
       return SubstituteSVESize(instr, format);
     case '?':
       return SubstituteTernary(instr, format);
+    case '(':
+      return SubstituteConditionalBlock(instr, format);
     default: {
       VIXL_UNREACHABLE();
       return 1;
@@ -6947,6 +6741,80 @@ int Disassembler::SubstituteTernary(const Instruction *instr,
   c++;
   AppendToOutput("%c", c[1 - instr->ExtractBit(static_cast<int>(value))]);
   return 6;
+}
+
+int Disassembler::SubstituteConditionalBlock(const Instruction *instr,
+                                             const char *format) {
+  VIXL_ASSERT(strlen(format) >= 6);
+  VIXL_ASSERT((format[0] == '(') && (format[5] == '?' || (format[5] == '=')));
+  VIXL_ASSERT(strchr(format, ')') != nullptr);
+
+  // A conditional block uses the placeholder '(AABB?xxx:yyyy)' where AA and
+  // BB are two digit bit positions between 00 and 31, and AA >= BB. If the
+  // bits of the instruction in the range AA to BB are non-zero, the placeholder
+  // is substituted with the string represented by xxx, else yyyy. The strings
+  // are of variable length and may contain other placeholders for further
+  // substitutions. The ':yyyy' section may be omitted, implying a zero-length
+  // string is substituted if instruction bits in the range AA to BB are zero.
+  //
+  // Alternatively, a specific value for the bits in the range AA to BB can
+  // be specified using the placeholder '(AABB=zzz?xxx:yyyy)'. If the bits in
+  // the range AA to BB are equal to zzz, xxx is substitued, else yyyy. As
+  // above, :yyyy may be omitted.
+  VIXL_ASSERT(strspn(&format[1], "0123456789") == 4);
+  const char *c = &format[1];
+  int msb = ((c[0] - '0') * 10) + (c[1] - '0');
+  int lsb = ((c[2] - '0') * 10) + (c[3] - '0');
+  uint32_t bits = instr->ExtractBits(msb, lsb);
+  uint64_t value = 0;
+  bool use_explicit_value = false;
+
+  if (format[5] == '=') {
+    use_explicit_value = true;
+    char *temp;
+    VIXL_ASSERT(strspn(&format[6], "0123456789") > 0);
+    value = strtoul(&format[6], &temp, 10);
+    c = temp;
+  } else {
+    c += 4;  // Skip the bit positions we read above.
+  }
+
+  // Skip '?'
+  VIXL_ASSERT(*c == '?');
+  c++;
+
+  char temp[256] = {0};
+  const char *close = strchr(format, ')');
+  size_t subst_len = close - c;
+  VIXL_ASSERT(subst_len < sizeof(temp));
+
+  // Copy the substitution string into a temporary buffer and set up pointers
+  // for the left-hand (true) and right-hand (false) sides.
+  memcpy(temp, c, subst_len);
+
+  char *lhs = temp;
+  char *rhs = nullptr;
+  char *colon = strchr(temp, ':');
+  if (colon != nullptr) {
+    // If there's a colon, set it to zero to act as the terminator for the
+    // left-hand string.
+    *colon = 0;
+    rhs = colon + 1;
+  }
+
+  bool use_lhs;
+  if (use_explicit_value) {
+    use_lhs = (bits == value);
+  } else {
+    use_lhs = (bits != 0);
+  }
+
+  char *subst = use_lhs ? lhs : rhs;
+  if ((subst != nullptr) && (strlen(subst) > 0)) {
+    Substitute(instr, subst);
+  }
+
+  return static_cast<int>(1 + close - format);
 }
 
 void Disassembler::ResetOutput() {

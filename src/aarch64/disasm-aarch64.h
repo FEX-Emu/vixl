@@ -207,7 +207,7 @@ class Disassembler : public DecoderVisitor {
                                  const char* format0,
                                  const char* format1 = NULL);
 
-  void Substitute(const Instruction* instr, const char* string);
+  int Substitute(const Instruction* instr, const char* string);
   int SubstituteField(const Instruction* instr, const char* format);
   int SubstituteRegisterField(const Instruction* instr, const char* format);
   int SubstitutePredicateRegisterField(const Instruction* instr,
@@ -229,6 +229,7 @@ class Disassembler : public DecoderVisitor {
   int SubstituteIntField(const Instruction* instr, const char* format);
   int SubstituteSVESize(const Instruction* instr, const char* format);
   int SubstituteTernary(const Instruction* instr, const char* format);
+  int SubstituteConditionalBlock(const Instruction* instr, const char* format);
 
   std::pair<unsigned, unsigned> GetRegNumForField(const Instruction* instr,
                                                   char reg_prefix,
