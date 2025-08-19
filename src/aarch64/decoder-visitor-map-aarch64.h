@@ -35,12 +35,7 @@
 
 #define DEFAULT_FORM_TO_VISITOR_MAP(VISITORCLASS)                              \
   {"abs_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},        \
-      {"add_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated},   \
-      {"adr_z_az_d_s32_scaled"_h, &VISITORCLASS::VisitSVEAddressGeneration},   \
-      {"adr_z_az_d_u32_scaled"_h, &VISITORCLASS::VisitSVEAddressGeneration},   \
-      {"adr_z_az_sd_same_scaled"_h, &VISITORCLASS::VisitSVEAddressGeneration}, \
       {"ands_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
-      {"andv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                   \
       {"and_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
       {"and_z_zi"_h,                                                           \
        &VISITORCLASS::VisitSVEBitwiseLogicalWithImm_Unpredicated},             \
@@ -87,7 +82,6 @@
       {"dup_z_r"_h, &VISITORCLASS::VisitSVEBroadcastGeneralRegister},          \
       {"dup_z_zi"_h, &VISITORCLASS::VisitSVEBroadcastIndexElement},            \
       {"eors_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
-      {"eorv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                   \
       {"eor_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
       {"eor_z_zi"_h,                                                           \
        &VISITORCLASS::VisitSVEBitwiseLogicalWithImm_Unpredicated},             \
@@ -187,10 +181,6 @@
       {"inch_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
       {"incw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"incw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
-      {"index_z_ii"_h, &VISITORCLASS::VisitSVEIndexGeneration},                \
-      {"index_z_ir"_h, &VISITORCLASS::VisitSVEIndexGeneration},                \
-      {"index_z_ri"_h, &VISITORCLASS::VisitSVEIndexGeneration},                \
-      {"index_z_rr"_h, &VISITORCLASS::VisitSVEIndexGeneration},                \
       {"insr_z_r"_h, &VISITORCLASS::VisitSVEInsertGeneralRegister},            \
       {"lasta_r_p_z"_h,                                                        \
        &VISITORCLASS::VisitSVEExtractElementToGeneralRegister},                \
@@ -200,28 +190,12 @@
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
       {"ld1b_z_p_ai_s"_h,                                                      \
        &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
-      {"ld1b_z_p_bi_u16"_h,                                                    \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
-      {"ld1b_z_p_bi_u32"_h,                                                    \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
-      {"ld1b_z_p_bi_u64"_h,                                                    \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
-      {"ld1b_z_p_bi_u8"_h,                                                     \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
       {"ld1d_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1d_z_p_bi_u64"_h,                                                    \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
       {"ld1h_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
       {"ld1h_z_p_ai_s"_h,                                                      \
        &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
-      {"ld1h_z_p_bi_u16"_h,                                                    \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
-      {"ld1h_z_p_bi_u32"_h,                                                    \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
-      {"ld1h_z_p_bi_u64"_h,                                                    \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
       {"ld1rb_z_p_bi_u16"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
       {"ld1rb_z_p_bi_u32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
       {"ld1rb_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
@@ -230,14 +204,6 @@
       {"ld1rh_z_p_bi_u16"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
       {"ld1rh_z_p_bi_u32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
       {"ld1rh_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
-      {"ld1rqb_z_p_bi_u8"_h,                                                   \
-       &VISITORCLASS::VisitSVELoadAndBroadcastQOWord_ScalarPlusImm},           \
-      {"ld1rqd_z_p_bi_u64"_h,                                                  \
-       &VISITORCLASS::VisitSVELoadAndBroadcastQOWord_ScalarPlusImm},           \
-      {"ld1rqh_z_p_bi_u16"_h,                                                  \
-       &VISITORCLASS::VisitSVELoadAndBroadcastQOWord_ScalarPlusImm},           \
-      {"ld1rqw_z_p_bi_u32"_h,                                                  \
-       &VISITORCLASS::VisitSVELoadAndBroadcastQOWord_ScalarPlusImm},           \
       {"ld1rsb_z_p_bi_s16"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
       {"ld1rsb_z_p_bi_s32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
       {"ld1rsb_z_p_bi_s64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
@@ -250,32 +216,16 @@
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
       {"ld1sb_z_p_ai_s"_h,                                                     \
        &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
-      {"ld1sb_z_p_bi_s16"_h,                                                   \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
-      {"ld1sb_z_p_bi_s32"_h,                                                   \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
-      {"ld1sb_z_p_bi_s64"_h,                                                   \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
       {"ld1sh_z_p_ai_d"_h,                                                     \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
       {"ld1sh_z_p_ai_s"_h,                                                     \
        &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
-      {"ld1sh_z_p_bi_s32"_h,                                                   \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
-      {"ld1sh_z_p_bi_s64"_h,                                                   \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
       {"ld1sw_z_p_ai_d"_h,                                                     \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1sw_z_p_bi_s64"_h,                                                   \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
       {"ld1w_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
       {"ld1w_z_p_ai_s"_h,                                                      \
        &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
-      {"ld1w_z_p_bi_u32"_h,                                                    \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
-      {"ld1w_z_p_bi_u64"_h,                                                    \
-       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
       {"ldff1b_z_p_ai_d"_h,                                                    \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
       {"ldff1b_z_p_ai_s"_h,                                                    \
@@ -397,7 +347,6 @@
       {"orr_z_zi"_h,                                                           \
        &VISITORCLASS::VisitSVEBitwiseLogicalWithImm_Unpredicated},             \
       {"orr_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
-      {"orv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                    \
       {"prfb_i_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitGatherPrefetch_VectorPlusImm},              \
       {"prfb_i_p_ai_s"_h,                                                      \
@@ -454,15 +403,12 @@
       {"prfw_i_p_bz_d_x32_scaled"_h,                                           \
        &VISITORCLASS::                                                         \
            VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets},  \
-      {"ptrues_p_s"_h, &VISITORCLASS::VisitSVEPredicateInitialize},            \
-      {"ptrue_p_s"_h, &VISITORCLASS::VisitSVEPredicateInitialize},             \
       {"rbit_z_p_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},          \
       {"revb_z_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},            \
       {"revh_z_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},            \
       {"revw_z_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},            \
       {"rev_p_p"_h, &VISITORCLASS::VisitSVEReversePredicateElements},          \
       {"rev_z_z"_h, &VISITORCLASS::VisitSVEReverseVectorElements},             \
-      {"saddv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
       {"scvtf_z_p_z_h2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
       {"scvtf_z_p_z_w2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
       {"scvtf_z_p_z_w2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
@@ -473,13 +419,8 @@
       {"sdivr_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},  \
       {"sdiv_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},   \
       {"sdot_z_zzz"_h, &VISITORCLASS::VisitSVEIntMulAddUnpredicated},          \
-      {"sdot_z_zzzi_d"_h, &VISITORCLASS::VisitSVEMulIndex},                    \
-      {"sdot_z_zzzi_s"_h, &VISITORCLASS::VisitSVEMulIndex},                    \
       {"sel_p_p_pp"_h, &VISITORCLASS::VisitSVEPredicateLogical},               \
       {"sel_z_p_zz"_h, &VISITORCLASS::VisitSVEVectorSelect},                   \
-      {"smaxv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
-      {"sminv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
-      {"sqadd_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated}, \
       {"sqdecb_r_rs_sx"_h,                                                     \
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"sqdecb_r_rs_x"_h,                                                      \
@@ -524,7 +465,6 @@
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"sqincw_z_zs"_h,                                                        \
        &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"sqsub_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated}, \
       {"st1b_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
       {"st1b_z_p_ai_s"_h,                                                      \
@@ -553,14 +493,11 @@
        &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
       {"str_p_bi"_h, &VISITORCLASS::VisitSVEStorePredicateRegister},           \
       {"str_z_bi"_h, &VISITORCLASS::VisitSVEStoreVectorRegister},              \
-      {"subr_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated},  \
-      {"sub_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated},   \
       {"sunpkhi_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
       {"sunpklo_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
       {"sxtb_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
       {"sxth_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
       {"sxtw_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
-      {"uaddv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
       {"ucvtf_z_p_z_h2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
       {"ucvtf_z_p_z_w2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
       {"ucvtf_z_p_z_w2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
@@ -572,11 +509,6 @@
       {"udivr_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},  \
       {"udiv_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},   \
       {"udot_z_zzz"_h, &VISITORCLASS::VisitSVEIntMulAddUnpredicated},          \
-      {"udot_z_zzzi_d"_h, &VISITORCLASS::VisitSVEMulIndex},                    \
-      {"udot_z_zzzi_s"_h, &VISITORCLASS::VisitSVEMulIndex},                    \
-      {"umaxv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
-      {"uminv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
-      {"uqadd_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated}, \
       {"uqdecb_r_rs_uw"_h,                                                     \
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"uqdecb_r_rs_x"_h,                                                      \
@@ -621,20 +553,11 @@
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"uqincw_z_zs"_h,                                                        \
        &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"uqsub_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated}, \
       {"uunpkhi_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
       {"uunpklo_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
       {"uxtb_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
       {"uxth_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
       {"uxtw_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
-      {"whilele_p_p_rr"_h,                                                     \
-       &VISITORCLASS::VisitSVEIntCompareScalarCountAndLimit},                  \
-      {"whilelo_p_p_rr"_h,                                                     \
-       &VISITORCLASS::VisitSVEIntCompareScalarCountAndLimit},                  \
-      {"whilels_p_p_rr"_h,                                                     \
-       &VISITORCLASS::VisitSVEIntCompareScalarCountAndLimit},                  \
-      {"whilelt_p_p_rr"_h,                                                     \
-       &VISITORCLASS::VisitSVEIntCompareScalarCountAndLimit},                  \
       {"adds_32s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
       {"adds_64s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
       {"add_32_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},             \
@@ -864,18 +787,6 @@
       {"umulh_64_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
       {"extr_32_extract"_h, &VISITORCLASS::VisitExtract},                      \
       {"extr_64_extract"_h, &VISITORCLASS::VisitExtract},                      \
-      {"fabs_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
-      {"fabs_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
-      {"fabs_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
-      {"fneg_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
-      {"fneg_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
-      {"fneg_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
-      {"fsqrt_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
-      {"fsqrt_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
-      {"fsqrt_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
-      {"fmov_d_floatimm"_h, &VISITORCLASS::VisitFPImmediate},                  \
-      {"fmov_h_floatimm"_h, &VISITORCLASS::VisitFPImmediate},                  \
-      {"fmov_s_floatimm"_h, &VISITORCLASS::VisitFPImmediate},                  \
       {"casab_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"casah_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"casalb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
@@ -1188,30 +1099,6 @@
       {"sqrdmlah_asimdsame2_only"_h, &VISITORCLASS::VisitNEON3SameExtra},      \
       {"sqrdmlsh_asimdsame2_only"_h, &VISITORCLASS::VisitNEON3SameExtra},      \
       {"udot_asimdsame2_d"_h, &VISITORCLASS::VisitNEON3SameExtra},             \
-      {"fabd_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
-      {"facge_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
-      {"facgt_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
-      {"faddp_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
-      {"fadd_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
-      {"fcmeq_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
-      {"fcmge_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
-      {"fcmgt_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
-      {"fdiv_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
-      {"fmaxnmp_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},     \
-      {"fmaxnm_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},      \
-      {"fmaxp_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
-      {"fmax_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
-      {"fminnmp_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},     \
-      {"fminnm_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},      \
-      {"fminp_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
-      {"fmin_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
-      {"fmla_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
-      {"fmls_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
-      {"fmulx_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
-      {"fmul_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
-      {"frecps_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},      \
-      {"frsqrts_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},     \
-      {"fsub_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
       {"addv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},           \
       {"saddlv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},         \
       {"smaxv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},          \
@@ -1485,22 +1372,6 @@
        &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
       {"st4_asisdlsop_sx4_r4s"_h,                                              \
        &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"bic_asimdimm_l_hl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
-      {"bic_asimdimm_l_sl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
-      {"fmov_asimdimm_d2_d"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
-      {"fmov_asimdimm_h_h"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
-      {"fmov_asimdimm_s_s"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
-      {"movi_asimdimm_d2_d"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
-      {"movi_asimdimm_d_ds"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
-      {"movi_asimdimm_l_hl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
-      {"movi_asimdimm_l_sl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
-      {"movi_asimdimm_m_sm"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
-      {"movi_asimdimm_n_b"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
-      {"mvni_asimdimm_l_hl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
-      {"mvni_asimdimm_l_sl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
-      {"mvni_asimdimm_m_sm"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
-      {"orr_asimdimm_l_hl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
-      {"orr_asimdimm_l_sl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
       {"trn1_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
       {"trn2_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
       {"uzp1_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
@@ -1563,14 +1434,6 @@
       {"uqshl_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},          \
       {"shl_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},            \
       {"sli_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},            \
-      {"tbl_asimdtbl_l1_1"_h, &VISITORCLASS::VisitNEONTable},                  \
-      {"tbl_asimdtbl_l2_2"_h, &VISITORCLASS::VisitNEONTable},                  \
-      {"tbl_asimdtbl_l3_3"_h, &VISITORCLASS::VisitNEONTable},                  \
-      {"tbl_asimdtbl_l4_4"_h, &VISITORCLASS::VisitNEONTable},                  \
-      {"tbx_asimdtbl_l1_1"_h, &VISITORCLASS::VisitNEONTable},                  \
-      {"tbx_asimdtbl_l2_2"_h, &VISITORCLASS::VisitNEONTable},                  \
-      {"tbx_asimdtbl_l3_3"_h, &VISITORCLASS::VisitNEONTable},                  \
-      {"tbx_asimdtbl_l4_4"_h, &VISITORCLASS::VisitNEONTable},                  \
       {"bti_hb_hints"_h, &VISITORCLASS::VisitSystem},                          \
       {"clrex_bn_barriers"_h, &VISITORCLASS::VisitSystem},                     \
       {"dmb_bo_barriers"_h, &VISITORCLASS::VisitSystem},                       \
@@ -2844,6 +2707,145 @@
       {"fsqrt_asimdmiscfp16_r"_h, &VISITORCLASS::VisitNEON2RegMiscFP16},       \
       {"scvtf_asimdmiscfp16_r"_h, &VISITORCLASS::VisitNEON2RegMiscFP16},       \
       {"ucvtf_asimdmiscfp16_r"_h, &VISITORCLASS::VisitNEON2RegMiscFP16},       \
+      {"ld1b_z_p_bi_u16"_h,                                                    \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1b_z_p_bi_u32"_h,                                                    \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1b_z_p_bi_u64"_h,                                                    \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1b_z_p_bi_u8"_h,                                                     \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1d_z_p_bi_u64"_h,                                                    \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1h_z_p_bi_u16"_h,                                                    \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1h_z_p_bi_u32"_h,                                                    \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1h_z_p_bi_u64"_h,                                                    \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1sb_z_p_bi_s16"_h,                                                   \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1sb_z_p_bi_s32"_h,                                                   \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1sb_z_p_bi_s64"_h,                                                   \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1sh_z_p_bi_s32"_h,                                                   \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1sh_z_p_bi_s64"_h,                                                   \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1sw_z_p_bi_s64"_h,                                                   \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1w_z_p_bi_u32"_h,                                                    \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ld1w_z_p_bi_u64"_h,                                                    \
+       &VISITORCLASS::VisitSVEContiguousLoad_ScalarPlusImm},                   \
+      {"ptrues_p_s"_h, &VISITORCLASS::VisitSVEPredicateInitialize},            \
+      {"ptrue_p_s"_h, &VISITORCLASS::VisitSVEPredicateInitialize},             \
+      {"index_z_ii"_h, &VISITORCLASS::VisitSVEIndexGeneration},                \
+      {"index_z_ir"_h, &VISITORCLASS::VisitSVEIndexGeneration},                \
+      {"index_z_ri"_h, &VISITORCLASS::VisitSVEIndexGeneration},                \
+      {"index_z_rr"_h, &VISITORCLASS::VisitSVEIndexGeneration},                \
+      {"adr_z_az_d_s32_scaled"_h, &VISITORCLASS::VisitSVEAddressGeneration},   \
+      {"adr_z_az_d_u32_scaled"_h, &VISITORCLASS::VisitSVEAddressGeneration},   \
+      {"adr_z_az_sd_same_scaled"_h, &VISITORCLASS::VisitSVEAddressGeneration}, \
+      {"ld1rqb_z_p_bi_u8"_h,                                                   \
+       &VISITORCLASS::VisitSVELoadAndBroadcastQOWord_ScalarPlusImm},           \
+      {"ld1rqd_z_p_bi_u64"_h,                                                  \
+       &VISITORCLASS::VisitSVELoadAndBroadcastQOWord_ScalarPlusImm},           \
+      {"ld1rqh_z_p_bi_u16"_h,                                                  \
+       &VISITORCLASS::VisitSVELoadAndBroadcastQOWord_ScalarPlusImm},           \
+      {"ld1rqw_z_p_bi_u32"_h,                                                  \
+       &VISITORCLASS::VisitSVELoadAndBroadcastQOWord_ScalarPlusImm},           \
+      {"add_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated},   \
+      {"sqadd_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated}, \
+      {"sqsub_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated}, \
+      {"subr_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated},  \
+      {"sub_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated},   \
+      {"uqadd_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated}, \
+      {"uqsub_z_zi"_h, &VISITORCLASS::VisitSVEIntAddSubtractImm_Unpredicated}, \
+      {"whilele_p_p_rr"_h,                                                     \
+       &VISITORCLASS::VisitSVEIntCompareScalarCountAndLimit},                  \
+      {"whilelo_p_p_rr"_h,                                                     \
+       &VISITORCLASS::VisitSVEIntCompareScalarCountAndLimit},                  \
+      {"whilels_p_p_rr"_h,                                                     \
+       &VISITORCLASS::VisitSVEIntCompareScalarCountAndLimit},                  \
+      {"whilelt_p_p_rr"_h,                                                     \
+       &VISITORCLASS::VisitSVEIntCompareScalarCountAndLimit},                  \
+      {"ptrues_p_s"_h, &VISITORCLASS::VisitSVEPredicateInitialize},            \
+      {"ptrue_p_s"_h, &VISITORCLASS::VisitSVEPredicateInitialize},             \
+      {"fmov_d_floatimm"_h, &VISITORCLASS::VisitFPImmediate},                  \
+      {"fmov_h_floatimm"_h, &VISITORCLASS::VisitFPImmediate},                  \
+      {"fmov_s_floatimm"_h, &VISITORCLASS::VisitFPImmediate},                  \
+      {"fabs_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
+      {"fabs_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
+      {"fabs_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
+      {"fneg_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
+      {"fneg_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
+      {"fneg_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},      \
+      {"fsqrt_d_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
+      {"fsqrt_h_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
+      {"fsqrt_s_floatdp1"_h, &VISITORCLASS::VisitFPDataProcessing1Source},     \
+      {"bic_asimdimm_l_hl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
+      {"bic_asimdimm_l_sl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
+      {"fmov_asimdimm_d2_d"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
+      {"fmov_asimdimm_h_h"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
+      {"fmov_asimdimm_s_s"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
+      {"movi_asimdimm_d2_d"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
+      {"movi_asimdimm_d_ds"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
+      {"movi_asimdimm_l_hl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
+      {"movi_asimdimm_l_sl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
+      {"movi_asimdimm_m_sm"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
+      {"movi_asimdimm_n_b"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
+      {"mvni_asimdimm_l_hl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
+      {"mvni_asimdimm_l_sl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
+      {"mvni_asimdimm_m_sm"_h, &VISITORCLASS::VisitNEONModifiedImmediate},     \
+      {"orr_asimdimm_l_hl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
+      {"orr_asimdimm_l_sl"_h, &VISITORCLASS::VisitNEONModifiedImmediate},      \
+      {"tbl_asimdtbl_l1_1"_h, &VISITORCLASS::VisitNEONTable},                  \
+      {"tbl_asimdtbl_l2_2"_h, &VISITORCLASS::VisitNEONTable},                  \
+      {"tbl_asimdtbl_l3_3"_h, &VISITORCLASS::VisitNEONTable},                  \
+      {"tbl_asimdtbl_l4_4"_h, &VISITORCLASS::VisitNEONTable},                  \
+      {"tbx_asimdtbl_l1_1"_h, &VISITORCLASS::VisitNEONTable},                  \
+      {"tbx_asimdtbl_l2_2"_h, &VISITORCLASS::VisitNEONTable},                  \
+      {"tbx_asimdtbl_l3_3"_h, &VISITORCLASS::VisitNEONTable},                  \
+      {"tbx_asimdtbl_l4_4"_h, &VISITORCLASS::VisitNEONTable},                  \
+      {"andv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                   \
+      {"eorv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                   \
+      {"orv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                    \
+      {"saddv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
+      {"smaxv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
+      {"sminv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
+      {"uaddv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
+      {"umaxv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
+      {"uminv_r_p_z"_h, &VISITORCLASS::VisitSVEIntReduction},                  \
+      {"sdot_z_zzzi_d"_h, &VISITORCLASS::VisitSVEMulIndex},                    \
+      {"sdot_z_zzzi_s"_h, &VISITORCLASS::VisitSVEMulIndex},                    \
+      {"udot_z_zzzi_d"_h, &VISITORCLASS::VisitSVEMulIndex},                    \
+      {"udot_z_zzzi_s"_h, &VISITORCLASS::VisitSVEMulIndex},                    \
+      {"fabd_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
+      {"facge_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
+      {"facgt_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
+      {"faddp_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
+      {"fadd_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
+      {"fcmeq_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
+      {"fcmge_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
+      {"fcmgt_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
+      {"fdiv_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
+      {"fmaxnmp_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},     \
+      {"fmaxnm_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},      \
+      {"fmaxp_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
+      {"fmax_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
+      {"fminnmp_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},     \
+      {"fminnm_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},      \
+      {"fminp_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
+      {"fmin_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
+      {"fmla_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
+      {"fmls_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
+      {"fmulx_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},       \
+      {"fmul_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
+      {"frecps_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},      \
+      {"frsqrts_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},     \
+      {"fsub_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
       {"fmla_asisdelem_rh_h"_h,                                                \
        &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
       {"fmla_asisdelem_r_sd"_h,                                                \

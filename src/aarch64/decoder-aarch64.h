@@ -48,8 +48,6 @@
   V(DataProcessing2Source)                                       \
   V(DataProcessing3Source)                                       \
   V(Extract)                                                     \
-  V(FPDataProcessing1Source)                                     \
-  V(FPImmediate)                                                 \
   V(LoadStoreExclusive)                                          \
   V(LoadStorePairOffset)                                         \
   V(LoadStorePairPostIndex)                                      \
@@ -65,7 +63,6 @@
   V(NEON3Different)                                              \
   V(NEON3Same)                                                   \
   V(NEON3SameExtra)                                              \
-  V(NEON3SameFP16)                                               \
   V(NEONAcrossLanes)                                             \
   V(NEONByIndexedElement)                                        \
   V(NEONCopy)                                                    \
@@ -74,7 +71,6 @@
   V(NEONLoadStoreMultiStructPostIndex)                           \
   V(NEONLoadStoreSingleStruct)                                   \
   V(NEONLoadStoreSingleStructPostIndex)                          \
-  V(NEONModifiedImmediate)                                       \
   V(NEONPerm)                                                    \
   V(NEONScalar2RegMisc)                                          \
   V(NEONScalar3Diff)                                             \
@@ -84,7 +80,6 @@
   V(NEONScalarPairwise)                                          \
   V(NEONScalarShiftImmediate)                                    \
   V(NEONShiftImmediate)                                          \
-  V(NEONTable)                                                   \
   V(SVE32BitGatherLoad_VectorPlusImm)                            \
   V(SVE32BitGatherPrefetch_VectorPlusImm)                        \
   V(SVE32BitScatterStore_VectorPlusImm)                          \
@@ -93,7 +88,6 @@
   V(SVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets) \
   V(SVE64BitGatherPrefetch_VectorPlusImm)                        \
   V(SVE64BitScatterStore_VectorPlusImm)                          \
-  V(SVEAddressGeneration)                                        \
   V(SVEBitwiseLogicalUnpredicated)                               \
   V(SVEBitwiseShiftUnpredicated)                                 \
   V(SVEFPAccumulatingReduction)                                  \
@@ -105,11 +99,8 @@
   V(SVEFPFastReduction)                                          \
   V(SVEFPMulAdd)                                                 \
   V(SVEFPUnaryOpUnpredicated)                                    \
-  V(SVEIndexGeneration)                                          \
   V(SVEIntMulAddUnpredicated)                                    \
-  V(SVEIntReduction)                                             \
   V(SVEIntUnaryArithmeticPredicated)                             \
-  V(SVEMulIndex)                                                 \
   V(SVEPredicateLogical)                                         \
   V(SVEVectorSelect)                                             \
   V(SVEBitwiseLogicalWithImm_Unpredicated)                       \
@@ -124,7 +115,6 @@
   V(SVEConditionallyExtractElementToGeneralRegister)             \
   V(SVEConditionallyTerminateScalars)                            \
   V(SVEContiguousFirstFaultLoad_ScalarPlusScalar)                \
-  V(SVEContiguousLoad_ScalarPlusImm)                             \
   V(SVEContiguousNonFaultLoad_ScalarPlusImm)                     \
   V(SVEContiguousNonTemporalLoad_ScalarPlusImm)                  \
   V(SVEContiguousNonTemporalStore_ScalarPlusImm)                 \
@@ -148,15 +138,11 @@
   V(SVEIncDecRegisterByElementCount)                             \
   V(SVEIncDecVectorByElementCount)                               \
   V(SVEInsertGeneralRegister)                                    \
-  V(SVEIntAddSubtractImm_Unpredicated)                           \
-  V(SVEIntCompareScalarCountAndLimit)                            \
   V(SVEIntConvertToFP)                                           \
   V(SVEIntDivideVectors_Predicated)                              \
   V(SVELoadAndBroadcastElement)                                  \
-  V(SVELoadAndBroadcastQOWord_ScalarPlusImm)                     \
   V(SVELoadPredicateRegister)                                    \
   V(SVELoadVectorRegister)                                       \
-  V(SVEPredicateInitialize)                                      \
   V(SVEReversePredicateElements)                                 \
   V(SVEReverseVectorElements)                                    \
   V(SVEReverseWithinElements)                                    \
@@ -265,7 +251,21 @@
   V(Crypto2RegSHA)                                               \
   V(Crypto3RegSHA)                                               \
   V(CryptoAES)                                                   \
-  V(NEON2RegMiscFP16)
+  V(NEON2RegMiscFP16)                                            \
+  V(SVEContiguousLoad_ScalarPlusImm)                             \
+  V(SVEPredicateInitialize)                                      \
+  V(SVEIndexGeneration)                                          \
+  V(SVEAddressGeneration)                                        \
+  V(SVELoadAndBroadcastQOWord_ScalarPlusImm)                     \
+  V(SVEIntAddSubtractImm_Unpredicated)                           \
+  V(SVEIntCompareScalarCountAndLimit)                            \
+  V(FPImmediate)                                                 \
+  V(FPDataProcessing1Source)                                     \
+  V(NEONModifiedImmediate)                                       \
+  V(NEONTable)                                                   \
+  V(SVEIntReduction)                                             \
+  V(SVEMulIndex)                                                 \
+  V(NEON3SameFP16)
 
 #define VISITOR_LIST_THAT_DONT_RETURN(V) V(Reserved)
 

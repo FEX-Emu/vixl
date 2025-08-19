@@ -150,10 +150,6 @@ class Disassembler : public DecoderVisitor {
   void Disassemble_ZdaT_ZnTb_ZmTb_const(const Instruction* instr);
   void Disassemble_ZdnT_PgM_ZdnT_const(const Instruction* instr);
   void Disassemble_ZdnT_ZdnT_ZmT_const(const Instruction* instr);
-  void Disassemble_ZtD_PgZ_ZnD_Xm(const Instruction* instr);
-  void Disassemble_ZtD_Pg_ZnD_Xm(const Instruction* instr);
-  void Disassemble_ZtS_PgZ_ZnS_Xm(const Instruction* instr);
-  void Disassemble_ZtS_Pg_ZnS_Xm(const Instruction* instr);
 
   void DisassembleCpy(const Instruction* instr);
   void DisassembleSet(const Instruction* instr);
@@ -161,13 +157,11 @@ class Disassembler : public DecoderVisitor {
   void DisassembleSVEShiftLeftImm(const Instruction* instr);
   void DisassembleSVEShiftRightImm(const Instruction* instr);
   void DisassembleSVEAddSubHigh(const Instruction* instr);
-  void DisassembleSVEComplexIntAddition(const Instruction* instr);
   void DisassembleSVEFlogb(const Instruction* instr);
   void DisassembleSVEFPPair(const Instruction* instr);
   void DisassembleSVEPmull(const Instruction* instr);
 
   void DisassembleNEONMulByElementLong(const Instruction* instr);
-  void DisassembleNEONDotProdByElement(const Instruction* instr);
   void DisassembleNEONFPMulByElement(const Instruction* instr);
   void DisassembleNEONComplexMulByElement(const Instruction* instr);
   void DisassembleNEON2RegLogical(const Instruction* instr);
@@ -191,12 +185,6 @@ class Disassembler : public DecoderVisitor {
   void DisassembleNEONFPScalar2RegMisc(const Instruction* instr);
   void DisassembleNEONPolynomialMul(const Instruction* instr);
 
-  void DisassembleMTELoadTag(const Instruction* instr);
-  void DisassembleMTEStoreTag(const Instruction* instr);
-  void DisassembleMTEStoreTagPair(const Instruction* instr);
-
-  void Disassemble_XdSP_XnSP_Xm(const Instruction* instr);
-  void Disassemble_XdSP_XnSP_uimm6_uimm4(const Instruction* instr);
   void Disassemble_Xd_XnSP_XmSP(const Instruction* instr);
 
   void Format(const Instruction* instr,
