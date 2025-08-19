@@ -3199,23 +3199,23 @@ TEST(neon_extract) {
 TEST(neon_modimm) {
   SETUP();
 
-  COMPARE_MACRO(Orr(v4.V4H(), 0xaa, 0), "orr v4.4h, #0xaa, lsl #0");
+  COMPARE_MACRO(Orr(v4.V4H(), 0xaa, 0), "orr v4.4h, #0xaa");
   COMPARE_MACRO(Orr(v1.V8H(), 0xcc, 8), "orr v1.8h, #0xcc, lsl #8");
-  COMPARE_MACRO(Orr(v4.V2S(), 0xaa, 0), "orr v4.2s, #0xaa, lsl #0");
+  COMPARE_MACRO(Orr(v4.V2S(), 0xaa, 0), "orr v4.2s, #0xaa");
   COMPARE_MACRO(Orr(v1.V2S(), 0xcc, 8), "orr v1.2s, #0xcc, lsl #8");
   COMPARE_MACRO(Orr(v4.V4S(), 0xaa, 16), "orr v4.4s, #0xaa, lsl #16");
   COMPARE_MACRO(Orr(v1.V4S(), 0xcc, 24), "orr v1.4s, #0xcc, lsl #24");
 
-  COMPARE_MACRO(Bic(v4.V4H(), 0xaa, 0), "bic v4.4h, #0xaa, lsl #0");
+  COMPARE_MACRO(Bic(v4.V4H(), 0xaa, 0), "bic v4.4h, #0xaa");
   COMPARE_MACRO(Bic(v1.V8H(), 0xcc, 8), "bic v1.8h, #0xcc, lsl #8");
-  COMPARE_MACRO(Bic(v4.V2S(), 0xaa, 0), "bic v4.2s, #0xaa, lsl #0");
+  COMPARE_MACRO(Bic(v4.V2S(), 0xaa, 0), "bic v4.2s, #0xaa");
   COMPARE_MACRO(Bic(v1.V2S(), 0xcc, 8), "bic v1.2s, #0xcc, lsl #8");
   COMPARE_MACRO(Bic(v4.V4S(), 0xaa, 16), "bic v4.4s, #0xaa, lsl #16");
   COMPARE_MACRO(Bic(v1.V4S(), 0xcc, 24), "bic v1.4s, #0xcc, lsl #24");
 
-  COMPARE_MACRO(Mvni(v4.V4H(), 0xaa, LSL, 0), "mvni v4.4h, #0xaa, lsl #0");
+  COMPARE_MACRO(Mvni(v4.V4H(), 0xaa, LSL, 0), "mvni v4.4h, #0xaa");
   COMPARE_MACRO(Mvni(v1.V8H(), 0xcc, LSL, 8), "mvni v1.8h, #0xcc, lsl #8");
-  COMPARE_MACRO(Mvni(v4.V2S(), 0xaa, LSL, 0), "mvni v4.2s, #0xaa, lsl #0");
+  COMPARE_MACRO(Mvni(v4.V2S(), 0xaa, LSL, 0), "mvni v4.2s, #0xaa");
   COMPARE_MACRO(Mvni(v1.V2S(), 0xcc, LSL, 8), "mvni v1.2s, #0xcc, lsl #8");
   COMPARE_MACRO(Mvni(v4.V4S(), 0xaa, LSL, 16), "mvni v4.4s, #0xaa, lsl #16");
   COMPARE_MACRO(Mvni(v1.V4S(), 0xcc, LSL, 24), "mvni v1.4s, #0xcc, lsl #24");
@@ -3228,10 +3228,10 @@ TEST(neon_modimm) {
   COMPARE_MACRO(Movi(v4.V8B(), 0xaa), "movi v4.8b, #0xaa");
   COMPARE_MACRO(Movi(v1.V16B(), 0xcc), "movi v1.16b, #0xcc");
 
-  COMPARE_MACRO(Movi(v4.V4H(), 0xaa, LSL, 0), "movi v4.4h, #0xaa, lsl #0");
+  COMPARE_MACRO(Movi(v4.V4H(), 0xaa, LSL, 0), "movi v4.4h, #0xaa");
   COMPARE_MACRO(Movi(v1.V8H(), 0xcc, LSL, 8), "movi v1.8h, #0xcc, lsl #8");
 
-  COMPARE_MACRO(Movi(v4.V2S(), 0xaa, LSL, 0), "movi v4.2s, #0xaa, lsl #0");
+  COMPARE_MACRO(Movi(v4.V2S(), 0xaa, LSL, 0), "movi v4.2s, #0xaa");
   COMPARE_MACRO(Movi(v1.V2S(), 0xcc, LSL, 8), "movi v1.2s, #0xcc, lsl #8");
   COMPARE_MACRO(Movi(v4.V4S(), 0xaa, LSL, 16), "movi v4.4s, #0xaa, lsl #16");
   COMPARE_MACRO(Movi(v1.V4S(), 0xcc, LSL, 24), "movi v1.4s, #0xcc, lsl #24");

@@ -3425,29 +3425,25 @@ void Disassembler::VisitNEONModifiedImmediate(const Instruction *instr) {
   const char *mnemonic = mnemonic_.c_str();
   const char *form = "'Vt.%s, 'IVMIImm8, lsl 'IVMIShiftAmt1";
 
-  static const NEONFormatMap map_h = {{30}, {NF_4H, NF_8H}};
-  static const NEONFormatMap map_s = {{30}, {NF_2S, NF_4S}};
-  NEONFormatDecoder nfd(instr, NEONFormatDecoder::LogicalFormatMap());
-
   switch (form_hash_) {
     case "movi_asimdimm_n_b"_h:
-      form = "'Vt.%s, 'IVMIImm8";
+      form = "'Vt.'(3030?16:8)b, #0x'x1816:0905";
       break;
     case "bic_asimdimm_l_hl"_h:
     case "movi_asimdimm_l_hl"_h:
     case "mvni_asimdimm_l_hl"_h:
     case "orr_asimdimm_l_hl"_h:
-      nfd.SetFormatMap(0, &map_h);
+      form = "'Vt.'?30:84h, #0x'x1816:0905'(1413?, lsl #'u1413*8)";
       break;
     case "movi_asimdimm_m_sm"_h:
     case "mvni_asimdimm_m_sm"_h:
-      form = "'Vt.%s, 'IVMIImm8, msl 'IVMIShiftAmt2";
-      VIXL_FALLTHROUGH();
+      form = "'Vt.'?30:42s, #0x'x1816:0905, msl #'(1212?16:8)";
+      break;
     case "bic_asimdimm_l_sl"_h:
     case "movi_asimdimm_l_sl"_h:
     case "mvni_asimdimm_l_sl"_h:
     case "orr_asimdimm_l_sl"_h:
-      nfd.SetFormatMap(0, &map_s);
+      form = "'Vt.'?30:42s, #0x'x1816:0905'(1413?, lsl #'u1413*8)";
       break;
     case "movi_asimdimm_d_ds"_h:
       form = "'Dd, 'IVMIImm";
@@ -3456,19 +3452,17 @@ void Disassembler::VisitNEONModifiedImmediate(const Instruction *instr) {
       form = "'Vt.2d, 'IVMIImm";
       break;
     case "fmov_asimdimm_h_h"_h:
-      form = "'Vt.%s, 'IFPNeon";
-      nfd.SetFormatMap(0, &map_h);
+      form = "'Vt.'?30:84h, 'IFPNeon";
       break;
     case "fmov_asimdimm_s_s"_h:
-      form = "'Vt.%s, 'IFPNeon";
-      nfd.SetFormatMap(0, &map_s);
+      form = "'Vt.'?30:42s, 'IFPNeon";
       break;
     case "fmov_asimdimm_d2_d"_h:
       form = "'Vt.2d, 'IFPNeon";
       break;
   }
 
-  Format(instr, mnemonic, nfd.Substitute(form));
+  Format(instr, mnemonic, form);
 }
 
 void Disassembler::DisassembleNEONScalar2RegMiscOnlyD(
@@ -5563,6 +5557,7 @@ int Disassembler::SubstituteField(const Instruction *instr,
       return SubstitutePrefetchField(instr, format);
     case 'u':
     case 's':
+    case 'x':
       return SubstituteIntField(instr, format);
     case 't':
       return SubstituteSVESize(instr, format);
@@ -6099,11 +6094,7 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
           return 9;
         }
         case 'M': {  // Modified Immediate cases.
-          if (strncmp(format, "IVMIImm8", strlen("IVMIImm8")) == 0) {
-            uint64_t imm8 = instr->GetImmNEONabcdefgh();
-            AppendToOutput("#0x%" PRIx64, imm8);
-            return static_cast<int>(strlen("IVMIImm8"));
-          } else if (strncmp(format, "IVMIImm", strlen("IVMIImm")) == 0) {
+          if (strncmp(format, "IVMIImm", strlen("IVMIImm")) == 0) {
             uint64_t imm8 = instr->GetImmNEONabcdefgh();
             uint64_t imm = 0;
             for (int i = 0; i < 8; ++i) {
@@ -6113,20 +6104,6 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
             }
             AppendToOutput("#0x%" PRIx64, imm);
             return static_cast<int>(strlen("IVMIImm"));
-          } else if (strncmp(format,
-                             "IVMIShiftAmt1",
-                             strlen("IVMIShiftAmt1")) == 0) {
-            int cmode = instr->GetNEONCmode();
-            int shift_amount = 8 * ((cmode >> 1) & 3);
-            AppendToOutput("#%d", shift_amount);
-            return static_cast<int>(strlen("IVMIShiftAmt1"));
-          } else if (strncmp(format,
-                             "IVMIShiftAmt2",
-                             strlen("IVMIShiftAmt2")) == 0) {
-            int cmode = instr->GetNEONCmode();
-            int shift_amount = 8 << (cmode & 1);
-            AppendToOutput("#%d", shift_amount);
-            return static_cast<int>(strlen("IVMIShiftAmt2"));
           } else {
             VIXL_UNIMPLEMENTED();
             return 0;
@@ -6597,7 +6574,7 @@ int Disassembler::SubstituteCrField(const Instruction *instr,
 
 int Disassembler::SubstituteIntField(const Instruction *instr,
                                      const char *format) {
-  VIXL_ASSERT((format[0] == 'u') || (format[0] == 's'));
+  VIXL_ASSERT((format[0] == 'u') || (format[0] == 's') || (format[0] == 'x'));
 
   // A generic signed or unsigned int field uses a placeholder of the form
   // 'sAABB and 'uAABB respectively where AA and BB are two digit bit positions
@@ -6608,11 +6585,14 @@ int Disassembler::SubstituteIntField(const Instruction *instr,
   // In addition, split fields can be represented using 'sAABB:CCDD, where CCDD
   // become the least-significant bits of the result, and bit AA is the sign bit
   // (if 's is used).
+  //
+  // For unsigned fields, 'u may be replaced with 'x to substitute the
+  // hexadecimal representation instead of a decimal.
   int32_t bits = 0;
   int width = 0;
   const char *c = format;
   do {
-    c++;  // Skip the 'u', 's' or ':'.
+    c++;  // Skip the 'u', 's', 'x' or ':'.
     VIXL_ASSERT(strspn(c, "0123456789") == 4);
     int msb = ((c[0] - '0') * 10) + (c[1] - '0');
     int lsb = ((c[2] - '0') * 10) + (c[3] - '0');
@@ -6648,7 +6628,7 @@ int Disassembler::SubstituteIntField(const Instruction *instr,
     bits = static_cast<int32_t>(bits * value);
   }
 
-  AppendToOutput("%d", bits);
+  AppendToOutput(format[0] == 'x' ? "%x" : "%d", bits);
 
   return static_cast<int>(c - format);
 }
