@@ -1534,6 +1534,10 @@ void Disassembler::VisitAddSubShifted(const Instruction *instr) {
 
 
 void Disassembler::VisitAddSubExtended(const Instruction *instr) {
+  if (instr->GetImmExtendShift() > 4) {
+    VisitUnallocated(instr);
+    return;
+  }
   bool rd_is_zr = RdIsZROrSP(instr);
   const char *mnemonic = "";
   Extend mode = static_cast<Extend>(instr->GetExtendMode());

@@ -348,6 +348,11 @@ TEST(add_extended) {
   COMPARE(cmn(sp, Operand(xzr, UXTX, 3)), "cmn sp, xzr, lsl #3");
   COMPARE(cmn(sp, Operand(xzr, LSL, 4)), "cmn sp, xzr, lsl #4");
 
+  // Undefined shift amounts.
+  COMPARE(dci(0x0b201400), "unallocated (Unallocated)");
+  COMPARE(dci(0x0b201800), "unallocated (Unallocated)");
+  COMPARE(dci(0x0b201c00), "unallocated (Unallocated)");
+
   CLEANUP();
 }
 
@@ -373,6 +378,11 @@ TEST(sub_extended) {
   COMPARE(sub(wsp, wsp, Operand(w4, UXTW, 2)), "sub wsp, wsp, w4, lsl #2");
   COMPARE(cmp(sp, Operand(xzr, UXTX, 3)), "cmp sp, xzr, lsl #3");
   COMPARE(cmp(sp, Operand(xzr, LSL, 4)), "cmp sp, xzr, lsl #4");
+
+  // Undefined shift amounts.
+  COMPARE(dci(0x4b201400), "unallocated (Unallocated)");
+  COMPARE(dci(0x4b201800), "unallocated (Unallocated)");
+  COMPARE(dci(0x4b201c00), "unallocated (Unallocated)");
 
   CLEANUP();
 }
