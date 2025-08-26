@@ -103,16 +103,38 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fminp_asisdpair_only_sd"_h}},
       {"'Bt, ['Xns'(2012?, #'s2012)]",
        {"ldur_b_ldst_unscaled"_h, "stur_b_ldst_unscaled"_h}},
+      {"'Bt, ['Xns'ILU]", {"ldr_b_ldst_pos"_h, "str_b_ldst_pos"_h}},
+      {"'Bt, ['Xns, #'s2012]!", {"ldr_b_ldst_immpre"_h, "str_b_ldst_immpre"_h}},
+      {"'Bt, ['Xns, 'Offsetreg]",
+       {"ldr_b_ldst_regoff"_h,
+        "ldr_bl_ldst_regoff"_h,
+        "str_b_ldst_regoff"_h,
+        "str_bl_ldst_regoff"_h}},
+      {"'Bt, ['Xns], #'s2012",
+       {"ldr_b_ldst_immpost"_h, "str_b_ldst_immpost"_h}},
       {"'Dd, 'Hn", {"fcvt_dh_floatdp1"_h}},
       {"'Dd, 'IFP", {"fmov_d_floatimm"_h}},
       {"'Dd, 'IVMIImm", {"movi_asimdimm_d_ds"_h}},
       {"'Dd, 'Pgl, 'Zn.'t", {"saddv_r_p_z"_h, "uaddv_r_p_z"_h}},
       {"'Dd, 'Sn", {"fcvt_ds_floatdp1"_h}},
       {"'Dt, 'Dt2, ['Xns'(2115?, #'s2115*8)]",
-       {"ldnp_d_ldstnapair_offs"_h, "stnp_d_ldstnapair_offs"_h}},
+       {"ldnp_d_ldstnapair_offs"_h,
+        "ldp_d_ldstpair_off"_h,
+        "stnp_d_ldstnapair_offs"_h,
+        "stp_d_ldstpair_off"_h}},
+      {"'Dt, 'Dt2, ['Xns, #'s2115*8]!",
+       {"ldp_d_ldstpair_pre"_h, "stp_d_ldstpair_pre"_h}},
+      {"'Dt, 'Dt2, ['Xns], #'s2115*8",
+       {"ldp_d_ldstpair_post"_h, "stp_d_ldstpair_post"_h}},
       {"'Dt, 'ILLiteral 'LValue", {"ldr_d_loadlit"_h}},
       {"'Dt, ['Xns'(2012?, #'s2012)]",
        {"ldur_d_ldst_unscaled"_h, "stur_d_ldst_unscaled"_h}},
+      {"'Dt, ['Xns'ILU]", {"ldr_d_ldst_pos"_h, "str_d_ldst_pos"_h}},
+      {"'Dt, ['Xns, #'s2012]!", {"ldr_d_ldst_immpre"_h, "str_d_ldst_immpre"_h}},
+      {"'Dt, ['Xns, 'Offsetreg]",
+       {"ldr_d_ldst_regoff"_h, "str_d_ldst_regoff"_h}},
+      {"'Dt, ['Xns], #'s2012",
+       {"ldr_d_ldst_immpost"_h, "str_d_ldst_immpost"_h}},
       {"'Fd, 'Fn", {"fabs_d_floatdp1"_h,     "fabs_h_floatdp1"_h,
                     "fabs_s_floatdp1"_h,     "fmov_d_floatdp1"_h,
                     "fmov_h_floatdp1"_h,     "fmov_s_floatdp1"_h,
@@ -263,6 +285,12 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fminp_asisdpair_only_h"_h}},
       {"'Ht, ['Xns'(2012?, #'s2012)]",
        {"ldur_h_ldst_unscaled"_h, "stur_h_ldst_unscaled"_h}},
+      {"'Ht, ['Xns'ILU]", {"ldr_h_ldst_pos"_h, "str_h_ldst_pos"_h}},
+      {"'Ht, ['Xns, #'s2012]!", {"ldr_h_ldst_immpre"_h, "str_h_ldst_immpre"_h}},
+      {"'Ht, ['Xns, 'Offsetreg]",
+       {"ldr_h_ldst_regoff"_h, "str_h_ldst_regoff"_h}},
+      {"'Ht, ['Xns], #'s2012",
+       {"ldr_h_ldst_immpost"_h, "str_h_ldst_immpost"_h}},
       {"'Pd.'t'(0905=31?:, 'Ipc)", {"ptrue_p_s"_h, "ptrues_p_s"_h}},
       {"'Pd.'t, 'Pgl/z, 'Zn.'t, #'s2016",
        {"cmpeq_p_p_zi"_h,
@@ -336,9 +364,22 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "sha1p_qsv_cryptosha3"_h}},
       {"'Qt, 'ILLiteral 'LValue", {"ldr_q_loadlit"_h}},
       {"'Qt, 'Qt2, ['Xns'(2115?, #'s2115*16)]",
-       {"ldnp_q_ldstnapair_offs"_h, "stnp_q_ldstnapair_offs"_h}},
+       {"ldnp_q_ldstnapair_offs"_h,
+        "ldp_q_ldstpair_off"_h,
+        "stnp_q_ldstnapair_offs"_h,
+        "stp_q_ldstpair_off"_h}},
+      {"'Qt, 'Qt2, ['Xns, #'s2115*16]!",
+       {"ldp_q_ldstpair_pre"_h, "stp_q_ldstpair_pre"_h}},
+      {"'Qt, 'Qt2, ['Xns], #'s2115*16",
+       {"ldp_q_ldstpair_post"_h, "stp_q_ldstpair_post"_h}},
       {"'Qt, ['Xns'(2012?, #'s2012)]",
        {"ldur_q_ldst_unscaled"_h, "stur_q_ldst_unscaled"_h}},
+      {"'Qt, ['Xns'ILU]", {"ldr_q_ldst_pos"_h, "str_q_ldst_pos"_h}},
+      {"'Qt, ['Xns, #'s2012]!", {"ldr_q_ldst_immpre"_h, "str_q_ldst_immpre"_h}},
+      {"'Qt, ['Xns, 'Offsetreg]",
+       {"ldr_q_ldst_regoff"_h, "str_q_ldst_regoff"_h}},
+      {"'Qt, ['Xns], #'s2012",
+       {"ldr_q_ldst_immpost"_h, "str_q_ldst_immpost"_h}},
       {"'Rd, 'Fn", {"fcvtas_32d_float2int"_h,  "fcvtas_32h_float2int"_h,
                     "fcvtas_32s_float2int"_h,  "fcvtas_64d_float2int"_h,
                     "fcvtas_64h_float2int"_h,  "fcvtas_64s_float2int"_h,
@@ -457,9 +498,22 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Sd, 'Sn", {"sha1h_ss_cryptosha2"_h}},
       {"'St, 'ILLiteral 'LValue", {"ldr_s_loadlit"_h}},
       {"'St, 'St2, ['Xns'(2115?, #'s2115*4)]",
-       {"ldnp_s_ldstnapair_offs"_h, "stnp_s_ldstnapair_offs"_h}},
+       {"ldnp_s_ldstnapair_offs"_h,
+        "ldp_s_ldstpair_off"_h,
+        "stnp_s_ldstnapair_offs"_h,
+        "stp_s_ldstpair_off"_h}},
+      {"'St, 'St2, ['Xns, #'s2115*4]!",
+       {"ldp_s_ldstpair_pre"_h, "stp_s_ldstpair_pre"_h}},
+      {"'St, 'St2, ['Xns], #'s2115*4",
+       {"ldp_s_ldstpair_post"_h, "stp_s_ldstpair_post"_h}},
       {"'St, ['Xns'(2012?, #'s2012)]",
        {"ldur_s_ldst_unscaled"_h, "stur_s_ldst_unscaled"_h}},
+      {"'St, ['Xns'ILU]", {"ldr_s_ldst_pos"_h, "str_s_ldst_pos"_h}},
+      {"'St, ['Xns, #'s2012]!", {"ldr_s_ldst_immpre"_h, "str_s_ldst_immpre"_h}},
+      {"'St, ['Xns, 'Offsetreg]",
+       {"ldr_s_ldst_regoff"_h, "str_s_ldst_regoff"_h}},
+      {"'St, ['Xns], #'s2012",
+       {"ldr_s_ldst_immpost"_h, "str_s_ldst_immpost"_h}},
       {"'TImmUncn", {"b_only_branch_imm"_h, "bl_only_branch_imm"_h}},
       {"'Vd.'(3030?16:8)b, 'Vn.'(3030?16:8)b", {"rbit_asimdmisc_r"_h}},
       {"'Vd.'(3030?16:8)b, {'Vn.16b, 'Vn2.16b, 'Vn3.16b, 'Vn4.16b}, "
@@ -589,7 +643,14 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Wn", {"setf16_only_setf"_h, "setf8_only_setf"_h}},
       {"'Wt, 'ILLiteral 'LValue", {"ldr_32_loadlit"_h}},
       {"'Wt, 'Wt2, ['Xns'(2115?, #'s2115*4)]",
-       {"ldnp_32_ldstnapair_offs"_h, "stnp_32_ldstnapair_offs"_h}},
+       {"ldnp_32_ldstnapair_offs"_h,
+        "ldp_32_ldstpair_off"_h,
+        "stnp_32_ldstnapair_offs"_h,
+        "stp_32_ldstpair_off"_h}},
+      {"'Wt, 'Wt2, ['Xns, #'s2115*4]!",
+       {"ldp_32_ldstpair_pre"_h, "stp_32_ldstpair_pre"_h}},
+      {"'Wt, 'Wt2, ['Xns], #'s2115*4",
+       {"ldp_32_ldstpair_post"_h, "stp_32_ldstpair_post"_h}},
       {"'Wt, ['Xns'(2012?, #'s2012)]",
        {"ldapur_32_ldapstl_unscaled"_h,
         "ldapurb_32_ldapstl_unscaled"_h,
@@ -607,6 +668,45 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "stur_32_ldst_unscaled"_h,
         "sturb_32_ldst_unscaled"_h,
         "sturh_32_ldst_unscaled"_h}},
+      {"'Wt, ['Xns'ILU]",
+       {"ldr_32_ldst_pos"_h,
+        "ldrb_32_ldst_pos"_h,
+        "ldrh_32_ldst_pos"_h,
+        "ldrsb_32_ldst_pos"_h,
+        "ldrsh_32_ldst_pos"_h,
+        "str_32_ldst_pos"_h,
+        "strb_32_ldst_pos"_h,
+        "strh_32_ldst_pos"_h}},
+      {"'Wt, ['Xns, #'s2012]!",
+       {"ldr_32_ldst_immpre"_h,
+        "ldrb_32_ldst_immpre"_h,
+        "ldrh_32_ldst_immpre"_h,
+        "ldrsb_32_ldst_immpre"_h,
+        "ldrsh_32_ldst_immpre"_h,
+        "str_32_ldst_immpre"_h,
+        "strb_32_ldst_immpre"_h,
+        "strh_32_ldst_immpre"_h}},
+      {"'Wt, ['Xns, 'Offsetreg]",
+       {"ldr_32_ldst_regoff"_h,
+        "ldrb_32b_ldst_regoff"_h,
+        "ldrb_32bl_ldst_regoff"_h,
+        "ldrh_32_ldst_regoff"_h,
+        "ldrsb_32b_ldst_regoff"_h,
+        "ldrsb_32bl_ldst_regoff"_h,
+        "ldrsh_32_ldst_regoff"_h,
+        "str_32_ldst_regoff"_h,
+        "strb_32b_ldst_regoff"_h,
+        "strb_32bl_ldst_regoff"_h,
+        "strh_32_ldst_regoff"_h}},
+      {"'Wt, ['Xns], #'s2012",
+       {"ldr_32_ldst_immpost"_h,
+        "ldrb_32_ldst_immpost"_h,
+        "ldrh_32_ldst_immpost"_h,
+        "ldrsb_32_ldst_immpost"_h,
+        "ldrsh_32_ldst_immpost"_h,
+        "str_32_ldst_immpost"_h,
+        "strb_32_ldst_immpost"_h,
+        "strh_32_ldst_immpost"_h}},
       {"'Xd",
        {"autdza_64z_dp_1src"_h,
         "autdzb_64z_dp_1src"_h,
@@ -662,10 +762,20 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Xn, #'u2015, 'INzcv", {"rmif_only_rmif"_h}},
       {"'Xt, 'ILLiteral 'LValue", {"ldr_64_loadlit"_h, "ldrsw_64_loadlit"_h}},
       {"'Xt, 'Xt2, ['Xns'(2115?, #'s2115*16)]", {"stgp_64_ldstpair_off"_h}},
+      {"'Xt, 'Xt2, ['Xns'(2115?, #'s2115*4)]", {"ldpsw_64_ldstpair_off"_h}},
       {"'Xt, 'Xt2, ['Xns'(2115?, #'s2115*8)]",
-       {"ldnp_64_ldstnapair_offs"_h, "stnp_64_ldstnapair_offs"_h}},
+       {"ldnp_64_ldstnapair_offs"_h,
+        "ldp_64_ldstpair_off"_h,
+        "stnp_64_ldstnapair_offs"_h,
+        "stp_64_ldstpair_off"_h}},
       {"'Xt, 'Xt2, ['Xns, #'s2115*16]!", {"stgp_64_ldstpair_pre"_h}},
+      {"'Xt, 'Xt2, ['Xns, #'s2115*4]!", {"ldpsw_64_ldstpair_pre"_h}},
+      {"'Xt, 'Xt2, ['Xns, #'s2115*8]!",
+       {"ldp_64_ldstpair_pre"_h, "stp_64_ldstpair_pre"_h}},
       {"'Xt, 'Xt2, ['Xns], #'s2115*16", {"stgp_64_ldstpair_post"_h}},
+      {"'Xt, 'Xt2, ['Xns], #'s2115*4", {"ldpsw_64_ldstpair_post"_h}},
+      {"'Xt, 'Xt2, ['Xns], #'s2115*8",
+       {"ldp_64_ldstpair_post"_h, "stp_64_ldstpair_post"_h}},
       {"'Xt, ['Xns'(2012?, #'s2012)]",
        {"ldapur_64_ldapstl_unscaled"_h,
         "ldapursb_64_ldapstl_unscaled"_h,
@@ -680,6 +790,31 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Xt, ['Xns'(2012?, #'s2012*16)]", {"ldg_64loffset_ldsttags"_h}},
       {"'Xt, ['Xns'ILA]!", {"ldraa_64w_ldst_pac"_h, "ldrab_64w_ldst_pac"_h}},
       {"'Xt, ['Xns'ILA]", {"ldraa_64_ldst_pac"_h, "ldrab_64_ldst_pac"_h}},
+      {"'Xt, ['Xns'ILU]",
+       {"ldr_64_ldst_pos"_h,
+        "ldrsb_64_ldst_pos"_h,
+        "ldrsh_64_ldst_pos"_h,
+        "ldrsw_64_ldst_pos"_h,
+        "str_64_ldst_pos"_h}},
+      {"'Xt, ['Xns, #'s2012]!",
+       {"ldr_64_ldst_immpre"_h,
+        "ldrsb_64_ldst_immpre"_h,
+        "ldrsh_64_ldst_immpre"_h,
+        "ldrsw_64_ldst_immpre"_h,
+        "str_64_ldst_immpre"_h}},
+      {"'Xt, ['Xns, 'Offsetreg]",
+       {"ldr_64_ldst_regoff"_h,
+        "ldrsb_64b_ldst_regoff"_h,
+        "ldrsb_64bl_ldst_regoff"_h,
+        "ldrsh_64_ldst_regoff"_h,
+        "ldrsw_64_ldst_regoff"_h,
+        "str_64_ldst_regoff"_h}},
+      {"'Xt, ['Xns], #'s2012",
+       {"ldr_64_ldst_immpost"_h,
+        "ldrsb_64_ldst_immpost"_h,
+        "ldrsh_64_ldst_immpost"_h,
+        "ldrsw_64_ldst_immpost"_h,
+        "str_64_ldst_immpost"_h}},
       {"'Zd, 'Zn", {"movprfx_z_z"_h}},
       {"'Zd.'?22:ds, 'Zn.'?22:ds, 'Zm.'?22:ds",
        {"adclb_z_zzz"_h, "adclt_z_zzz"_h, "sbclb_z_zzz"_h, "sbclt_z_zzz"_h}},
@@ -878,6 +1013,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"cmla_z_zzzi_s"_h, "fcmla_z_zzzi_s"_h, "sqrdcmlah_z_zzzi_s"_h}},
       {"'prefOp, 'ILLiteral 'LValue", {"prfm_p_loadlit"_h}},
       {"'prefOp, ['Xns'(2012?, #'s2012)]", {"prfum_p_ldst_unscaled"_h}},
+      {"'prefOp, ['Xns'ILU]", {"prfm_p_ldst_pos"_h}},
+      {"'prefOp, ['Xns, 'Offsetreg]", {"prfm_p_ldst_regoff"_h}},
       {"'prefSVEOp, 'Pgl, ['Xns, 'Zm.s, '?22:suxtw #1]",
        {"prfh_i_p_bz_s_x32_scaled"_h}},
       {"'prefSVEOp, 'Pgl, ['Xns, 'Zm.s, '?22:suxtw #2]",
@@ -894,6 +1031,118 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"dcps1_dc_exception"_h,
         "dcps2_dc_exception"_h,
         "dcps3_dc_exception"_h}},
+      {"{'Vt.b, 'Vt2.b, 'Vt3.b, 'Vt4.b}['u3030:1210], ['Xns]'(2323?, 'Xmb4)",
+       {"ld4_asisdlsop_b4_i4b"_h,
+        "ld4_asisdlsop_bx4_r4b"_h,
+        "st4_asisdlsop_b4_i4b"_h,
+        "st4_asisdlsop_bx4_r4b"_h,
+        "ld4_asisdlso_b4_4b"_h,
+        "st4_asisdlso_b4_4b"_h}},
+      {"{'Vt.b, 'Vt2.b, 'Vt3.b}['u3030:1210], ['Xns]'(2323?, 'Xmb3)",
+       {"ld3_asisdlsop_b3_i3b"_h,
+        "ld3_asisdlsop_bx3_r3b"_h,
+        "st3_asisdlsop_b3_i3b"_h,
+        "st3_asisdlsop_bx3_r3b"_h,
+        "ld3_asisdlso_b3_3b"_h,
+        "st3_asisdlso_b3_3b"_h}},
+      {"{'Vt.b, 'Vt2.b}['u3030:1210], ['Xns]'(2323?, 'Xmb2)",
+       {"ld2_asisdlsop_b2_i2b"_h,
+        "ld2_asisdlsop_bx2_r2b"_h,
+        "st2_asisdlsop_b2_i2b"_h,
+        "st2_asisdlsop_bx2_r2b"_h,
+        "ld2_asisdlso_b2_2b"_h,
+        "st2_asisdlso_b2_2b"_h}},
+      {"{'Vt.b}['u3030:1210], ['Xns]'(2323?, 'Xmb1)",
+       {"ld1_asisdlsop_b1_i1b"_h,
+        "ld1_asisdlsop_bx1_r1b"_h,
+        "st1_asisdlsop_b1_i1b"_h,
+        "st1_asisdlsop_bx1_r1b"_h,
+        "ld1_asisdlso_b1_1b"_h,
+        "st1_asisdlso_b1_1b"_h}},
+      {"{'Vt.d, 'Vt2.d, 'Vt3.d, 'Vt4.d}['u3030], ['Xns]'(2323?, 'Xmb32)",
+       {"ld4_asisdlsop_d4_i4d"_h,
+        "ld4_asisdlsop_dx4_r4d"_h,
+        "st4_asisdlsop_d4_i4d"_h,
+        "st4_asisdlsop_dx4_r4d"_h,
+        "ld4_asisdlso_d4_4d"_h,
+        "st4_asisdlso_d4_4d"_h}},
+      {"{'Vt.d, 'Vt2.d, 'Vt3.d}['u3030], ['Xns]'(2323?, 'Xmb24)",
+       {"ld3_asisdlsop_d3_i3d"_h,
+        "ld3_asisdlsop_dx3_r3d"_h,
+        "st3_asisdlsop_d3_i3d"_h,
+        "st3_asisdlsop_dx3_r3d"_h,
+        "ld3_asisdlso_d3_3d"_h,
+        "st3_asisdlso_d3_3d"_h}},
+      {"{'Vt.d, 'Vt2.d}['u3030], ['Xns]'(2323?, 'Xmb16)",
+       {"ld2_asisdlsop_d2_i2d"_h,
+        "ld2_asisdlsop_dx2_r2d"_h,
+        "st2_asisdlsop_d2_i2d"_h,
+        "st2_asisdlsop_dx2_r2d"_h,
+        "ld2_asisdlso_d2_2d"_h,
+        "st2_asisdlso_d2_2d"_h}},
+      {"{'Vt.d}['u3030], ['Xns]'(2323?, 'Xmb8)",
+       {"ld1_asisdlsop_d1_i1d"_h,
+        "ld1_asisdlsop_dx1_r1d"_h,
+        "st1_asisdlsop_d1_i1d"_h,
+        "st1_asisdlsop_dx1_r1d"_h,
+        "ld1_asisdlso_d1_1d"_h,
+        "st1_asisdlso_d1_1d"_h}},
+      {"{'Vt.h, 'Vt2.h, 'Vt3.h, 'Vt4.h}['u3030:1211], ['Xns]'(2323?, 'Xmb8)",
+       {"ld4_asisdlso_h4_4h"_h,
+        "ld4_asisdlsop_h4_i4h"_h,
+        "ld4_asisdlsop_hx4_r4h"_h,
+        "st4_asisdlso_h4_4h"_h,
+        "st4_asisdlsop_h4_i4h"_h,
+        "st4_asisdlsop_hx4_r4h"_h}},
+      {"{'Vt.h, 'Vt2.h, 'Vt3.h}['u3030:1211], ['Xns]'(2323?, 'Xmb6)",
+       {"ld3_asisdlso_h3_3h"_h,
+        "ld3_asisdlsop_h3_i3h"_h,
+        "ld3_asisdlsop_hx3_r3h"_h,
+        "st3_asisdlso_h3_3h"_h,
+        "st3_asisdlsop_h3_i3h"_h,
+        "st3_asisdlsop_hx3_r3h"_h}},
+      {"{'Vt.h, 'Vt2.h}['u3030:1211], ['Xns]'(2323?, 'Xmb4)",
+       {"ld2_asisdlso_h2_2h"_h,
+        "ld2_asisdlsop_h2_i2h"_h,
+        "ld2_asisdlsop_hx2_r2h"_h,
+        "st2_asisdlso_h2_2h"_h,
+        "st2_asisdlsop_h2_i2h"_h,
+        "st2_asisdlsop_hx2_r2h"_h}},
+      {"{'Vt.h}['u3030:1211], ['Xns]'(2323?, 'Xmb2)",
+       {"ld1_asisdlso_h1_1h"_h,
+        "ld1_asisdlsop_h1_i1h"_h,
+        "ld1_asisdlsop_hx1_r1h"_h,
+        "st1_asisdlso_h1_1h"_h,
+        "st1_asisdlsop_h1_i1h"_h,
+        "st1_asisdlsop_hx1_r1h"_h}},
+      {"{'Vt.s, 'Vt2.s, 'Vt3.s, 'Vt4.s}['u3030:1212], ['Xns]'(2323?, 'Xmb16)",
+       {"ld4_asisdlsop_s4_i4s"_h,
+        "ld4_asisdlsop_sx4_r4s"_h,
+        "st4_asisdlsop_s4_i4s"_h,
+        "st4_asisdlsop_sx4_r4s"_h,
+        "ld4_asisdlso_s4_4s"_h,
+        "st4_asisdlso_s4_4s"_h}},
+      {"{'Vt.s, 'Vt2.s, 'Vt3.s}['u3030:1212], ['Xns]'(2323?, 'Xmb12)",
+       {"ld3_asisdlsop_s3_i3s"_h,
+        "ld3_asisdlsop_sx3_r3s"_h,
+        "st3_asisdlsop_s3_i3s"_h,
+        "st3_asisdlsop_sx3_r3s"_h,
+        "ld3_asisdlso_s3_3s"_h,
+        "st3_asisdlso_s3_3s"_h}},
+      {"{'Vt.s, 'Vt2.s}['u3030:1212], ['Xns]'(2323?, 'Xmb8)",
+       {"ld2_asisdlsop_s2_i2s"_h,
+        "ld2_asisdlsop_sx2_r2s"_h,
+        "st2_asisdlsop_s2_i2s"_h,
+        "st2_asisdlsop_sx2_r2s"_h,
+        "ld2_asisdlso_s2_2s"_h,
+        "st2_asisdlso_s2_2s"_h}},
+      {"{'Vt.s}['u3030:1212], ['Xns]'(2323?, 'Xmb4)",
+       {"ld1_asisdlsop_s1_i1s"_h,
+        "ld1_asisdlsop_sx1_r1s"_h,
+        "st1_asisdlsop_s1_i1s"_h,
+        "st1_asisdlsop_sx1_r1s"_h,
+        "ld1_asisdlso_s1_1s"_h,
+        "st1_asisdlso_s1_1s"_h}},
       {"{'Zt.'tlss}, 'Pgl/z, ['Xns'(1916?, #'s1916, mul vl)]",
        {"ld1b_z_p_bi_u16"_h,
         "ld1b_z_p_bi_u32"_h,
@@ -1492,6 +1741,46 @@ const Disassembler::FormToVisitorFnMap *Disassembler::GetFormToVisitorFnMap() {
       {"setm_set_memcms"_h, &Disassembler::DisassembleSet},
       {"setpn_set_memcms"_h, &Disassembler::DisassembleSet},
       {"setp_set_memcms"_h, &Disassembler::DisassembleSet},
+      {"ld1r_asisdlsop_r1_i"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld1r_asisdlsop_rx1_r"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld1r_asisdlso_r1"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld2r_asisdlsop_r2_i"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld2r_asisdlsop_rx2_r"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld2r_asisdlso_r2"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld3r_asisdlsop_r3_i"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld3r_asisdlsop_rx3_r"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld3r_asisdlso_r3"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld4r_asisdlsop_r4_i"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld4r_asisdlsop_rx4_r"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld4r_asisdlso_r4"_h, &Disassembler::DisassembleNEONLoadBroadcast},
+      {"ld1_asisdlsep_i1_i1"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld1_asisdlsep_i2_i2"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld1_asisdlsep_i3_i3"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld1_asisdlsep_i4_i4"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld1_asisdlsep_r1_r1"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld1_asisdlsep_r2_r2"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld1_asisdlsep_r3_r3"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld1_asisdlsep_r4_r4"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld2_asisdlsep_i2_i"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld2_asisdlsep_r2_r"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld3_asisdlsep_i3_i"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld3_asisdlsep_r3_r"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld4_asisdlsep_i4_i"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"ld4_asisdlsep_r4_r"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st1_asisdlsep_i1_i1"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st1_asisdlsep_i2_i2"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st1_asisdlsep_i3_i3"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st1_asisdlsep_i4_i4"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st1_asisdlsep_r1_r1"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st1_asisdlsep_r2_r2"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st1_asisdlsep_r3_r3"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st1_asisdlsep_r4_r4"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st2_asisdlsep_i2_i"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st2_asisdlsep_r2_r"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st3_asisdlsep_i3_i"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st3_asisdlsep_r3_r"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st4_asisdlsep_i4_i"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
+      {"st4_asisdlsep_r4_r"_h, &Disassembler::VisitNEONLoadStoreMultiStruct},
   };
   return &form_to_visitor;
 }  // NOLINT(readability/fn_size)
@@ -2048,150 +2337,6 @@ void Disassembler::VisitMoveWideImmediate(const Instruction *instr) {
       VIXL_UNREACHABLE();
   }
   Format(instr, mnemonic, form);
-}
-
-#define LOAD_STORE_LIST(V) \
-  V(STRB_w, "'Wt")         \
-  V(STRH_w, "'Wt")         \
-  V(STR_w, "'Wt")          \
-  V(STR_x, "'Xt")          \
-  V(LDRB_w, "'Wt")         \
-  V(LDRH_w, "'Wt")         \
-  V(LDR_w, "'Wt")          \
-  V(LDR_x, "'Xt")          \
-  V(LDRSB_x, "'Xt")        \
-  V(LDRSH_x, "'Xt")        \
-  V(LDRSW_x, "'Xt")        \
-  V(LDRSB_w, "'Wt")        \
-  V(LDRSH_w, "'Wt")        \
-  V(STR_b, "'Bt")          \
-  V(STR_h, "'Ht")          \
-  V(STR_s, "'St")          \
-  V(STR_d, "'Dt")          \
-  V(LDR_b, "'Bt")          \
-  V(LDR_h, "'Ht")          \
-  V(LDR_s, "'St")          \
-  V(LDR_d, "'Dt")          \
-  V(STR_q, "'Qt")          \
-  V(LDR_q, "'Qt")
-
-void Disassembler::VisitLoadStorePreIndex(const Instruction *instr) {
-  const char *form = "(LoadStorePreIndex)";
-  const char *suffix = ", ['Xns, #'s2012]!";
-
-  switch (instr->Mask(LoadStorePreIndexMask)) {
-#define LS_PREINDEX(A, B) \
-  case A##_pre:           \
-    form = B;             \
-    break;
-    LOAD_STORE_LIST(LS_PREINDEX)
-#undef LS_PREINDEX
-  }
-  FormatWithDecodedMnemonic(instr, form, suffix);
-}
-
-void Disassembler::VisitLoadStorePostIndex(const Instruction *instr) {
-  const char *form = "(LoadStorePostIndex)";
-  const char *suffix = ", ['Xns], #'s2012";
-
-  switch (instr->Mask(LoadStorePostIndexMask)) {
-#define LS_POSTINDEX(A, B) \
-  case A##_post:           \
-    form = B;              \
-    break;
-    LOAD_STORE_LIST(LS_POSTINDEX)
-#undef LS_POSTINDEX
-  }
-  FormatWithDecodedMnemonic(instr, form, suffix);
-}
-
-void Disassembler::VisitLoadStoreUnsignedOffset(const Instruction *instr) {
-  const char *form = "(LoadStoreUnsignedOffset)";
-  const char *suffix = ", ['Xns'ILU]";
-
-  switch (instr->Mask(LoadStoreUnsignedOffsetMask)) {
-#define LS_UNSIGNEDOFFSET(A, B) \
-  case A##_unsigned:            \
-    form = B;                   \
-    break;
-    LOAD_STORE_LIST(LS_UNSIGNEDOFFSET)
-#undef LS_UNSIGNEDOFFSET
-    case PRFM_unsigned:
-      form = "'prefOp";
-  }
-  FormatWithDecodedMnemonic(instr, form, suffix);
-}
-
-void Disassembler::VisitLoadStoreRegisterOffset(const Instruction *instr) {
-  const char *form = "(LoadStoreRegisterOffset)";
-  const char *suffix = ", ['Xns, 'Offsetreg]";
-
-  switch (instr->Mask(LoadStoreRegisterOffsetMask)) {
-#define LS_REGISTEROFFSET(A, B) \
-  case A##_reg:                 \
-    form = B;                   \
-    break;
-    LOAD_STORE_LIST(LS_REGISTEROFFSET)
-#undef LS_REGISTEROFFSET
-    case PRFM_reg:
-      form = "'prefOp";
-  }
-  FormatWithDecodedMnemonic(instr, form, suffix);
-}
-
-#define LOAD_STORE_PAIR_LIST(V) \
-  V(STP_w, "'Wt, 'Wt2", "4")    \
-  V(LDP_w, "'Wt, 'Wt2", "4")    \
-  V(LDPSW_x, "'Xt, 'Xt2", "4")  \
-  V(STP_x, "'Xt, 'Xt2", "8")    \
-  V(LDP_x, "'Xt, 'Xt2", "8")    \
-  V(STP_s, "'St, 'St2", "4")    \
-  V(LDP_s, "'St, 'St2", "4")    \
-  V(STP_d, "'Dt, 'Dt2", "8")    \
-  V(LDP_d, "'Dt, 'Dt2", "8")    \
-  V(LDP_q, "'Qt, 'Qt2", "16")   \
-  V(STP_q, "'Qt, 'Qt2", "16")
-
-void Disassembler::VisitLoadStorePairPostIndex(const Instruction *instr) {
-  const char *form = "(LoadStorePairPostIndex)";
-
-  switch (instr->Mask(LoadStorePairPostIndexMask)) {
-#define LSP_POSTINDEX(A, B, C)       \
-  case A##_post:                     \
-    form = B ", ['Xns], #'s2115*" C; \
-    break;
-    LOAD_STORE_PAIR_LIST(LSP_POSTINDEX)
-#undef LSP_POSTINDEX
-  }
-  FormatWithDecodedMnemonic(instr, form);
-}
-
-void Disassembler::VisitLoadStorePairPreIndex(const Instruction *instr) {
-  const char *form = "(LoadStorePairPreIndex)";
-
-  switch (instr->Mask(LoadStorePairPreIndexMask)) {
-#define LSP_PREINDEX(A, B, C)            \
-  case A##_pre:                          \
-    form = B ", ['Xns, #'s2115*" C "]!"; \
-    break;
-    LOAD_STORE_PAIR_LIST(LSP_PREINDEX)
-#undef LSP_PREINDEX
-  }
-  FormatWithDecodedMnemonic(instr, form);
-}
-
-void Disassembler::VisitLoadStorePairOffset(const Instruction *instr) {
-  const char *form = "(LoadStorePairOffset)";
-
-  switch (instr->Mask(LoadStorePairOffsetMask)) {
-#define LSP_OFFSET(A, B, C)                     \
-  case A##_off:                                 \
-    form = B ", ['Xns'(2115?, #'s2115*" C ")]"; \
-    break;
-    LOAD_STORE_PAIR_LIST(LSP_OFFSET)
-#undef LSP_OFFSET
-  }
-  FormatWithDecodedMnemonic(instr, form);
 }
 
 // clang-format off
@@ -2830,520 +2975,111 @@ void Disassembler::VisitNEONExtract(const Instruction *instr) {
 }
 
 void Disassembler::VisitNEONLoadStoreMultiStruct(const Instruction *instr) {
-  const char *mnemonic = NULL;
   const char *form = NULL;
-  const char *form_1v = "{'Vt.%s}, ['Xns]";
-  const char *form_2v = "{'Vt.%s, 'Vt2.%s}, ['Xns]";
-  const char *form_3v = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s}, ['Xns]";
-  const char *form_4v = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s, 'Vt4.%s}, ['Xns]";
+  const char *form_1v = "{'Vt.%s}, ['Xns]'(2323?, 'Xmr1)";
+  const char *form_2v = "{'Vt.%s, 'Vt2.%s}, ['Xns]'(2323?, 'Xmr2)";
+  const char *form_3v = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s}, ['Xns]'(2323?, 'Xmr3)";
+  const char *form_4v =
+      "{'Vt.%s, 'Vt2.%s, 'Vt3.%s, 'Vt4.%s}, ['Xns]'(2323?, 'Xmr4)";
   NEONFormatDecoder nfd(instr, NEONFormatDecoder::LoadStoreFormatMap());
 
-  switch (instr->Mask(NEONLoadStoreMultiStructMask)) {
-    case NEON_LD1_1v:
-      mnemonic = "ld1";
+  // LD[2-4] and ST[2-4] cannot use .1d format.
+  bool allocated = true;
+  bool not_1d = nfd.GetVectorFormat() != kFormat1D;
+
+  switch (form_hash_) {
+    case "ld1_asisdlse_r1_1v"_h:
+    case "ld1_asisdlsep_i1_i1"_h:
+    case "ld1_asisdlsep_r1_r1"_h:
+    case "st1_asisdlse_r1_1v"_h:
+    case "st1_asisdlsep_i1_i1"_h:
+    case "st1_asisdlsep_r1_r1"_h:
       form = form_1v;
       break;
-    case NEON_LD1_2v:
-      mnemonic = "ld1";
+    case "ld2_asisdlse_r2"_h:
+    case "ld2_asisdlsep_i2_i"_h:
+    case "ld2_asisdlsep_r2_r"_h:
+    case "st2_asisdlse_r2"_h:
+    case "st2_asisdlsep_i2_i"_h:
+    case "st2_asisdlsep_r2_r"_h:
+      allocated = not_1d;
+      VIXL_FALLTHROUGH();
+    case "ld1_asisdlse_r2_2v"_h:
+    case "ld1_asisdlsep_i2_i2"_h:
+    case "ld1_asisdlsep_r2_r2"_h:
+    case "st1_asisdlse_r2_2v"_h:
+    case "st1_asisdlsep_i2_i2"_h:
+    case "st1_asisdlsep_r2_r2"_h:
       form = form_2v;
       break;
-    case NEON_LD1_3v:
-      mnemonic = "ld1";
+    case "ld3_asisdlse_r3"_h:
+    case "ld3_asisdlsep_i3_i"_h:
+    case "ld3_asisdlsep_r3_r"_h:
+    case "st3_asisdlse_r3"_h:
+    case "st3_asisdlsep_i3_i"_h:
+    case "st3_asisdlsep_r3_r"_h:
+      allocated = not_1d;
+      VIXL_FALLTHROUGH();
+    case "ld1_asisdlse_r3_3v"_h:
+    case "ld1_asisdlsep_i3_i3"_h:
+    case "ld1_asisdlsep_r3_r3"_h:
+    case "st1_asisdlse_r3_3v"_h:
+    case "st1_asisdlsep_i3_i3"_h:
+    case "st1_asisdlsep_r3_r3"_h:
       form = form_3v;
       break;
-    case NEON_LD1_4v:
-      mnemonic = "ld1";
+    case "ld4_asisdlse_r4"_h:
+    case "ld4_asisdlsep_i4_i"_h:
+    case "ld4_asisdlsep_r4_r"_h:
+    case "st4_asisdlse_r4"_h:
+    case "st4_asisdlsep_i4_i"_h:
+    case "st4_asisdlsep_r4_r"_h:
+      allocated = not_1d;
+      VIXL_FALLTHROUGH();
+    case "ld1_asisdlse_r4_4v"_h:
+    case "ld1_asisdlsep_i4_i4"_h:
+    case "ld1_asisdlsep_r4_r4"_h:
+    case "st1_asisdlse_r4_4v"_h:
+    case "st1_asisdlsep_i4_i4"_h:
+    case "st1_asisdlsep_r4_r4"_h:
       form = form_4v;
-      break;
-    case NEON_LD2:
-      mnemonic = "ld2";
-      form = form_2v;
-      break;
-    case NEON_LD3:
-      mnemonic = "ld3";
-      form = form_3v;
-      break;
-    case NEON_LD4:
-      mnemonic = "ld4";
-      form = form_4v;
-      break;
-    case NEON_ST1_1v:
-      mnemonic = "st1";
-      form = form_1v;
-      break;
-    case NEON_ST1_2v:
-      mnemonic = "st1";
-      form = form_2v;
-      break;
-    case NEON_ST1_3v:
-      mnemonic = "st1";
-      form = form_3v;
-      break;
-    case NEON_ST1_4v:
-      mnemonic = "st1";
-      form = form_4v;
-      break;
-    case NEON_ST2:
-      mnemonic = "st2";
-      form = form_2v;
-      break;
-    case NEON_ST3:
-      mnemonic = "st3";
-      form = form_3v;
-      break;
-    case NEON_ST4:
-      mnemonic = "st4";
-      form = form_4v;
-      break;
-    default:
       break;
   }
 
-  // Work out unallocated encodings.
-  bool allocated = (mnemonic != NULL);
-  switch (instr->Mask(NEONLoadStoreMultiStructMask)) {
-    case NEON_LD2:
-    case NEON_LD3:
-    case NEON_LD4:
-    case NEON_ST2:
-    case NEON_ST3:
-    case NEON_ST4:
-      // LD[2-4] and ST[2-4] cannot use .1d format.
-      allocated = (instr->GetNEONQ() != 0) || (instr->GetNEONLSSize() != 3);
-      break;
-    default:
-      break;
-  }
   if (allocated) {
-    VIXL_ASSERT(mnemonic != NULL);
-    VIXL_ASSERT(form != NULL);
+    FormatWithDecodedMnemonic(instr, nfd.Substitute(form));
   } else {
-    mnemonic = "unallocated";
-    form = "(NEONLoadStoreMultiStruct)";
+    VisitUnallocated(instr);
   }
-
-  Format(instr, mnemonic, nfd.Substitute(form));
 }
 
-void Disassembler::VisitNEONLoadStoreMultiStructPostIndex(
-    const Instruction *instr) {
-  const char *mnemonic = NULL;
+void Disassembler::DisassembleNEONLoadBroadcast(const Instruction *instr) {
   const char *form = NULL;
-  const char *form_1v = "{'Vt.%s}, ['Xns], 'Xmr1";
-  const char *form_2v = "{'Vt.%s, 'Vt2.%s}, ['Xns], 'Xmr2";
-  const char *form_3v = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s}, ['Xns], 'Xmr3";
-  const char *form_4v = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s, 'Vt4.%s}, ['Xns], 'Xmr4";
   NEONFormatDecoder nfd(instr, NEONFormatDecoder::LoadStoreFormatMap());
 
-  switch (instr->Mask(NEONLoadStoreMultiStructPostIndexMask)) {
-    case NEON_LD1_1v_post:
-      mnemonic = "ld1";
-      form = form_1v;
+  switch (form_hash_) {
+    case "ld1r_asisdlsop_r1_i"_h:
+    case "ld1r_asisdlsop_rx1_r"_h:
+    case "ld1r_asisdlso_r1"_h:
+      form = "{'Vt.%s}, ['Xns]'(2323?, 'Xmz1)";
       break;
-    case NEON_LD1_2v_post:
-      mnemonic = "ld1";
-      form = form_2v;
+    case "ld2r_asisdlsop_r2_i"_h:
+    case "ld2r_asisdlsop_rx2_r"_h:
+    case "ld2r_asisdlso_r2"_h:
+      form = "{'Vt.%s, 'Vt2.%s}, ['Xns]'(2323?, 'Xmz2)";
       break;
-    case NEON_LD1_3v_post:
-      mnemonic = "ld1";
-      form = form_3v;
+    case "ld3r_asisdlsop_r3_i"_h:
+    case "ld3r_asisdlsop_rx3_r"_h:
+    case "ld3r_asisdlso_r3"_h:
+      form = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s}, ['Xns]'(2323?, 'Xmz3)";
       break;
-    case NEON_LD1_4v_post:
-      mnemonic = "ld1";
-      form = form_4v;
-      break;
-    case NEON_LD2_post:
-      mnemonic = "ld2";
-      form = form_2v;
-      break;
-    case NEON_LD3_post:
-      mnemonic = "ld3";
-      form = form_3v;
-      break;
-    case NEON_LD4_post:
-      mnemonic = "ld4";
-      form = form_4v;
-      break;
-    case NEON_ST1_1v_post:
-      mnemonic = "st1";
-      form = form_1v;
-      break;
-    case NEON_ST1_2v_post:
-      mnemonic = "st1";
-      form = form_2v;
-      break;
-    case NEON_ST1_3v_post:
-      mnemonic = "st1";
-      form = form_3v;
-      break;
-    case NEON_ST1_4v_post:
-      mnemonic = "st1";
-      form = form_4v;
-      break;
-    case NEON_ST2_post:
-      mnemonic = "st2";
-      form = form_2v;
-      break;
-    case NEON_ST3_post:
-      mnemonic = "st3";
-      form = form_3v;
-      break;
-    case NEON_ST4_post:
-      mnemonic = "st4";
-      form = form_4v;
-      break;
-    default:
+    case "ld4r_asisdlsop_r4_i"_h:
+    case "ld4r_asisdlsop_rx4_r"_h:
+    case "ld4r_asisdlso_r4"_h:
+      form = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s, 'Vt4.%s}, ['Xns]'(2323?, 'Xmz4)";
       break;
   }
-
-  // Work out unallocated encodings.
-  bool allocated = (mnemonic != NULL);
-  switch (instr->Mask(NEONLoadStoreMultiStructPostIndexMask)) {
-    case NEON_LD2_post:
-    case NEON_LD3_post:
-    case NEON_LD4_post:
-    case NEON_ST2_post:
-    case NEON_ST3_post:
-    case NEON_ST4_post:
-      // LD[2-4] and ST[2-4] cannot use .1d format.
-      allocated = (instr->GetNEONQ() != 0) || (instr->GetNEONLSSize() != 3);
-      break;
-    default:
-      break;
-  }
-  if (allocated) {
-    VIXL_ASSERT(mnemonic != NULL);
-    VIXL_ASSERT(form != NULL);
-  } else {
-    mnemonic = "unallocated";
-    form = "(NEONLoadStoreMultiStructPostIndex)";
-  }
-
-  Format(instr, mnemonic, nfd.Substitute(form));
-}
-
-void Disassembler::VisitNEONLoadStoreSingleStruct(const Instruction *instr) {
-  const char *mnemonic = NULL;
-  const char *form = NULL;
-
-  const char *form_1b = "{'Vt.b}['IVLSLane0], ['Xns]";
-  const char *form_1h = "{'Vt.h}['IVLSLane1], ['Xns]";
-  const char *form_1s = "{'Vt.s}['IVLSLane2], ['Xns]";
-  const char *form_1d = "{'Vt.d}['IVLSLane3], ['Xns]";
-  NEONFormatDecoder nfd(instr, NEONFormatDecoder::LoadStoreFormatMap());
-
-  switch (instr->Mask(NEONLoadStoreSingleStructMask)) {
-    case NEON_LD1_b:
-      mnemonic = "ld1";
-      form = form_1b;
-      break;
-    case NEON_LD1_h:
-      mnemonic = "ld1";
-      form = form_1h;
-      break;
-    case NEON_LD1_s:
-      mnemonic = "ld1";
-      VIXL_STATIC_ASSERT((NEON_LD1_s | (1 << NEONLSSize_offset)) == NEON_LD1_d);
-      form = ((instr->GetNEONLSSize() & 1) == 0) ? form_1s : form_1d;
-      break;
-    case NEON_ST1_b:
-      mnemonic = "st1";
-      form = form_1b;
-      break;
-    case NEON_ST1_h:
-      mnemonic = "st1";
-      form = form_1h;
-      break;
-    case NEON_ST1_s:
-      mnemonic = "st1";
-      VIXL_STATIC_ASSERT((NEON_ST1_s | (1 << NEONLSSize_offset)) == NEON_ST1_d);
-      form = ((instr->GetNEONLSSize() & 1) == 0) ? form_1s : form_1d;
-      break;
-    case NEON_LD1R:
-      mnemonic = "ld1r";
-      form = "{'Vt.%s}, ['Xns]";
-      break;
-    case NEON_LD2_b:
-    case NEON_ST2_b:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld2" : "st2";
-      form = "{'Vt.b, 'Vt2.b}['IVLSLane0], ['Xns]";
-      break;
-    case NEON_LD2_h:
-    case NEON_ST2_h:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld2" : "st2";
-      form = "{'Vt.h, 'Vt2.h}['IVLSLane1], ['Xns]";
-      break;
-    case NEON_LD2_s:
-    case NEON_ST2_s:
-      VIXL_STATIC_ASSERT((NEON_ST2_s | (1 << NEONLSSize_offset)) == NEON_ST2_d);
-      VIXL_STATIC_ASSERT((NEON_LD2_s | (1 << NEONLSSize_offset)) == NEON_LD2_d);
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld2" : "st2";
-      if ((instr->GetNEONLSSize() & 1) == 0) {
-        form = "{'Vt.s, 'Vt2.s}['IVLSLane2], ['Xns]";
-      } else {
-        form = "{'Vt.d, 'Vt2.d}['IVLSLane3], ['Xns]";
-      }
-      break;
-    case NEON_LD2R:
-      mnemonic = "ld2r";
-      form = "{'Vt.%s, 'Vt2.%s}, ['Xns]";
-      break;
-    case NEON_LD3_b:
-    case NEON_ST3_b:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld3" : "st3";
-      form = "{'Vt.b, 'Vt2.b, 'Vt3.b}['IVLSLane0], ['Xns]";
-      break;
-    case NEON_LD3_h:
-    case NEON_ST3_h:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld3" : "st3";
-      form = "{'Vt.h, 'Vt2.h, 'Vt3.h}['IVLSLane1], ['Xns]";
-      break;
-    case NEON_LD3_s:
-    case NEON_ST3_s:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld3" : "st3";
-      if ((instr->GetNEONLSSize() & 1) == 0) {
-        form = "{'Vt.s, 'Vt2.s, 'Vt3.s}['IVLSLane2], ['Xns]";
-      } else {
-        form = "{'Vt.d, 'Vt2.d, 'Vt3.d}['IVLSLane3], ['Xns]";
-      }
-      break;
-    case NEON_LD3R:
-      mnemonic = "ld3r";
-      form = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s}, ['Xns]";
-      break;
-    case NEON_LD4_b:
-    case NEON_ST4_b:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld4" : "st4";
-      form = "{'Vt.b, 'Vt2.b, 'Vt3.b, 'Vt4.b}['IVLSLane0], ['Xns]";
-      break;
-    case NEON_LD4_h:
-    case NEON_ST4_h:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld4" : "st4";
-      form = "{'Vt.h, 'Vt2.h, 'Vt3.h, 'Vt4.h}['IVLSLane1], ['Xns]";
-      break;
-    case NEON_LD4_s:
-    case NEON_ST4_s:
-      VIXL_STATIC_ASSERT((NEON_LD4_s | (1 << NEONLSSize_offset)) == NEON_LD4_d);
-      VIXL_STATIC_ASSERT((NEON_ST4_s | (1 << NEONLSSize_offset)) == NEON_ST4_d);
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld4" : "st4";
-      if ((instr->GetNEONLSSize() & 1) == 0) {
-        form = "{'Vt.s, 'Vt2.s, 'Vt3.s, 'Vt4.s}['IVLSLane2], ['Xns]";
-      } else {
-        form = "{'Vt.d, 'Vt2.d, 'Vt3.d, 'Vt4.d}['IVLSLane3], ['Xns]";
-      }
-      break;
-    case NEON_LD4R:
-      mnemonic = "ld4r";
-      form = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s, 'Vt4.%s}, ['Xns]";
-      break;
-    default:
-      break;
-  }
-
-  // Work out unallocated encodings.
-  bool allocated = (mnemonic != NULL);
-  switch (instr->Mask(NEONLoadStoreSingleStructMask)) {
-    case NEON_LD1_h:
-    case NEON_LD2_h:
-    case NEON_LD3_h:
-    case NEON_LD4_h:
-    case NEON_ST1_h:
-    case NEON_ST2_h:
-    case NEON_ST3_h:
-    case NEON_ST4_h:
-      VIXL_ASSERT(allocated);
-      allocated = ((instr->GetNEONLSSize() & 1) == 0);
-      break;
-    case NEON_LD1_s:
-    case NEON_LD2_s:
-    case NEON_LD3_s:
-    case NEON_LD4_s:
-    case NEON_ST1_s:
-    case NEON_ST2_s:
-    case NEON_ST3_s:
-    case NEON_ST4_s:
-      VIXL_ASSERT(allocated);
-      allocated = (instr->GetNEONLSSize() <= 1) &&
-                  ((instr->GetNEONLSSize() == 0) || (instr->GetNEONS() == 0));
-      break;
-    case NEON_LD1R:
-    case NEON_LD2R:
-    case NEON_LD3R:
-    case NEON_LD4R:
-      VIXL_ASSERT(allocated);
-      allocated = (instr->GetNEONS() == 0);
-      break;
-    default:
-      break;
-  }
-  if (allocated) {
-    VIXL_ASSERT(mnemonic != NULL);
-    VIXL_ASSERT(form != NULL);
-  } else {
-    mnemonic = "unallocated";
-    form = "(NEONLoadStoreSingleStruct)";
-  }
-
-  Format(instr, mnemonic, nfd.Substitute(form));
-}
-
-void Disassembler::VisitNEONLoadStoreSingleStructPostIndex(
-    const Instruction *instr) {
-  const char *mnemonic = NULL;
-  const char *form = NULL;
-
-  const char *form_1b = "{'Vt.b}['IVLSLane0], ['Xns], 'Xmb1";
-  const char *form_1h = "{'Vt.h}['IVLSLane1], ['Xns], 'Xmb2";
-  const char *form_1s = "{'Vt.s}['IVLSLane2], ['Xns], 'Xmb4";
-  const char *form_1d = "{'Vt.d}['IVLSLane3], ['Xns], 'Xmb8";
-  NEONFormatDecoder nfd(instr, NEONFormatDecoder::LoadStoreFormatMap());
-
-  switch (instr->Mask(NEONLoadStoreSingleStructPostIndexMask)) {
-    case NEON_LD1_b_post:
-      mnemonic = "ld1";
-      form = form_1b;
-      break;
-    case NEON_LD1_h_post:
-      mnemonic = "ld1";
-      form = form_1h;
-      break;
-    case NEON_LD1_s_post:
-      mnemonic = "ld1";
-      VIXL_STATIC_ASSERT((NEON_LD1_s | (1 << NEONLSSize_offset)) == NEON_LD1_d);
-      form = ((instr->GetNEONLSSize() & 1) == 0) ? form_1s : form_1d;
-      break;
-    case NEON_ST1_b_post:
-      mnemonic = "st1";
-      form = form_1b;
-      break;
-    case NEON_ST1_h_post:
-      mnemonic = "st1";
-      form = form_1h;
-      break;
-    case NEON_ST1_s_post:
-      mnemonic = "st1";
-      VIXL_STATIC_ASSERT((NEON_ST1_s | (1 << NEONLSSize_offset)) == NEON_ST1_d);
-      form = ((instr->GetNEONLSSize() & 1) == 0) ? form_1s : form_1d;
-      break;
-    case NEON_LD1R_post:
-      mnemonic = "ld1r";
-      form = "{'Vt.%s}, ['Xns], 'Xmz1";
-      break;
-    case NEON_LD2_b_post:
-    case NEON_ST2_b_post:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld2" : "st2";
-      form = "{'Vt.b, 'Vt2.b}['IVLSLane0], ['Xns], 'Xmb2";
-      break;
-    case NEON_ST2_h_post:
-    case NEON_LD2_h_post:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld2" : "st2";
-      form = "{'Vt.h, 'Vt2.h}['IVLSLane1], ['Xns], 'Xmb4";
-      break;
-    case NEON_LD2_s_post:
-    case NEON_ST2_s_post:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld2" : "st2";
-      if ((instr->GetNEONLSSize() & 1) == 0)
-        form = "{'Vt.s, 'Vt2.s}['IVLSLane2], ['Xns], 'Xmb8";
-      else
-        form = "{'Vt.d, 'Vt2.d}['IVLSLane3], ['Xns], 'Xmb16";
-      break;
-    case NEON_LD2R_post:
-      mnemonic = "ld2r";
-      form = "{'Vt.%s, 'Vt2.%s}, ['Xns], 'Xmz2";
-      break;
-    case NEON_LD3_b_post:
-    case NEON_ST3_b_post:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld3" : "st3";
-      form = "{'Vt.b, 'Vt2.b, 'Vt3.b}['IVLSLane0], ['Xns], 'Xmb3";
-      break;
-    case NEON_LD3_h_post:
-    case NEON_ST3_h_post:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld3" : "st3";
-      form = "{'Vt.h, 'Vt2.h, 'Vt3.h}['IVLSLane1], ['Xns], 'Xmb6";
-      break;
-    case NEON_LD3_s_post:
-    case NEON_ST3_s_post:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld3" : "st3";
-      if ((instr->GetNEONLSSize() & 1) == 0)
-        form = "{'Vt.s, 'Vt2.s, 'Vt3.s}['IVLSLane2], ['Xns], 'Xmb12";
-      else
-        form = "{'Vt.d, 'Vt2.d, 'Vt3.d}['IVLSLane3], ['Xns], 'Xmb24";
-      break;
-    case NEON_LD3R_post:
-      mnemonic = "ld3r";
-      form = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s}, ['Xns], 'Xmz3";
-      break;
-    case NEON_LD4_b_post:
-    case NEON_ST4_b_post:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld4" : "st4";
-      form = "{'Vt.b, 'Vt2.b, 'Vt3.b, 'Vt4.b}['IVLSLane0], ['Xns], 'Xmb4";
-      break;
-    case NEON_LD4_h_post:
-    case NEON_ST4_h_post:
-      mnemonic = (instr->GetLdStXLoad()) == 1 ? "ld4" : "st4";
-      form = "{'Vt.h, 'Vt2.h, 'Vt3.h, 'Vt4.h}['IVLSLane1], ['Xns], 'Xmb8";
-      break;
-    case NEON_LD4_s_post:
-    case NEON_ST4_s_post:
-      mnemonic = (instr->GetLdStXLoad() == 1) ? "ld4" : "st4";
-      if ((instr->GetNEONLSSize() & 1) == 0)
-        form = "{'Vt.s, 'Vt2.s, 'Vt3.s, 'Vt4.s}['IVLSLane2], ['Xns], 'Xmb16";
-      else
-        form = "{'Vt.d, 'Vt2.d, 'Vt3.d, 'Vt4.d}['IVLSLane3], ['Xns], 'Xmb32";
-      break;
-    case NEON_LD4R_post:
-      mnemonic = "ld4r";
-      form = "{'Vt.%s, 'Vt2.%s, 'Vt3.%s, 'Vt4.%s}, ['Xns], 'Xmz4";
-      break;
-    default:
-      break;
-  }
-
-  // Work out unallocated encodings.
-  bool allocated = (mnemonic != NULL);
-  switch (instr->Mask(NEONLoadStoreSingleStructPostIndexMask)) {
-    case NEON_LD1_h_post:
-    case NEON_LD2_h_post:
-    case NEON_LD3_h_post:
-    case NEON_LD4_h_post:
-    case NEON_ST1_h_post:
-    case NEON_ST2_h_post:
-    case NEON_ST3_h_post:
-    case NEON_ST4_h_post:
-      VIXL_ASSERT(allocated);
-      allocated = ((instr->GetNEONLSSize() & 1) == 0);
-      break;
-    case NEON_LD1_s_post:
-    case NEON_LD2_s_post:
-    case NEON_LD3_s_post:
-    case NEON_LD4_s_post:
-    case NEON_ST1_s_post:
-    case NEON_ST2_s_post:
-    case NEON_ST3_s_post:
-    case NEON_ST4_s_post:
-      VIXL_ASSERT(allocated);
-      allocated = (instr->GetNEONLSSize() <= 1) &&
-                  ((instr->GetNEONLSSize() == 0) || (instr->GetNEONS() == 0));
-      break;
-    case NEON_LD1R_post:
-    case NEON_LD2R_post:
-    case NEON_LD3R_post:
-    case NEON_LD4R_post:
-      VIXL_ASSERT(allocated);
-      allocated = (instr->GetNEONS() == 0);
-      break;
-    default:
-      break;
-  }
-  if (allocated) {
-    VIXL_ASSERT(mnemonic != NULL);
-    VIXL_ASSERT(form != NULL);
-  } else {
-    mnemonic = "unallocated";
-    form = "(NEONLoadStoreSingleStructPostIndex)";
-  }
-
-  Format(instr, mnemonic, nfd.Substitute(form));
+  FormatWithDecodedMnemonic(instr, nfd.Substitute(form));
 }
 
 void Disassembler::DisassembleNEONScalar2RegMiscOnlyD(
@@ -5643,10 +5379,6 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
             return static_cast<int>(strlen("IVInsSVEIndex"));
           }
           VIXL_FALLTHROUGH();
-        }
-        case 'L': {  // IVLSLane[0123] - suffix indicates access size shift.
-          AppendToOutput("%d", instr->GetNEONLSIndex(format[8] - '0'));
-          return 9;
         }
         case 'M': {  // Modified Immediate cases.
           if (strncmp(format, "IVMIImm", strlen("IVMIImm")) == 0) {

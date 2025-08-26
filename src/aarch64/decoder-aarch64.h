@@ -49,13 +49,6 @@
   V(DataProcessing3Source)                                       \
   V(Extract)                                                     \
   V(LoadStoreExclusive)                                          \
-  V(LoadStorePairOffset)                                         \
-  V(LoadStorePairPostIndex)                                      \
-  V(LoadStorePairPreIndex)                                       \
-  V(LoadStorePostIndex)                                          \
-  V(LoadStorePreIndex)                                           \
-  V(LoadStoreRegisterOffset)                                     \
-  V(LoadStoreUnsignedOffset)                                     \
   V(LogicalImmediate)                                            \
   V(LogicalShifted)                                              \
   V(MoveWideImmediate)                                           \
@@ -68,9 +61,6 @@
   V(NEONCopy)                                                    \
   V(NEONExtract)                                                 \
   V(NEONLoadStoreMultiStruct)                                    \
-  V(NEONLoadStoreMultiStructPostIndex)                           \
-  V(NEONLoadStoreSingleStruct)                                   \
-  V(NEONLoadStoreSingleStructPostIndex)                          \
   V(NEONPerm)                                                    \
   V(NEONScalar2RegMisc)                                          \
   V(NEONScalar3Diff)                                             \
@@ -265,7 +255,17 @@
   V(NEONTable)                                                   \
   V(SVEIntReduction)                                             \
   V(SVEMulIndex)                                                 \
-  V(NEON3SameFP16)
+  V(NEON3SameFP16)                                               \
+  V(NEONLoadStoreSingleStruct)                                   \
+  V(NEONLoadStoreSingleStructPostIndex)                          \
+  V(NEONLoadStoreMultiStructPostIndex)                           \
+  V(LoadStorePreIndex)                                           \
+  V(LoadStorePostIndex)                                          \
+  V(LoadStoreUnsignedOffset)                                     \
+  V(LoadStoreRegisterOffset)                                     \
+  V(LoadStorePairPostIndex)                                      \
+  V(LoadStorePairOffset)                                         \
+  V(LoadStorePairPreIndex)
 
 #define VISITOR_LIST_THAT_DONT_RETURN(V) V(Reserved)
 

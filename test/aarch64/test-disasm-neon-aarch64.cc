@@ -590,65 +590,61 @@ TEST(neon_load_store_vector_unallocated) {
   // Encodings marked as unallocated during decoding to an instruction class.
   const char* expected = "unallocated (Unallocated)";
 
-  // Encodings marked as unallocated within instruction classes
-  const char* expected_2 = "unallocated (NEONLoadStoreMultiStruct)";
-  const char* expected_3 = "unallocated (NEONLoadStoreMultiStructPostIndex)";
-
   // LD[1-4] (multiple structures) (no offset)
-  COMPARE(dci(0x0c401000), expected);    // opcode = 0b0001
-  COMPARE(dci(0x0c403000), expected);    // opcode = 0b0011
-  COMPARE(dci(0x0c405000), expected);    // opcode = 0b0101
-  COMPARE(dci(0x0c409000), expected);    // opcode = 0b1001
-  COMPARE(dci(0x0c40b000), expected);    // opcode = 0b1011
-  COMPARE(dci(0x0c40c000), expected);    // opcode = 0b1100
-  COMPARE(dci(0x0c40d000), expected);    // opcode = 0b1101
-  COMPARE(dci(0x0c40e000), expected);    // opcode = 0b1110
-  COMPARE(dci(0x0c40f000), expected);    // opcode = 0b1111
-  COMPARE(dci(0x0c400c00), expected_2);  // opcode = 0b0000, size:Q = 0b110
-  COMPARE(dci(0x0c404c00), expected_2);  // opcode = 0b0100, size:Q = 0b110
-  COMPARE(dci(0x0c408c00), expected_2);  // opcode = 0b1000, size:Q = 0b110
+  COMPARE(dci(0x0c401000), expected);  // opcode = 0b0001
+  COMPARE(dci(0x0c403000), expected);  // opcode = 0b0011
+  COMPARE(dci(0x0c405000), expected);  // opcode = 0b0101
+  COMPARE(dci(0x0c409000), expected);  // opcode = 0b1001
+  COMPARE(dci(0x0c40b000), expected);  // opcode = 0b1011
+  COMPARE(dci(0x0c40c000), expected);  // opcode = 0b1100
+  COMPARE(dci(0x0c40d000), expected);  // opcode = 0b1101
+  COMPARE(dci(0x0c40e000), expected);  // opcode = 0b1110
+  COMPARE(dci(0x0c40f000), expected);  // opcode = 0b1111
+  COMPARE(dci(0x0c400c00), expected);  // opcode = 0b0000, size:Q = 0b110
+  COMPARE(dci(0x0c404c00), expected);  // opcode = 0b0100, size:Q = 0b110
+  COMPARE(dci(0x0c408c00), expected);  // opcode = 0b1000, size:Q = 0b110
 
   // ST[1-4] (multiple structures) (no offset)
-  COMPARE(dci(0x0c001000), expected);    // opcode = 0b0001
-  COMPARE(dci(0x0c003000), expected);    // opcode = 0b0011
-  COMPARE(dci(0x0c005000), expected);    // opcode = 0b0101
-  COMPARE(dci(0x0c009000), expected);    // opcode = 0b1001
-  COMPARE(dci(0x0c00b000), expected);    // opcode = 0b1011
-  COMPARE(dci(0x0c00c000), expected);    // opcode = 0b1100
-  COMPARE(dci(0x0c00d000), expected);    // opcode = 0b1101
-  COMPARE(dci(0x0c00e000), expected);    // opcode = 0b1110
-  COMPARE(dci(0x0c00f000), expected);    // opcode = 0b1111
-  COMPARE(dci(0x0c000c00), expected_2);  // opcode = 0b0000, size:Q = 0b110
-  COMPARE(dci(0x0c004c00), expected_2);  // opcode = 0b0100, size:Q = 0b110
-  COMPARE(dci(0x0c008c00), expected_2);  // opcode = 0b1000, size:Q = 0b110
+  COMPARE(dci(0x0c001000), expected);  // opcode = 0b0001
+  COMPARE(dci(0x0c003000), expected);  // opcode = 0b0011
+  COMPARE(dci(0x0c005000), expected);  // opcode = 0b0101
+  COMPARE(dci(0x0c009000), expected);  // opcode = 0b1001
+  COMPARE(dci(0x0c00b000), expected);  // opcode = 0b1011
+  COMPARE(dci(0x0c00c000), expected);  // opcode = 0b1100
+  COMPARE(dci(0x0c00d000), expected);  // opcode = 0b1101
+  COMPARE(dci(0x0c00e000), expected);  // opcode = 0b1110
+  COMPARE(dci(0x0c00f000), expected);  // opcode = 0b1111
+  COMPARE(dci(0x0c000c00), expected);  // opcode = 0b0000, size:Q = 0b110
+  COMPARE(dci(0x0c004c00), expected);  // opcode = 0b0100, size:Q = 0b110
+  COMPARE(dci(0x0c008c00), expected);  // opcode = 0b1000, size:Q = 0b110
 
   // LD[1-4] (multiple structures) (post index)
-  COMPARE(dci(0x0cc01000), expected);    // opcode = 0b0001
-  COMPARE(dci(0x0cc03000), expected);    // opcode = 0b0011
-  COMPARE(dci(0x0cc05000), expected);    // opcode = 0b0101
-  COMPARE(dci(0x0cc09000), expected);    // opcode = 0b1001
-  COMPARE(dci(0x0cc0b000), expected);    // opcode = 0b1011
-  COMPARE(dci(0x0cc0c000), expected);    // opcode = 0b1100
-  COMPARE(dci(0x0cc0d000), expected);    // opcode = 0b1101
-  COMPARE(dci(0x0cc0e000), expected);    // opcode = 0b1110
-  COMPARE(dci(0x0cc0f000), expected);    // opcode = 0b1111
-  COMPARE(dci(0x0cc00c00), expected_3);  // opcode = 0b0000, size:Q = 0b110
-  COMPARE(dci(0x0cc04c00), expected_3);  // opcode = 0b0100, size:Q = 0b110
-  COMPARE(dci(0x0cc08c00), expected_3);  // opcode = 0b1000, size:Q = 0b110
+  COMPARE(dci(0x0cc01000), expected);  // opcode = 0b0001
+  COMPARE(dci(0x0cc03000), expected);  // opcode = 0b0011
+  COMPARE(dci(0x0cc05000), expected);  // opcode = 0b0101
+  COMPARE(dci(0x0cc09000), expected);  // opcode = 0b1001
+  COMPARE(dci(0x0cc0b000), expected);  // opcode = 0b1011
+  COMPARE(dci(0x0cc0c000), expected);  // opcode = 0b1100
+  COMPARE(dci(0x0cc0d000), expected);  // opcode = 0b1101
+  COMPARE(dci(0x0cc0e000), expected);  // opcode = 0b1110
+  COMPARE(dci(0x0cc0f000), expected);  // opcode = 0b1111
+  COMPARE(dci(0x0cc00c00), expected);  // opcode = 0b0000, size:Q = 0b110
+  COMPARE(dci(0x0cc04c00), expected);  // opcode = 0b0100, size:Q = 0b110
+  COMPARE(dci(0x0cc08c00), expected);  // opcode = 0b1000, size:Q = 0b110
 
   // ST[1-4] (multiple structures) (post index)
-  COMPARE(dci(0x0c801000), expected);    // opcode = 0b0001
-  COMPARE(dci(0x0c803000), expected);    // opcode = 0b0011
-  COMPARE(dci(0x0c805000), expected);    // opcode = 0b0101
-  COMPARE(dci(0x0c809000), expected);    // opcode = 0b1001
-  COMPARE(dci(0x0c80b000), expected);    // opcode = 0b1011
-  COMPARE(dci(0x0c80c000), expected);    // opcode = 0b1100
-  COMPARE(dci(0x0c80d000), expected);    // opcode = 0b1101
-  COMPARE(dci(0x0c80e000), expected);    // opcode = 0b1110
-  COMPARE(dci(0x0c80f000), expected);    // opcode = 0b1111
-  COMPARE(dci(0x0c800c00), expected_3);  // opcode = 0b0000, size:Q = 0b110
-  COMPARE(dci(0x0c804c00), expected_3);  // opcode = 0b0100, size:Q = 0b110
-  COMPARE(dci(0x0c808c00), expected_3);  // opcode = 0b1000, size:Q = 0b110
+  COMPARE(dci(0x0c801000), expected);  // opcode = 0b0001
+  COMPARE(dci(0x0c803000), expected);  // opcode = 0b0011
+  COMPARE(dci(0x0c805000), expected);  // opcode = 0b0101
+  COMPARE(dci(0x0c809000), expected);  // opcode = 0b1001
+  COMPARE(dci(0x0c80b000), expected);  // opcode = 0b1011
+  COMPARE(dci(0x0c80c000), expected);  // opcode = 0b1100
+  COMPARE(dci(0x0c80d000), expected);  // opcode = 0b1101
+  COMPARE(dci(0x0c80e000), expected);  // opcode = 0b1110
+  COMPARE(dci(0x0c80f000), expected);  // opcode = 0b1111
+  COMPARE(dci(0x0c800c00), expected);  // opcode = 0b0000, size:Q = 0b110
+  COMPARE(dci(0x0c804c00), expected);  // opcode = 0b0100, size:Q = 0b110
+  COMPARE(dci(0x0c808c00), expected);  // opcode = 0b1000, size:Q = 0b110
 
   CLEANUP();
 }

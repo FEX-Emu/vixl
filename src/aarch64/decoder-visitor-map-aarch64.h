@@ -851,146 +851,6 @@
       {"stxrh_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
       {"stxr_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"stxr_sr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"ldpsw_64_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},    \
-      {"ldp_32_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},      \
-      {"ldp_64_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},      \
-      {"ldp_d_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
-      {"ldp_q_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
-      {"ldp_s_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
-      {"stp_32_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},      \
-      {"stp_64_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},      \
-      {"stp_d_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
-      {"stp_q_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
-      {"stp_s_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
-      {"ldpsw_64_ldstpair_post"_h,                                             \
-       &VISITORCLASS::VisitLoadStorePairPostIndex},                            \
-      {"ldp_32_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},  \
-      {"ldp_64_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},  \
-      {"ldp_d_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
-      {"ldp_q_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
-      {"ldp_s_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
-      {"stp_32_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},  \
-      {"stp_64_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},  \
-      {"stp_d_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
-      {"stp_q_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
-      {"stp_s_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
-      {"ldpsw_64_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},  \
-      {"ldp_32_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},    \
-      {"ldp_64_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},    \
-      {"ldp_d_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
-      {"ldp_q_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
-      {"ldp_s_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
-      {"stp_32_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},    \
-      {"stp_64_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},    \
-      {"stp_d_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
-      {"stp_q_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
-      {"stp_s_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
-      {"ldrb_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},      \
-      {"ldrh_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},      \
-      {"ldrsb_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},     \
-      {"ldrsb_64_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},     \
-      {"ldrsh_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},     \
-      {"ldrsh_64_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},     \
-      {"ldrsw_64_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},     \
-      {"ldr_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},       \
-      {"ldr_64_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},       \
-      {"ldr_b_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
-      {"ldr_d_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
-      {"ldr_h_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
-      {"ldr_q_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
-      {"ldr_s_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
-      {"strb_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},      \
-      {"strh_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},      \
-      {"str_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},       \
-      {"str_64_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},       \
-      {"str_b_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
-      {"str_d_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
-      {"str_h_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
-      {"str_q_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
-      {"str_s_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
-      {"ldrb_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},        \
-      {"ldrh_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},        \
-      {"ldrsb_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},       \
-      {"ldrsb_64_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},       \
-      {"ldrsh_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},       \
-      {"ldrsh_64_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},       \
-      {"ldrsw_64_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},       \
-      {"ldr_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},         \
-      {"ldr_64_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},         \
-      {"ldr_b_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
-      {"ldr_d_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
-      {"ldr_h_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
-      {"ldr_q_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
-      {"ldr_s_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
-      {"strb_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},        \
-      {"strh_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},        \
-      {"str_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},         \
-      {"str_64_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},         \
-      {"str_b_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
-      {"str_d_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
-      {"str_h_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
-      {"str_q_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
-      {"str_s_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
-      {"ldrb_32bl_ldst_regoff"_h,                                              \
-       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
-      {"ldrb_32b_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset}, \
-      {"ldrh_32_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},  \
-      {"ldrsb_32bl_ldst_regoff"_h,                                             \
-       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
-      {"ldrsb_32b_ldst_regoff"_h,                                              \
-       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
-      {"ldrsb_64bl_ldst_regoff"_h,                                             \
-       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
-      {"ldrsb_64b_ldst_regoff"_h,                                              \
-       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
-      {"ldrsh_32_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset}, \
-      {"ldrsh_64_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset}, \
-      {"ldrsw_64_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset}, \
-      {"ldr_32_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
-      {"ldr_64_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
-      {"ldr_bl_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
-      {"ldr_b_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
-      {"ldr_d_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
-      {"ldr_h_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
-      {"ldr_q_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
-      {"ldr_s_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
-      {"prfm_p_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
-      {"strb_32bl_ldst_regoff"_h,                                              \
-       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
-      {"strb_32b_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset}, \
-      {"strh_32_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},  \
-      {"str_32_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
-      {"str_64_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
-      {"str_bl_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
-      {"str_b_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
-      {"str_d_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
-      {"str_h_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
-      {"str_q_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
-      {"str_s_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
-      {"ldrb_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},     \
-      {"ldrh_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},     \
-      {"ldrsb_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},    \
-      {"ldrsb_64_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},    \
-      {"ldrsh_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},    \
-      {"ldrsh_64_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},    \
-      {"ldrsw_64_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},    \
-      {"ldr_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},      \
-      {"ldr_64_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},      \
-      {"ldr_b_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
-      {"ldr_d_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
-      {"ldr_h_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
-      {"ldr_q_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
-      {"ldr_s_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
-      {"prfm_p_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},      \
-      {"strb_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},     \
-      {"strh_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},     \
-      {"str_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},      \
-      {"str_64_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},      \
-      {"str_b_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
-      {"str_d_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
-      {"str_h_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
-      {"str_q_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
-      {"str_s_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
       {"ands_32s_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},            \
       {"ands_64s_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},            \
       {"and_32_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
@@ -1136,242 +996,6 @@
       {"st2_asisdlse_r2"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},     \
       {"st3_asisdlse_r3"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},     \
       {"st4_asisdlse_r4"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},     \
-      {"ld1_asisdlsep_i1_i1"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld1_asisdlsep_i2_i2"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld1_asisdlsep_i3_i3"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld1_asisdlsep_i4_i4"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld1_asisdlsep_r1_r1"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld1_asisdlsep_r2_r2"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld1_asisdlsep_r3_r3"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld1_asisdlsep_r4_r4"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld2_asisdlsep_i2_i"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld2_asisdlsep_r2_r"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld3_asisdlsep_i3_i"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld3_asisdlsep_r3_r"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld4_asisdlsep_i4_i"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld4_asisdlsep_r4_r"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st1_asisdlsep_i1_i1"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st1_asisdlsep_i2_i2"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st1_asisdlsep_i3_i3"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st1_asisdlsep_i4_i4"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st1_asisdlsep_r1_r1"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st1_asisdlsep_r2_r2"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st1_asisdlsep_r3_r3"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st1_asisdlsep_r4_r4"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st2_asisdlsep_i2_i"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st2_asisdlsep_r2_r"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st3_asisdlsep_i3_i"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st3_asisdlsep_r3_r"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st4_asisdlsep_i4_i"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"st4_asisdlsep_r4_r"_h,                                                 \
-       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
-      {"ld1r_asisdlso_r1"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct},   \
-      {"ld1_asisdlso_b1_1b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld1_asisdlso_d1_1d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld1_asisdlso_h1_1h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld1_asisdlso_s1_1s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld2r_asisdlso_r2"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct},   \
-      {"ld2_asisdlso_b2_2b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld2_asisdlso_d2_2d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld2_asisdlso_h2_2h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld2_asisdlso_s2_2s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld3r_asisdlso_r3"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct},   \
-      {"ld3_asisdlso_b3_3b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld3_asisdlso_d3_3d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld3_asisdlso_h3_3h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld3_asisdlso_s3_3s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld4r_asisdlso_r4"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct},   \
-      {"ld4_asisdlso_b4_4b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld4_asisdlso_d4_4d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld4_asisdlso_h4_4h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld4_asisdlso_s4_4s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st1_asisdlso_b1_1b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st1_asisdlso_d1_1d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st1_asisdlso_h1_1h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st1_asisdlso_s1_1s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st2_asisdlso_b2_2b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st2_asisdlso_d2_2d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st2_asisdlso_h2_2h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st2_asisdlso_s2_2s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st3_asisdlso_b3_3b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st3_asisdlso_d3_3d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st3_asisdlso_h3_3h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st3_asisdlso_s3_3s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st4_asisdlso_b4_4b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st4_asisdlso_d4_4d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st4_asisdlso_h4_4h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"st4_asisdlso_s4_4s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
-      {"ld1r_asisdlsop_r1_i"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld1r_asisdlsop_rx1_r"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld1_asisdlsop_b1_i1b"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld1_asisdlsop_bx1_r1b"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld1_asisdlsop_d1_i1d"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld1_asisdlsop_dx1_r1d"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld1_asisdlsop_h1_i1h"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld1_asisdlsop_hx1_r1h"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld1_asisdlsop_s1_i1s"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld1_asisdlsop_sx1_r1s"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld2r_asisdlsop_r2_i"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld2r_asisdlsop_rx2_r"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld2_asisdlsop_b2_i2b"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld2_asisdlsop_bx2_r2b"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld2_asisdlsop_d2_i2d"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld2_asisdlsop_dx2_r2d"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld2_asisdlsop_h2_i2h"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld2_asisdlsop_hx2_r2h"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld2_asisdlsop_s2_i2s"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld2_asisdlsop_sx2_r2s"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld3r_asisdlsop_r3_i"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld3r_asisdlsop_rx3_r"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld3_asisdlsop_b3_i3b"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld3_asisdlsop_bx3_r3b"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld3_asisdlsop_d3_i3d"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld3_asisdlsop_dx3_r3d"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld3_asisdlsop_h3_i3h"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld3_asisdlsop_hx3_r3h"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld3_asisdlsop_s3_i3s"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld3_asisdlsop_sx3_r3s"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld4r_asisdlsop_r4_i"_h,                                                \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld4r_asisdlsop_rx4_r"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld4_asisdlsop_b4_i4b"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld4_asisdlsop_bx4_r4b"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld4_asisdlsop_d4_i4d"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld4_asisdlsop_dx4_r4d"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld4_asisdlsop_h4_i4h"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld4_asisdlsop_hx4_r4h"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld4_asisdlsop_s4_i4s"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"ld4_asisdlsop_sx4_r4s"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st1_asisdlsop_b1_i1b"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st1_asisdlsop_bx1_r1b"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st1_asisdlsop_d1_i1d"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st1_asisdlsop_dx1_r1d"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st1_asisdlsop_h1_i1h"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st1_asisdlsop_hx1_r1h"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st1_asisdlsop_s1_i1s"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st1_asisdlsop_sx1_r1s"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st2_asisdlsop_b2_i2b"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st2_asisdlsop_bx2_r2b"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st2_asisdlsop_d2_i2d"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st2_asisdlsop_dx2_r2d"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st2_asisdlsop_h2_i2h"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st2_asisdlsop_hx2_r2h"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st2_asisdlsop_s2_i2s"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st2_asisdlsop_sx2_r2s"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st3_asisdlsop_b3_i3b"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st3_asisdlsop_bx3_r3b"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st3_asisdlsop_d3_i3d"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st3_asisdlsop_dx3_r3d"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st3_asisdlsop_h3_i3h"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st3_asisdlsop_hx3_r3h"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st3_asisdlsop_s3_i3s"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st3_asisdlsop_sx3_r3s"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st4_asisdlsop_b4_i4b"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st4_asisdlsop_bx4_r4b"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st4_asisdlsop_d4_i4d"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st4_asisdlsop_dx4_r4d"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st4_asisdlsop_h4_i4h"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st4_asisdlsop_hx4_r4h"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st4_asisdlsop_s4_i4s"_h,                                               \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
-      {"st4_asisdlsop_sx4_r4s"_h,                                              \
-       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
       {"trn1_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
       {"trn2_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
       {"uzp1_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
@@ -2846,6 +2470,382 @@
       {"frecps_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},      \
       {"frsqrts_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},     \
       {"fsub_asimdsamefp16_only"_h, &VISITORCLASS::VisitNEON3SameFP16},        \
+      {"ld1r_asisdlso_r1"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct},   \
+      {"ld2r_asisdlso_r2"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct},   \
+      {"ld3r_asisdlso_r3"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct},   \
+      {"ld4r_asisdlso_r4"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct},   \
+      {"ld1r_asisdlsop_r1_i"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld1r_asisdlsop_rx1_r"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld2r_asisdlsop_r2_i"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld2r_asisdlsop_rx2_r"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld3r_asisdlsop_r3_i"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld3r_asisdlsop_rx3_r"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld4r_asisdlsop_r4_i"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld4r_asisdlsop_rx4_r"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld1_asisdlso_b1_1b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld2_asisdlso_b2_2b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld3_asisdlso_b3_3b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld4_asisdlso_b4_4b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st1_asisdlso_b1_1b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st2_asisdlso_b2_2b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st3_asisdlso_b3_3b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st4_asisdlso_b4_4b"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld1_asisdlsop_b1_i1b"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld1_asisdlsop_bx1_r1b"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld2_asisdlsop_b2_i2b"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld2_asisdlsop_bx2_r2b"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld3_asisdlsop_b3_i3b"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld3_asisdlsop_bx3_r3b"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld4_asisdlsop_b4_i4b"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld4_asisdlsop_bx4_r4b"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st1_asisdlsop_b1_i1b"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st1_asisdlsop_bx1_r1b"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st2_asisdlsop_b2_i2b"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st2_asisdlsop_bx2_r2b"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st3_asisdlsop_b3_i3b"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st3_asisdlsop_bx3_r3b"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st4_asisdlsop_b4_i4b"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st4_asisdlsop_bx4_r4b"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld1_asisdlso_h1_1h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld2_asisdlso_h2_2h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld3_asisdlso_h3_3h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld4_asisdlso_h4_4h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st1_asisdlso_h1_1h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st2_asisdlso_h2_2h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st3_asisdlso_h3_3h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st4_asisdlso_h4_4h"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld1_asisdlsop_h1_i1h"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld1_asisdlsop_hx1_r1h"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld2_asisdlsop_h2_i2h"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld2_asisdlsop_hx2_r2h"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld3_asisdlsop_h3_i3h"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld3_asisdlsop_hx3_r3h"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld4_asisdlsop_h4_i4h"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld4_asisdlsop_hx4_r4h"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st1_asisdlsop_h1_i1h"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st1_asisdlsop_hx1_r1h"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st2_asisdlsop_h2_i2h"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st2_asisdlsop_hx2_r2h"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st3_asisdlsop_h3_i3h"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st3_asisdlsop_hx3_r3h"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st4_asisdlsop_h4_i4h"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st4_asisdlsop_hx4_r4h"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld1_asisdlso_s1_1s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld2_asisdlso_s2_2s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld3_asisdlso_s3_3s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld4_asisdlso_s4_4s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st1_asisdlso_s1_1s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st2_asisdlso_s2_2s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st3_asisdlso_s3_3s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st4_asisdlso_s4_4s"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld1_asisdlsop_s1_i1s"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld1_asisdlsop_sx1_r1s"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld2_asisdlsop_s2_i2s"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld2_asisdlsop_sx2_r2s"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld3_asisdlsop_s3_i3s"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld3_asisdlsop_sx3_r3s"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld4_asisdlsop_s4_i4s"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld4_asisdlsop_sx4_r4s"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st1_asisdlsop_s1_i1s"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st1_asisdlsop_sx1_r1s"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st2_asisdlsop_s2_i2s"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st2_asisdlsop_sx2_r2s"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st3_asisdlsop_s3_i3s"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st3_asisdlsop_sx3_r3s"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st4_asisdlsop_s4_i4s"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st4_asisdlsop_sx4_r4s"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld1_asisdlso_d1_1d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld2_asisdlso_d2_2d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld3_asisdlso_d3_3d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld4_asisdlso_d4_4d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st1_asisdlso_d1_1d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st2_asisdlso_d2_2d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st3_asisdlso_d3_3d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"st4_asisdlso_d4_4d"_h, &VISITORCLASS::VisitNEONLoadStoreSingleStruct}, \
+      {"ld1_asisdlsop_d1_i1d"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld1_asisdlsop_dx1_r1d"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld2_asisdlsop_d2_i2d"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld2_asisdlsop_dx2_r2d"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld3_asisdlsop_d3_i3d"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld3_asisdlsop_dx3_r3d"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld4_asisdlsop_d4_i4d"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld4_asisdlsop_dx4_r4d"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st1_asisdlsop_d1_i1d"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st1_asisdlsop_dx1_r1d"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st2_asisdlsop_d2_i2d"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st2_asisdlsop_dx2_r2d"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st3_asisdlsop_d3_i3d"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st3_asisdlsop_dx3_r3d"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st4_asisdlsop_d4_i4d"_h,                                               \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"st4_asisdlsop_dx4_r4d"_h,                                              \
+       &VISITORCLASS::VisitNEONLoadStoreSingleStructPostIndex},                \
+      {"ld1_asisdlsep_i1_i1"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld1_asisdlsep_i2_i2"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld1_asisdlsep_i3_i3"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld1_asisdlsep_i4_i4"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld1_asisdlsep_r1_r1"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld1_asisdlsep_r2_r2"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld1_asisdlsep_r3_r3"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld1_asisdlsep_r4_r4"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld2_asisdlsep_i2_i"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld2_asisdlsep_r2_r"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld3_asisdlsep_i3_i"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld3_asisdlsep_r3_r"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld4_asisdlsep_i4_i"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ld4_asisdlsep_r4_r"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st1_asisdlsep_i1_i1"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st1_asisdlsep_i2_i2"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st1_asisdlsep_i3_i3"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st1_asisdlsep_i4_i4"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st1_asisdlsep_r1_r1"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st1_asisdlsep_r2_r2"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st1_asisdlsep_r3_r3"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st1_asisdlsep_r4_r4"_h,                                                \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st2_asisdlsep_i2_i"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st2_asisdlsep_r2_r"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st3_asisdlsep_i3_i"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st3_asisdlsep_r3_r"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st4_asisdlsep_i4_i"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"st4_asisdlsep_r4_r"_h,                                                 \
+       &VISITORCLASS::VisitNEONLoadStoreMultiStructPostIndex},                 \
+      {"ldrb_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},        \
+      {"ldrh_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},        \
+      {"ldrsb_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},       \
+      {"ldrsb_64_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},       \
+      {"ldrsh_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},       \
+      {"ldrsh_64_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},       \
+      {"ldrsw_64_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},       \
+      {"ldr_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},         \
+      {"ldr_64_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},         \
+      {"ldr_b_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
+      {"ldr_d_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
+      {"ldr_h_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
+      {"ldr_q_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
+      {"ldr_s_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
+      {"strb_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},        \
+      {"strh_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},        \
+      {"str_32_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},         \
+      {"str_64_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},         \
+      {"str_b_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
+      {"str_d_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
+      {"str_h_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
+      {"str_q_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
+      {"str_s_ldst_immpre"_h, &VISITORCLASS::VisitLoadStorePreIndex},          \
+      {"ldrb_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},      \
+      {"ldrh_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},      \
+      {"ldrsb_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},     \
+      {"ldrsb_64_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},     \
+      {"ldrsh_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},     \
+      {"ldrsh_64_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},     \
+      {"ldrsw_64_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},     \
+      {"ldr_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},       \
+      {"ldr_64_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},       \
+      {"ldr_b_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
+      {"ldr_d_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
+      {"ldr_h_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
+      {"ldr_q_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
+      {"ldr_s_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
+      {"strb_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},      \
+      {"strh_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},      \
+      {"str_32_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},       \
+      {"str_64_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},       \
+      {"str_b_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
+      {"str_d_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
+      {"str_h_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
+      {"str_q_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
+      {"str_s_ldst_immpost"_h, &VISITORCLASS::VisitLoadStorePostIndex},        \
+      {"ldrb_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},     \
+      {"ldrh_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},     \
+      {"ldrsb_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},    \
+      {"ldrsb_64_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},    \
+      {"ldrsh_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},    \
+      {"ldrsh_64_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},    \
+      {"ldrsw_64_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},    \
+      {"ldr_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},      \
+      {"ldr_64_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},      \
+      {"ldr_b_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
+      {"ldr_d_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
+      {"ldr_h_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
+      {"ldr_q_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
+      {"ldr_s_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
+      {"prfm_p_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},      \
+      {"strb_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},     \
+      {"strh_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},     \
+      {"str_32_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},      \
+      {"str_64_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},      \
+      {"str_b_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
+      {"str_d_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
+      {"str_h_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
+      {"str_q_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
+      {"str_s_ldst_pos"_h, &VISITORCLASS::VisitLoadStoreUnsignedOffset},       \
+      {"ldrb_32bl_ldst_regoff"_h,                                              \
+       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
+      {"ldrb_32b_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset}, \
+      {"ldrh_32_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},  \
+      {"ldrsb_32bl_ldst_regoff"_h,                                             \
+       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
+      {"ldrsb_32b_ldst_regoff"_h,                                              \
+       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
+      {"ldrsb_64bl_ldst_regoff"_h,                                             \
+       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
+      {"ldrsb_64b_ldst_regoff"_h,                                              \
+       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
+      {"ldrsh_32_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset}, \
+      {"ldrsh_64_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset}, \
+      {"ldrsw_64_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset}, \
+      {"ldr_32_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
+      {"ldr_64_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
+      {"ldr_bl_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
+      {"ldr_b_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
+      {"ldr_d_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
+      {"ldr_h_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
+      {"ldr_q_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
+      {"ldr_s_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
+      {"prfm_p_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
+      {"strb_32bl_ldst_regoff"_h,                                              \
+       &VISITORCLASS::VisitLoadStoreRegisterOffset},                           \
+      {"strb_32b_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset}, \
+      {"strh_32_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},  \
+      {"str_32_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
+      {"str_64_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
+      {"str_bl_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},   \
+      {"str_b_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
+      {"str_d_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
+      {"str_h_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
+      {"str_q_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
+      {"str_s_ldst_regoff"_h, &VISITORCLASS::VisitLoadStoreRegisterOffset},    \
+      {"ldpsw_64_ldstpair_post"_h,                                             \
+       &VISITORCLASS::VisitLoadStorePairPostIndex},                            \
+      {"ldp_32_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},  \
+      {"ldp_64_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},  \
+      {"ldp_d_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
+      {"ldp_q_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
+      {"ldp_s_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
+      {"stp_32_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},  \
+      {"stp_64_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},  \
+      {"stp_d_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
+      {"stp_q_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
+      {"stp_s_ldstpair_post"_h, &VISITORCLASS::VisitLoadStorePairPostIndex},   \
+      {"ldpsw_64_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},    \
+      {"ldp_32_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},      \
+      {"ldp_64_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},      \
+      {"ldp_d_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
+      {"ldp_q_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
+      {"ldp_s_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
+      {"stp_32_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},      \
+      {"stp_64_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},      \
+      {"stp_d_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
+      {"stp_q_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
+      {"stp_s_ldstpair_off"_h, &VISITORCLASS::VisitLoadStorePairOffset},       \
+      {"ldpsw_64_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},  \
+      {"ldp_32_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},    \
+      {"ldp_64_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},    \
+      {"ldp_d_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
+      {"ldp_q_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
+      {"ldp_s_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
+      {"stp_32_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},    \
+      {"stp_64_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},    \
+      {"stp_d_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
+      {"stp_q_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
+      {"stp_s_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
       {"fmla_asisdelem_rh_h"_h,                                                \
        &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
       {"fmla_asisdelem_r_sd"_h,                                                \
