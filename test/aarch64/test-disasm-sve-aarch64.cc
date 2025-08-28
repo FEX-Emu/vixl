@@ -407,6 +407,11 @@ TEST(sve_bitwise_shift_predicated) {
                 "movprfx z24.d, p2/m, z0.d\n"
                 "lsr z24.d, p2/m, z24.d, #64");
 
+  // Shift by wide element unallocated encodings (size = 0b11)
+  COMPARE(dci(0x04d88000), "unallocated (Unallocated)");
+  COMPARE(dci(0x04db8000), "unallocated (Unallocated)");
+  COMPARE(dci(0x04d98000), "unallocated (Unallocated)");
+
   CLEANUP();
 }
 
@@ -414,9 +419,9 @@ TEST(sve_bitwise_shift_unpredicated) {
   SETUP();
 
   // Test lsl with reserved D-sized lane field.
-  COMPARE_PREFIX(dci(0x04ef8e15), "unimplemented");
+  COMPARE_PREFIX(dci(0x04ef8e15), "unallocated");
   // Test asr with reserved tsz field.
-  COMPARE_PREFIX(dci(0x04209345), "unimplemented");
+  COMPARE_PREFIX(dci(0x04209345), "unallocated");
 
   COMPARE(asr(z4.VnB(), z27.VnB(), 1), "asr z4.b, z27.b, #1");
   COMPARE(asr(z5.VnB(), z26.VnB(), 8), "asr z5.b, z26.b, #8");

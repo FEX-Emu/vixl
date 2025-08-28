@@ -34,33 +34,20 @@
 // shared.
 
 #define DEFAULT_FORM_TO_VISITOR_MAP(VISITORCLASS)                              \
-  {"abs_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},        \
-      {"ands_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
+  {"ands_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},                \
       {"and_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"and_z_zi"_h,                                                           \
-       &VISITORCLASS::VisitSVEBitwiseLogicalWithImm_Unpredicated},             \
-      {"and_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
       {"asrd_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},  \
       {"asr_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},   \
-      {"asr_z_p_zw"_h,                                                         \
-       &VISITORCLASS::VisitSVEBitwiseShiftByWideElements_Predicated},          \
-      {"asr_z_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
-      {"asr_z_zw"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
       {"bics_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
       {"bic_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"bic_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
       {"clasta_r_p_z"_h,                                                       \
        &VISITORCLASS::VisitSVEConditionallyExtractElementToGeneralRegister},   \
       {"clastb_r_p_z"_h,                                                       \
        &VISITORCLASS::VisitSVEConditionallyExtractElementToGeneralRegister},   \
-      {"cls_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
-      {"clz_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
-      {"cnot_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
       {"cntb_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
       {"cntd_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
       {"cnth_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
       {"cntw_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
-      {"cnt_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
       {"compact_z_p_z"_h, &VISITORCLASS::VisitSVECompressActiveElements},      \
       {"cpy_z_o_i"_h, &VISITORCLASS::VisitSVECopyIntImm_Predicated},           \
       {"cpy_z_p_i"_h, &VISITORCLASS::VisitSVECopyIntImm_Predicated},           \
@@ -83,32 +70,6 @@
       {"dup_z_zi"_h, &VISITORCLASS::VisitSVEBroadcastIndexElement},            \
       {"eors_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
       {"eor_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"eor_z_zi"_h,                                                           \
-       &VISITORCLASS::VisitSVEBitwiseLogicalWithImm_Unpredicated},             \
-      {"eor_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
-      {"fabd_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
-      {"fabs_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
-      {"facge_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
-      {"facgt_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
-      {"fadda_v_p_z"_h, &VISITORCLASS::VisitSVEFPAccumulatingReduction},       \
-      {"faddv_v_p_z"_h, &VISITORCLASS::VisitSVEFPFastReduction},               \
-      {"fadd_z_p_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
-      {"fadd_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
-      {"fadd_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},        \
-      {"fcadd_z_p_zz"_h, &VISITORCLASS::VisitSVEFPComplexAddition},            \
-      {"fcmeq_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
-      {"fcmeq_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
-      {"fcmge_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
-      {"fcmge_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
-      {"fcmgt_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
-      {"fcmgt_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
-      {"fcmla_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPComplexMulAdd},             \
-      {"fcmle_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
-      {"fcmlt_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
-      {"fcmne_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
-      {"fcmne_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
-      {"fcmuo_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
       {"fcpy_z_p_i"_h, &VISITORCLASS::VisitSVECopyFPImm_Predicated},           \
       {"fcvt_z_p_z_d2h"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
       {"fcvt_z_p_z_d2s"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
@@ -116,64 +77,7 @@
       {"fcvt_z_p_z_h2s"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
       {"fcvt_z_p_z_s2d"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
       {"fcvt_z_p_z_s2h"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
-      {"fdivr_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},      \
-      {"fdiv_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
       {"fdup_z_i"_h, &VISITORCLASS::VisitSVEBroadcastFPImm_Unpredicated},      \
-      {"fexpa_z_z"_h, &VISITORCLASS::VisitSVEFPExponentialAccelerator},        \
-      {"fmad_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                     \
-      {"fmaxnmv_v_p_z"_h, &VISITORCLASS::VisitSVEFPFastReduction},             \
-      {"fmaxnm_z_p_zs"_h,                                                      \
-       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
-      {"fmaxnm_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},     \
-      {"fmaxv_v_p_z"_h, &VISITORCLASS::VisitSVEFPFastReduction},               \
-      {"fmax_z_p_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
-      {"fmax_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
-      {"fminnmv_v_p_z"_h, &VISITORCLASS::VisitSVEFPFastReduction},             \
-      {"fminnm_z_p_zs"_h,                                                      \
-       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
-      {"fminnm_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},     \
-      {"fminv_v_p_z"_h, &VISITORCLASS::VisitSVEFPFastReduction},               \
-      {"fmin_z_p_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
-      {"fmin_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
-      {"fmla_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                     \
-      {"fmls_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                     \
-      {"fmsb_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                     \
-      {"fmulx_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},      \
-      {"fmul_z_p_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
-      {"fmul_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
-      {"fmul_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},        \
-      {"fneg_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
-      {"fnmad_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                    \
-      {"fnmla_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                    \
-      {"fnmls_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                    \
-      {"fnmsb_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                    \
-      {"frecpe_z_z"_h, &VISITORCLASS::VisitSVEFPUnaryOpUnpredicated},          \
-      {"frecps_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},      \
-      {"frecpx_z_p_z"_h, &VISITORCLASS::VisitSVEFPUnaryOp},                    \
-      {"frinta_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
-      {"frinti_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
-      {"frintm_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
-      {"frintn_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
-      {"frintp_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
-      {"frintx_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
-      {"frintz_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
-      {"frsqrte_z_z"_h, &VISITORCLASS::VisitSVEFPUnaryOpUnpredicated},         \
-      {"frsqrts_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},     \
-      {"fscale_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},     \
-      {"fsqrt_z_p_z"_h, &VISITORCLASS::VisitSVEFPUnaryOp},                     \
-      {"fsubr_z_p_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
-      {"fsubr_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},      \
-      {"fsub_z_p_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
-      {"fsub_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
-      {"fsub_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},        \
-      {"ftmad_z_zzi"_h, &VISITORCLASS::VisitSVEFPTrigMulAddCoefficient},       \
-      {"ftsmul_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},      \
-      {"ftssel_z_zz"_h, &VISITORCLASS::VisitSVEFPTrigSelectCoefficient},       \
       {"incb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"incd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"incd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
@@ -181,7 +85,6 @@
       {"inch_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
       {"incw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"incw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
-      {"insr_z_r"_h, &VISITORCLASS::VisitSVEInsertGeneralRegister},            \
       {"lasta_r_p_z"_h,                                                        \
        &VISITORCLASS::VisitSVEExtractElementToGeneralRegister},                \
       {"lastb_r_p_z"_h,                                                        \
@@ -325,27 +228,15 @@
       {"ldr_p_bi"_h, &VISITORCLASS::VisitSVELoadPredicateRegister},            \
       {"ldr_z_bi"_h, &VISITORCLASS::VisitSVELoadVectorRegister},               \
       {"lsl_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},   \
-      {"lsl_z_p_zw"_h,                                                         \
-       &VISITORCLASS::VisitSVEBitwiseShiftByWideElements_Predicated},          \
-      {"lsl_z_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
-      {"lsl_z_zw"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
       {"lsr_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},   \
-      {"lsr_z_p_zw"_h,                                                         \
-       &VISITORCLASS::VisitSVEBitwiseShiftByWideElements_Predicated},          \
-      {"lsr_z_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
-      {"lsr_z_zw"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
       {"nands_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},           \
       {"nand_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
-      {"neg_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
       {"nors_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
       {"nor_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"not_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
       {"orns_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
       {"orn_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
       {"orrs_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
       {"orr_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"orr_z_zi"_h,                                                           \
-       &VISITORCLASS::VisitSVEBitwiseLogicalWithImm_Unpredicated},             \
       {"orr_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
       {"prfb_i_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitGatherPrefetch_VectorPlusImm},              \
@@ -403,19 +294,6 @@
       {"prfw_i_p_bz_d_x32_scaled"_h,                                           \
        &VISITORCLASS::                                                         \
            VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets},  \
-      {"rbit_z_p_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},          \
-      {"revb_z_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},            \
-      {"revh_z_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},            \
-      {"revw_z_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},            \
-      {"rev_p_p"_h, &VISITORCLASS::VisitSVEReversePredicateElements},          \
-      {"rev_z_z"_h, &VISITORCLASS::VisitSVEReverseVectorElements},             \
-      {"scvtf_z_p_z_h2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
-      {"scvtf_z_p_z_w2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
-      {"scvtf_z_p_z_w2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
-      {"scvtf_z_p_z_w2s"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
-      {"scvtf_z_p_z_x2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
-      {"scvtf_z_p_z_x2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
-      {"scvtf_z_p_z_x2s"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
       {"sdivr_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},  \
       {"sdiv_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},   \
       {"sdot_z_zzz"_h, &VISITORCLASS::VisitSVEIntMulAddUnpredicated},          \
@@ -493,18 +371,6 @@
        &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
       {"str_p_bi"_h, &VISITORCLASS::VisitSVEStorePredicateRegister},           \
       {"str_z_bi"_h, &VISITORCLASS::VisitSVEStoreVectorRegister},              \
-      {"sunpkhi_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
-      {"sunpklo_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
-      {"sxtb_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
-      {"sxth_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
-      {"sxtw_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
-      {"ucvtf_z_p_z_h2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
-      {"ucvtf_z_p_z_w2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
-      {"ucvtf_z_p_z_w2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
-      {"ucvtf_z_p_z_w2s"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
-      {"ucvtf_z_p_z_x2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
-      {"ucvtf_z_p_z_x2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
-      {"ucvtf_z_p_z_x2s"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
       {"udf_only_perm_undef"_h, &VISITORCLASS::VisitReserved},                 \
       {"udivr_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},  \
       {"udiv_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},   \
@@ -553,11 +419,6 @@
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"uqincw_z_zs"_h,                                                        \
        &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"uunpkhi_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
-      {"uunpklo_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
-      {"uxtb_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
-      {"uxth_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
-      {"uxtw_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
       {"adds_32s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
       {"adds_64s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
       {"add_32_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},             \
@@ -981,7 +842,6 @@
       {"smov_asimdins_x_x"_h, &VISITORCLASS::VisitNEONCopy},                   \
       {"umov_asimdins_w_w"_h, &VISITORCLASS::VisitNEONCopy},                   \
       {"umov_asimdins_x_x"_h, &VISITORCLASS::VisitNEONCopy},                   \
-      {"ext_asimdext_only"_h, &VISITORCLASS::VisitNEONExtract},                \
       {"ld1_asisdlse_r1_1v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
       {"ld1_asisdlse_r2_2v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
       {"ld1_asisdlse_r3_3v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
@@ -1035,17 +895,6 @@
       {"sqrdmulh_asisdelem_r"_h,                                               \
        &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
       {"dup_asisdone_only"_h, &VISITORCLASS::VisitNEONScalarCopy},             \
-      {"addp_asisdpair_only"_h, &VISITORCLASS::VisitNEONScalarPairwise},       \
-      {"faddp_asisdpair_only_h"_h, &VISITORCLASS::VisitNEONScalarPairwise},    \
-      {"faddp_asisdpair_only_sd"_h, &VISITORCLASS::VisitNEONScalarPairwise},   \
-      {"fmaxnmp_asisdpair_only_h"_h, &VISITORCLASS::VisitNEONScalarPairwise},  \
-      {"fmaxnmp_asisdpair_only_sd"_h, &VISITORCLASS::VisitNEONScalarPairwise}, \
-      {"fmaxp_asisdpair_only_h"_h, &VISITORCLASS::VisitNEONScalarPairwise},    \
-      {"fmaxp_asisdpair_only_sd"_h, &VISITORCLASS::VisitNEONScalarPairwise},   \
-      {"fminnmp_asisdpair_only_h"_h, &VISITORCLASS::VisitNEONScalarPairwise},  \
-      {"fminnmp_asisdpair_only_sd"_h, &VISITORCLASS::VisitNEONScalarPairwise}, \
-      {"fminp_asisdpair_only_h"_h, &VISITORCLASS::VisitNEONScalarPairwise},    \
-      {"fminp_asisdpair_only_sd"_h, &VISITORCLASS::VisitNEONScalarPairwise},   \
       {"fcvtzs_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},   \
       {"fcvtzu_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},   \
       {"scvtf_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},    \
@@ -1072,40 +921,6 @@
       {"sys_cr_systeminstrs"_h, &VISITORCLASS::VisitSystem},                   \
       {"tcommit_only_barriers"_h, &VISITORCLASS::VisitSystem},                 \
       {"tsb_hc_hints"_h, &VISITORCLASS::VisitSystem},                          \
-      {"blraaz_64_branch_reg"_h,                                               \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"blraa_64p_branch_reg"_h,                                               \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"blrabz_64_branch_reg"_h,                                               \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"blrab_64p_branch_reg"_h,                                               \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"blr_64_branch_reg"_h,                                                  \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"braaz_64_branch_reg"_h,                                                \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"braa_64p_branch_reg"_h,                                                \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"brabz_64_branch_reg"_h,                                                \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"brab_64p_branch_reg"_h,                                                \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"br_64_branch_reg"_h,                                                   \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"drps_64e_branch_reg"_h,                                                \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"eretaa_64e_branch_reg"_h,                                              \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"eretab_64e_branch_reg"_h,                                              \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"eret_64e_branch_reg"_h,                                                \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"retaa_64e_branch_reg"_h,                                               \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"retab_64e_branch_reg"_h,                                               \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
-      {"ret_64r_branch_reg"_h,                                                 \
-       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
       {"bfdot_asimdelem_e"_h, &VISITORCLASS::VisitUnimplemented},              \
       {"bfdot_asimdsame2_d"_h, &VISITORCLASS::VisitUnimplemented},             \
       {"bfmlal_asimdelem_f"_h, &VISITORCLASS::VisitUnimplemented},             \
@@ -2846,6 +2661,191 @@
       {"stp_d_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
       {"stp_q_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
       {"stp_s_ldstpair_pre"_h, &VISITORCLASS::VisitLoadStorePairPreIndex},     \
+      {"addp_asisdpair_only"_h, &VISITORCLASS::VisitNEONScalarPairwise},       \
+      {"faddp_asisdpair_only_h"_h, &VISITORCLASS::VisitNEONScalarPairwise},    \
+      {"faddp_asisdpair_only_sd"_h, &VISITORCLASS::VisitNEONScalarPairwise},   \
+      {"fmaxnmp_asisdpair_only_h"_h, &VISITORCLASS::VisitNEONScalarPairwise},  \
+      {"fmaxnmp_asisdpair_only_sd"_h, &VISITORCLASS::VisitNEONScalarPairwise}, \
+      {"fmaxp_asisdpair_only_h"_h, &VISITORCLASS::VisitNEONScalarPairwise},    \
+      {"fmaxp_asisdpair_only_sd"_h, &VISITORCLASS::VisitNEONScalarPairwise},   \
+      {"fminnmp_asisdpair_only_h"_h, &VISITORCLASS::VisitNEONScalarPairwise},  \
+      {"fminnmp_asisdpair_only_sd"_h, &VISITORCLASS::VisitNEONScalarPairwise}, \
+      {"fminp_asisdpair_only_h"_h, &VISITORCLASS::VisitNEONScalarPairwise},    \
+      {"fminp_asisdpair_only_sd"_h, &VISITORCLASS::VisitNEONScalarPairwise},   \
+      {"asr_z_p_zw"_h,                                                         \
+       &VISITORCLASS::VisitSVEBitwiseShiftByWideElements_Predicated},          \
+      {"lsl_z_p_zw"_h,                                                         \
+       &VISITORCLASS::VisitSVEBitwiseShiftByWideElements_Predicated},          \
+      {"lsr_z_p_zw"_h,                                                         \
+       &VISITORCLASS::VisitSVEBitwiseShiftByWideElements_Predicated},          \
+      {"frinta_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
+      {"frinti_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
+      {"frintm_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
+      {"frintn_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
+      {"frintp_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
+      {"frintx_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
+      {"frintz_z_p_z"_h, &VISITORCLASS::VisitSVEFPRoundToIntegralValue},       \
+      {"frecpx_z_p_z"_h, &VISITORCLASS::VisitSVEFPUnaryOp},                    \
+      {"fsqrt_z_p_z"_h, &VISITORCLASS::VisitSVEFPUnaryOp},                     \
+      {"frecpe_z_z"_h, &VISITORCLASS::VisitSVEFPUnaryOpUnpredicated},          \
+      {"frsqrte_z_z"_h, &VISITORCLASS::VisitSVEFPUnaryOpUnpredicated},         \
+      {"fmad_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                     \
+      {"fmla_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                     \
+      {"fmls_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                     \
+      {"fmsb_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                     \
+      {"fnmad_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                    \
+      {"fnmla_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                    \
+      {"fnmls_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                    \
+      {"fnmsb_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPMulAdd},                    \
+      {"faddv_v_p_z"_h, &VISITORCLASS::VisitSVEFPFastReduction},               \
+      {"fmaxnmv_v_p_z"_h, &VISITORCLASS::VisitSVEFPFastReduction},             \
+      {"fmaxv_v_p_z"_h, &VISITORCLASS::VisitSVEFPFastReduction},               \
+      {"fminnmv_v_p_z"_h, &VISITORCLASS::VisitSVEFPFastReduction},             \
+      {"fminv_v_p_z"_h, &VISITORCLASS::VisitSVEFPFastReduction},               \
+      {"fcmla_z_p_zzz"_h, &VISITORCLASS::VisitSVEFPComplexMulAdd},             \
+      {"fcadd_z_p_zz"_h, &VISITORCLASS::VisitSVEFPComplexAddition},            \
+      {"fcmeq_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
+      {"fcmge_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
+      {"fcmgt_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
+      {"fcmle_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
+      {"fcmlt_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
+      {"fcmne_p_p_z0"_h, &VISITORCLASS::VisitSVEFPCompareWithZero},            \
+      {"facge_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
+      {"facgt_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
+      {"fcmeq_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
+      {"fcmge_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
+      {"fcmgt_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
+      {"fcmne_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
+      {"fcmuo_p_p_zz"_h, &VISITORCLASS::VisitSVEFPCompareVectors},             \
+      {"fadd_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},        \
+      {"fmul_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},        \
+      {"frecps_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},      \
+      {"frsqrts_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},     \
+      {"fsub_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},        \
+      {"ftsmul_z_zz"_h, &VISITORCLASS::VisitSVEFPArithmeticUnpredicated},      \
+      {"fadda_v_p_z"_h, &VISITORCLASS::VisitSVEFPAccumulatingReduction},       \
+      {"abs_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
+      {"cls_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
+      {"clz_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
+      {"cnot_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
+      {"cnt_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
+      {"fabs_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
+      {"fneg_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
+      {"neg_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
+      {"not_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},    \
+      {"sxtb_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
+      {"sxth_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
+      {"sxtw_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
+      {"uxtb_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
+      {"uxth_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
+      {"uxtw_z_p_z"_h, &VISITORCLASS::VisitSVEIntUnaryArithmeticPredicated},   \
+      {"asr_z_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
+      {"asr_z_zw"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
+      {"lsl_z_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
+      {"lsl_z_zw"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
+      {"lsr_z_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
+      {"lsr_z_zw"_h, &VISITORCLASS::VisitSVEBitwiseShiftUnpredicated},         \
+      {"sunpkhi_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
+      {"sunpklo_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
+      {"uunpkhi_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
+      {"uunpklo_z_z"_h, &VISITORCLASS::VisitSVEUnpackVectorElements},          \
+      {"and_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
+      {"bic_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
+      {"eor_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
+      {"scvtf_z_p_z_h2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
+      {"scvtf_z_p_z_w2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
+      {"scvtf_z_p_z_w2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
+      {"scvtf_z_p_z_w2s"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
+      {"scvtf_z_p_z_x2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
+      {"scvtf_z_p_z_x2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
+      {"scvtf_z_p_z_x2s"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
+      {"ucvtf_z_p_z_h2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
+      {"ucvtf_z_p_z_w2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
+      {"ucvtf_z_p_z_w2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
+      {"ucvtf_z_p_z_w2s"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
+      {"ucvtf_z_p_z_x2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
+      {"ucvtf_z_p_z_x2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
+      {"ucvtf_z_p_z_x2s"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
+      {"rbit_z_p_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},          \
+      {"revb_z_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},            \
+      {"revh_z_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},            \
+      {"revw_z_z"_h, &VISITORCLASS::VisitSVEReverseWithinElements},            \
+      {"rev_p_p"_h, &VISITORCLASS::VisitSVEReversePredicateElements},          \
+      {"rev_z_z"_h, &VISITORCLASS::VisitSVEReverseVectorElements},             \
+      {"insr_z_r"_h, &VISITORCLASS::VisitSVEInsertGeneralRegister},            \
+      {"ftssel_z_zz"_h, &VISITORCLASS::VisitSVEFPTrigSelectCoefficient},       \
+      {"ftmad_z_zzi"_h, &VISITORCLASS::VisitSVEFPTrigMulAddCoefficient},       \
+      {"fexpa_z_z"_h, &VISITORCLASS::VisitSVEFPExponentialAccelerator},        \
+      {"fabd_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
+      {"fadd_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
+      {"fdivr_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},      \
+      {"fdiv_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
+      {"fmaxnm_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},     \
+      {"fmax_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
+      {"fminnm_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},     \
+      {"fmin_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
+      {"fmulx_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},      \
+      {"fmul_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
+      {"fscale_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},     \
+      {"fsubr_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},      \
+      {"fsub_z_p_zz"_h, &VISITORCLASS::VisitSVEFPArithmetic_Predicated},       \
+      {"fadd_z_p_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
+      {"fmaxnm_z_p_zs"_h,                                                      \
+       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
+      {"fmax_z_p_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
+      {"fminnm_z_p_zs"_h,                                                      \
+       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
+      {"fmin_z_p_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
+      {"fmul_z_p_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
+      {"fsubr_z_p_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
+      {"fsub_z_p_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVEFPArithmeticWithImm_Predicated},                 \
+      {"and_z_zi"_h,                                                           \
+       &VISITORCLASS::VisitSVEBitwiseLogicalWithImm_Unpredicated},             \
+      {"eor_z_zi"_h,                                                           \
+       &VISITORCLASS::VisitSVEBitwiseLogicalWithImm_Unpredicated},             \
+      {"orr_z_zi"_h,                                                           \
+       &VISITORCLASS::VisitSVEBitwiseLogicalWithImm_Unpredicated},             \
+      {"blraaz_64_branch_reg"_h,                                               \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"blraa_64p_branch_reg"_h,                                               \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"blrabz_64_branch_reg"_h,                                               \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"blrab_64p_branch_reg"_h,                                               \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"blr_64_branch_reg"_h,                                                  \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"braaz_64_branch_reg"_h,                                                \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"braa_64p_branch_reg"_h,                                                \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"brabz_64_branch_reg"_h,                                                \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"brab_64p_branch_reg"_h,                                                \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"br_64_branch_reg"_h,                                                   \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"drps_64e_branch_reg"_h,                                                \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"eretaa_64e_branch_reg"_h,                                              \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"eretab_64e_branch_reg"_h,                                              \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"eret_64e_branch_reg"_h,                                                \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"retaa_64e_branch_reg"_h,                                               \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"retab_64e_branch_reg"_h,                                               \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"ret_64r_branch_reg"_h,                                                 \
+       &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
+      {"ext_asimdext_only"_h, &VISITORCLASS::VisitNEONExtract},                \
       {"fmla_asisdelem_rh_h"_h,                                                \
        &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
       {"fmla_asisdelem_r_sd"_h,                                                \

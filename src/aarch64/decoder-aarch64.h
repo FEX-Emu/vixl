@@ -59,7 +59,6 @@
   V(NEONAcrossLanes)                                             \
   V(NEONByIndexedElement)                                        \
   V(NEONCopy)                                                    \
-  V(NEONExtract)                                                 \
   V(NEONLoadStoreMultiStruct)                                    \
   V(NEONPerm)                                                    \
   V(NEONScalar2RegMisc)                                          \
@@ -67,7 +66,6 @@
   V(NEONScalar3Same)                                             \
   V(NEONScalarByIndexedElement)                                  \
   V(NEONScalarCopy)                                              \
-  V(NEONScalarPairwise)                                          \
   V(NEONScalarShiftImmediate)                                    \
   V(NEONShiftImmediate)                                          \
   V(SVE32BitGatherLoad_VectorPlusImm)                            \
@@ -79,23 +77,10 @@
   V(SVE64BitGatherPrefetch_VectorPlusImm)                        \
   V(SVE64BitScatterStore_VectorPlusImm)                          \
   V(SVEBitwiseLogicalUnpredicated)                               \
-  V(SVEBitwiseShiftUnpredicated)                                 \
-  V(SVEFPAccumulatingReduction)                                  \
-  V(SVEFPArithmeticUnpredicated)                                 \
-  V(SVEFPCompareVectors)                                         \
-  V(SVEFPCompareWithZero)                                        \
-  V(SVEFPComplexAddition)                                        \
-  V(SVEFPComplexMulAdd)                                          \
-  V(SVEFPFastReduction)                                          \
-  V(SVEFPMulAdd)                                                 \
-  V(SVEFPUnaryOpUnpredicated)                                    \
   V(SVEIntMulAddUnpredicated)                                    \
-  V(SVEIntUnaryArithmeticPredicated)                             \
   V(SVEPredicateLogical)                                         \
   V(SVEVectorSelect)                                             \
-  V(SVEBitwiseLogicalWithImm_Unpredicated)                       \
   V(SVEBitwiseShiftByImm_Predicated)                             \
-  V(SVEBitwiseShiftByWideElements_Predicated)                    \
   V(SVEBroadcastBitmaskImm)                                      \
   V(SVEBroadcastFPImm_Unpredicated)                              \
   V(SVEBroadcastGeneralRegister)                                 \
@@ -117,33 +102,19 @@
   V(SVECopyIntImm_Predicated)                                    \
   V(SVEElementCount)                                             \
   V(SVEExtractElementToGeneralRegister)                          \
-  V(SVEFPArithmetic_Predicated)                                  \
-  V(SVEFPArithmeticWithImm_Predicated)                           \
   V(SVEFPConvertPrecision)                                       \
-  V(SVEFPExponentialAccelerator)                                 \
-  V(SVEFPRoundToIntegralValue)                                   \
-  V(SVEFPTrigMulAddCoefficient)                                  \
-  V(SVEFPTrigSelectCoefficient)                                  \
-  V(SVEFPUnaryOp)                                                \
   V(SVEIncDecRegisterByElementCount)                             \
   V(SVEIncDecVectorByElementCount)                               \
-  V(SVEInsertGeneralRegister)                                    \
-  V(SVEIntConvertToFP)                                           \
   V(SVEIntDivideVectors_Predicated)                              \
   V(SVELoadAndBroadcastElement)                                  \
   V(SVELoadPredicateRegister)                                    \
   V(SVELoadVectorRegister)                                       \
-  V(SVEReversePredicateElements)                                 \
-  V(SVEReverseVectorElements)                                    \
-  V(SVEReverseWithinElements)                                    \
   V(SVESaturatingIncDecRegisterByElementCount)                   \
   V(SVESaturatingIncDecVectorByElementCount)                     \
   V(SVEStorePredicateRegister)                                   \
   V(SVEStoreVectorRegister)                                      \
-  V(SVEUnpackVectorElements)                                     \
   V(System)                                                      \
   V(Unallocated)                                                 \
-  V(UnconditionalBranchToRegister)                               \
   V(Unimplemented)
 
 #define SIM_AUD_VISITOR_LIST_THAT_RETURN(V)                      \
@@ -265,7 +236,36 @@
   V(LoadStoreRegisterOffset)                                     \
   V(LoadStorePairPostIndex)                                      \
   V(LoadStorePairOffset)                                         \
-  V(LoadStorePairPreIndex)
+  V(LoadStorePairPreIndex)                                       \
+  V(SVEBitwiseShiftByWideElements_Predicated)                    \
+  V(NEONScalarPairwise)                                          \
+  V(SVEFPUnaryOp)                                                \
+  V(SVEFPRoundToIntegralValue)                                   \
+  V(SVEFPUnaryOpUnpredicated)                                    \
+  V(SVEFPMulAdd)                                                 \
+  V(SVEFPFastReduction)                                          \
+  V(SVEFPComplexMulAdd)                                          \
+  V(SVEFPComplexAddition)                                        \
+  V(SVEFPCompareWithZero)                                        \
+  V(SVEFPCompareVectors)                                         \
+  V(SVEFPArithmeticUnpredicated)                                 \
+  V(SVEFPAccumulatingReduction)                                  \
+  V(SVEIntUnaryArithmeticPredicated)                             \
+  V(SVEBitwiseShiftUnpredicated)                                 \
+  V(SVEUnpackVectorElements)                                     \
+  V(SVEIntConvertToFP)                                           \
+  V(SVEReverseWithinElements)                                    \
+  V(SVEReversePredicateElements)                                 \
+  V(SVEReverseVectorElements)                                    \
+  V(SVEInsertGeneralRegister)                                    \
+  V(SVEFPTrigSelectCoefficient)                                  \
+  V(SVEFPTrigMulAddCoefficient)                                  \
+  V(SVEFPExponentialAccelerator)                                 \
+  V(SVEFPArithmetic_Predicated)                                  \
+  V(SVEFPArithmeticWithImm_Predicated)                           \
+  V(SVEBitwiseLogicalWithImm_Unpredicated)                       \
+  V(UnconditionalBranchToRegister)                               \
+  V(NEONExtract)
 
 #define VISITOR_LIST_THAT_DONT_RETURN(V) V(Reserved)
 

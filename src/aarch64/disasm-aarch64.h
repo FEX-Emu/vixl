@@ -126,6 +126,10 @@ class Disassembler : public DecoderVisitor {
   using FormToStringMap = std::unordered_map<uint32_t, const char*>;
   static void PopulateFormToStringMap(FormToStringMap* fts);
 
+  using FormToUnallocMap = std::unordered_multimap<uint32_t, uint64_t>;
+  static void PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm);
+
+  FormToUnallocMap form_to_unalloc_;
   FormToStringMap form_to_string_;
   std::string mnemonic_;
   uint32_t form_hash_;
@@ -138,28 +142,15 @@ class Disassembler : public DecoderVisitor {
   }
 
   void Disassemble_PdT_PgZ_ZnT_ZmT(const Instruction* instr);
-  void Disassemble_ZdB_ZnB_ZmB(const Instruction* instr);
-  void Disassemble_ZdS_PgM_ZnS(const Instruction* instr);
   void Disassemble_ZdT_PgZ_ZnT_ZmT(const Instruction* instr);
-  void Disassemble_ZdT_ZnT_ZmTb(const Instruction* instr);
-  void Disassemble_ZdT_ZnTb(const Instruction* instr);
-  void Disassemble_ZdT_ZnTb_ZmTb(const Instruction* instr);
-  void Disassemble_ZdaT_PgM_ZnTb(const Instruction* instr);
   void Disassemble_ZdaT_ZnT_const(const Instruction* instr);
-  void Disassemble_ZdaT_ZnTb_ZmTb(const Instruction* instr);
   void Disassemble_ZdaT_ZnTb_ZmTb_const(const Instruction* instr);
   void Disassemble_ZdnT_PgM_ZdnT_const(const Instruction* instr);
-  void Disassemble_ZdnT_ZdnT_ZmT_const(const Instruction* instr);
 
   void DisassembleCpy(const Instruction* instr);
   void DisassembleSet(const Instruction* instr);
 
-  void DisassembleSVEShiftLeftImm(const Instruction* instr);
-  void DisassembleSVEShiftRightImm(const Instruction* instr);
-  void DisassembleSVEAddSubHigh(const Instruction* instr);
   void DisassembleSVEFlogb(const Instruction* instr);
-  void DisassembleSVEFPPair(const Instruction* instr);
-  void DisassembleSVEPmull(const Instruction* instr);
 
   void DisassembleNEONLoadBroadcast(const Instruction* instr);
   void DisassembleNEONMulByElementLong(const Instruction* instr);
@@ -169,21 +160,14 @@ class Disassembler : public DecoderVisitor {
   void DisassembleNEON2RegExtract(const Instruction* instr);
   void DisassembleNEON2RegAddlp(const Instruction* instr);
   void DisassembleNEON2RegCompare(const Instruction* instr);
-  void DisassembleNEON2RegFPCompare(const Instruction* instr);
   void DisassembleNEON2RegFPConvert(const Instruction* instr);
-  void DisassembleNEON2RegFP(const Instruction* instr);
   void DisassembleNEON3SameLogical(const Instruction* instr);
   void DisassembleNEON3SameNoD(const Instruction* instr);
   void DisassembleNEONShiftLeftLongImm(const Instruction* instr);
   void DisassembleNEONShiftRightImm(const Instruction* instr);
   void DisassembleNEONShiftRightNarrowImm(const Instruction* instr);
   void DisassembleNEONScalarSatMulLongIndex(const Instruction* instr);
-  void DisassembleNEONScalar3SameOnlyD(const Instruction* instr);
-  void DisassembleNEONFPAcrossLanes(const Instruction* instr);
-  void DisassembleNEONScalarShiftImmOnlyD(const Instruction* instr);
   void DisassembleNEONScalarShiftRightNarrowImm(const Instruction* instr);
-  void DisassembleNEONScalar2RegMiscOnlyD(const Instruction* instr);
-  void DisassembleNEONFPScalar2RegMisc(const Instruction* instr);
   void DisassembleNEONPolynomialMul(const Instruction* instr);
 
   void Disassemble_Xd_XnSP_XmSP(const Instruction* instr);
