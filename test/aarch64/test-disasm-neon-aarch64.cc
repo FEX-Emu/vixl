@@ -2621,10 +2621,10 @@ TEST(neon_fp_byelement) {
                 "fcmla v0.4s, v1.4s, v2.s[1], #180");
   COMPARE_MACRO(Fcmla(v0.V4S(), v1.V4S(), v31.S(), 1, 180),
                 "fcmla v0.4s, v1.4s, v31.s[1], #180");
-  COMPARE_MACRO(Fcmla(v0.V4H(), v1.V4H(), v2.H(), 2, 90),
-                "fcmla v0.4h, v1.4h, v2.h[2], #90");
-  COMPARE_MACRO(Fcmla(v0.V8H(), v1.V8H(), v2.H(), 3, 0),
-                "fcmla v0.8h, v1.8h, v2.h[3], #0");
+  COMPARE_MACRO(Fcmla(v0.V4H(), v1.V4H(), v2.H(), 1, 90),
+                "fcmla v0.4h, v1.4h, v2.h[1], #90");
+  COMPARE_MACRO(Fcmla(v0.V8H(), v1.V8H(), v2.H(), 2, 0),
+                "fcmla v0.8h, v1.8h, v2.h[2], #0");
   COMPARE_MACRO(Fcmla(v0.V8H(), v1.V8H(), v31.H(), 3, 0),
                 "fcmla v0.8h, v1.8h, v31.h[3], #0");
 

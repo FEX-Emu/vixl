@@ -155,7 +155,6 @@ class Disassembler : public DecoderVisitor {
   void DisassembleNEONLoadBroadcast(const Instruction* instr);
   void DisassembleNEONMulByElementLong(const Instruction* instr);
   void DisassembleNEONFPMulByElement(const Instruction* instr);
-  void DisassembleNEONComplexMulByElement(const Instruction* instr);
   void DisassembleNEON2RegLogical(const Instruction* instr);
   void DisassembleNEON2RegExtract(const Instruction* instr);
   void DisassembleNEON2RegAddlp(const Instruction* instr);

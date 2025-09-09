@@ -46,6 +46,7 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
   static const UnallocToFormMap forms =
       {{0x000207e0'000007c0, {"and_z_zi"_h, "eor_z_zi"_h, "orr_z_zi"_h}},
        {0x000207e0'000007e0, {"and_z_zi"_h, "eor_z_zi"_h, "orr_z_zi"_h}},
+       {0x00200000'00200000, {"fcmla_asimdelem_c_s"_h}},
        {0x00400000'00000000,
         {"shl_asisdshf_r"_h,
          "sli_asisdshf_r"_h,
@@ -328,6 +329,8 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "usra_z_zi"_h,
          "lsl_z_zi"_h,
          "sli_z_zzi"_h}},
+       {0x40000000'00000000, {"fcmla_asimdelem_c_s"_h}},
+       {0x40000800'00000800, {"fcmla_asimdelem_c_h"_h}},
        {0x40004000'00004000, {"ext_asimdext_only"_h}},
        {0x40400000'00000000,
         {"fmaxnmv_asimdall_only_sd"_h,
@@ -1018,6 +1021,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fmls_asimdsamefp16_only"_h,    "fmulx_asimdsamefp16_only"_h,
         "fmul_asimdsamefp16_only"_h,    "frecps_asimdsamefp16_only"_h,
         "frsqrts_asimdsamefp16_only"_h, "fsub_asimdsamefp16_only"_h}},
+      {"'Vd.'?30:84h, 'Vn.'?30:84h, 'Vm.h['IVByElemIndexRot], #'u1413*90",
+       {"fcmla_asimdelem_c_h"_h}},
       {"'Vd.16b, 'Vn.16b",
        {"aesd_b_cryptoaes"_h,
         "aese_b_cryptoaes"_h,
@@ -1049,6 +1054,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "sm3tt1b_vvv4_crypto3_imm2"_h,
         "sm3tt2a_vvv4_crypto3_imm2"_h,
         "sm3tt2b_vvv_crypto3_imm2"_h}},
+      {"'Vd.4s, 'Vn.4s, 'Vm.s['IVByElemIndexRot], #'u1413*90",
+       {"fcmla_asimdelem_c_s"_h}},
       {"'Vd.D[1], 'Rn", {"fmov_v64i_float2int"_h}},
       {"'Vdv, 'Pgl, 'Zn.'t",
        {"andv_r_p_z"_h,
@@ -2043,10 +2050,6 @@ const Disassembler::FormToVisitorFnMap *Disassembler::GetFormToVisitorFnMap() {
       {"sqdmull_asimdelem_l"_h, &Disassembler::DisassembleNEONMulByElementLong},
       {"sqdmlal_asimdelem_l"_h, &Disassembler::DisassembleNEONMulByElementLong},
       {"sqdmlsl_asimdelem_l"_h, &Disassembler::DisassembleNEONMulByElementLong},
-      {"fcmla_asimdelem_c_h"_h,
-       &Disassembler::DisassembleNEONComplexMulByElement},
-      {"fcmla_asimdelem_c_s"_h,
-       &Disassembler::DisassembleNEONComplexMulByElement},
       {"fmla_asimdelem_r_sd"_h, &Disassembler::DisassembleNEONFPMulByElement},
       {"fmls_asimdelem_r_sd"_h, &Disassembler::DisassembleNEONFPMulByElement},
       {"fmulx_asimdelem_r_sd"_h, &Disassembler::DisassembleNEONFPMulByElement},
@@ -3266,20 +3269,6 @@ void Disassembler::DisassembleNEONFPMulByElement(const Instruction *instr) {
                         NEONFormatDecoder::FPFormatMap(),
                         NEONFormatDecoder::FPFormatMap(),
                         NEONFormatDecoder::FPScalarFormatMap());
-  Format(instr, mnemonic_.c_str(), nfd.Substitute(form));
-}
-
-void Disassembler::DisassembleNEONComplexMulByElement(
-    const Instruction *instr) {
-  const char *form = "'Vd.%s, 'Vn.%s, 'Vm.%s['IVByElemIndexRot], #'u1413*90";
-  // TODO: Disallow undefined element types for this instruction.
-  static const NEONFormatMap map_cn =
-      {{23, 22, 30},
-       {NF_UNDEF, NF_UNDEF, NF_4H, NF_8H, NF_UNDEF, NF_4S, NF_UNDEF, NF_UNDEF}};
-  NEONFormatDecoder nfd(instr,
-                        &map_cn,
-                        &map_cn,
-                        NEONFormatDecoder::ScalarFormatMap());
   Format(instr, mnemonic_.c_str(), nfd.Substitute(form));
 }
 

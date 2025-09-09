@@ -4553,7 +4553,10 @@ void Assembler::fcmla(const VRegister& vd,
   VIXL_ASSERT(vd.IsVector() && AreSameFormat(vd, vn));
   VIXL_ASSERT((vm.IsH() && (vd.Is8H() || vd.Is4H())) ||
               (vm.IsS() && vd.Is4S()));
-  if (vd.IsLaneSizeH()) VIXL_ASSERT(CPUHas(CPUFeatures::kNEONHalf));
+  if (vd.IsLaneSizeH()) {
+    VIXL_ASSERT(CPUHas(CPUFeatures::kNEONHalf));
+    VIXL_ASSERT(vd.Is8H() || (vm_index <= 1));
+  }
   int index_num_bits = vd.Is4S() ? 1 : 2;
   Emit(VFormat(vd) | Rm(vm) | NEON_FCMLA_byelement |
        ImmNEONHLM(vm_index, index_num_bits) | ImmRotFcmlaSca(rot) | Rn(vn) |
