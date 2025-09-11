@@ -62,6 +62,11 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "pmullb_z_zz"_h,
          "pmullt_z_zz"_h,
          "fcvtxn_asisdmisc_n"_h}},
+       {0x00400000'00400000,
+        {"urecpe_asimdmisc_r"_h,
+         "ursqrte_asimdmisc_r"_h,
+         "cnt_asimdmisc_r"_h,
+         "rev16_asimdmisc_r"_h}},
        {0x00060000'00000000, {"flogb_z_p_z"_h}},
        {0x00580000'00000000,
         {"rshrnb_z_zi"_h,    "rshrnt_z_zi"_h,    "shrnb_z_zi"_h,
@@ -101,6 +106,7 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "sqxtunt_z_zz"_h,
          "uqxtnb_z_zz"_h,
          "uqxtnt_z_zz"_h}},
+       {0x00800000'00800000, {"cnt_asimdmisc_r"_h, "rev16_asimdmisc_r"_h}},
        {0x00c00000'00000000,
         {"smlalb_z_zzz"_h,
          "smlalt_z_zzz"_h,
@@ -266,7 +272,9 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "cmge_asisdmisc_z"_h,
          "cmgt_asisdmisc_z"_h,
          "cmle_asisdmisc_z"_h,
-         "cmlt_asisdmisc_z"_h}},
+         "cmlt_asisdmisc_z"_h,
+         "cdot_z_zzz"_h,
+         "histcnt_z_p_zz"_h}},
        {0x00c00000'00400000,
         {"urecpe_z_p_z"_h,
          "ursqrte_z_p_z"_h,
@@ -294,7 +302,9 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "cmge_asisdmisc_z"_h,
          "cmgt_asisdmisc_z"_h,
          "cmle_asisdmisc_z"_h,
-         "cmlt_asisdmisc_z"_h}},
+         "cmlt_asisdmisc_z"_h,
+         "cdot_z_zzz"_h,
+         "histcnt_z_p_zz"_h}},
        {0x00c00000'00800000, {"histseg_z_zz"_h,        "pmul_z_zz"_h,
                               "cmeq_asisdsame_only"_h, "cmge_asisdsame_only"_h,
                               "cmgt_asisdsame_only"_h, "cmhi_asisdsame_only"_h,
@@ -305,7 +315,8 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
                               "pmul_asimdsame_only"_h, "abs_asisdmisc_r"_h,
                               "neg_asisdmisc_r"_h,     "cmeq_asisdmisc_z"_h,
                               "cmge_asisdmisc_z"_h,    "cmgt_asisdmisc_z"_h,
-                              "cmle_asisdmisc_z"_h,    "cmlt_asisdmisc_z"_h}},
+                              "cmle_asisdmisc_z"_h,    "cmlt_asisdmisc_z"_h,
+                              "match_p_p_zz"_h,        "nmatch_p_p_zz"_h}},
        {0x00c00000'00c00000,
         {"asr_z_p_zw"_h,
          "lsl_z_p_zw"_h,
@@ -317,7 +328,9 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "asr_z_zw"_h,
          "lsl_z_zw"_h,
          "lsr_z_zw"_h,
-         "pmul_asimdsame_only"_h}},
+         "pmul_asimdsame_only"_h,
+         "match_p_p_zz"_h,
+         "nmatch_p_p_zz"_h}},
        {0x00d80000'00000000,
         {"xar_z_zzi"_h,
          "asr_z_zi"_h,
@@ -409,13 +422,16 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
             "yield_hi_hints"_h,
             "retaa_64e_branch_reg"_h,
             "retab_64e_branch_reg"_h}},
+      {"#'u1105", {"hint_hm_hints"_h}},
       {"#0x'x2005",
        {"brk_ex_exception"_h,
         "hlt_ex_exception"_h,
         "hvc_ex_exception"_h,
         "smc_ex_exception"_h,
         "svc_ex_exception"_h}},
+      {"'(0707?j)'(0606?c)", {"bti_hb_hints"_h}},
       {"'(0905=30?:'Xn)", {"ret_64r_branch_reg"_h}},
+      {"'(1108=15?:#0x'x1108)", {"clrex_bn_barriers"_h}},
       {"'?22:ds'u0400, '?22:ds'u0905",
        {"fcvtas_asisdmisc_r"_h,
         "fcvtau_asisdmisc_r"_h,
@@ -677,6 +693,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"ldr_h_ldst_regoff"_h, "str_h_ldst_regoff"_h}},
       {"'Ht, ['Xns], #'s2012",
        {"ldr_h_ldst_immpost"_h, "str_h_ldst_immpost"_h}},
+      {"'IY, 'Xt", {"msr_sr_systemmove"_h}},
+      {"'M", {"dmb_bo_barriers"_h}},
       {"'Pd.'t'(0905=31?:, 'Ipc)", {"ptrue_p_s"_h, "ptrues_p_s"_h}},
       {"'Pd.'t, 'Pgl/z, 'Zn.'t, #'s2016",
        {"cmpeq_p_p_zi"_h,
@@ -712,7 +730,9 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fcmge_p_p_zz"_h,
         "fcmgt_p_p_zz"_h,
         "fcmne_p_p_zz"_h,
-        "fcmuo_p_p_zz"_h}},
+        "fcmuo_p_p_zz"_h,
+        "match_p_p_zz"_h,
+        "nmatch_p_p_zz"_h}},
       {"'Pd.'t, 'Pgl/z, 'Zn.'t, 'Zm.d",
        {"cmpeq_p_p_zw"_h,
         "cmpge_p_p_zw"_h,
@@ -944,7 +964,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fcmgt_asimdmisc_fz"_h,
         "fcmle_asimdmisc_fz"_h,
         "fcmlt_asimdmisc_fz"_h}},
-      {"'Vd.'(3030?16:8)b, 'Vn.'(3030?16:8)b", {"rbit_asimdmisc_r"_h}},
+      {"'Vd.'(3030?16:8)b, 'Vn.'(3030?16:8)b",
+       {"rbit_asimdmisc_r"_h, "cnt_asimdmisc_r"_h, "rev16_asimdmisc_r"_h}},
       {"'Vd.'(3030?16:8)b, 'Vn.'(3030?16:8)b, 'Vm.'(3030?16:8)b",
        {"and_asimdsame_only"_h,
         "bic_asimdsame_only"_h,
@@ -984,6 +1005,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"bfdot_asimdsame2_d"_h, "bfmmla_asimdsame2_e"_h}},
       {"'Vd.'?30:42s, 'Vn.'?30:84h, 'Vm.2h['u1111:2121]",
        {"bfdot_asimdelem_e"_h}},
+      {"'Vd.'?30:42s, 'Vn.'?30:42s",
+       {"urecpe_asimdmisc_r"_h, "ursqrte_asimdmisc_r"_h}},
       {"'Vd.'?30:84h, 'Vn.'?30:84h",
        {"fabs_asimdmiscfp16_r"_h,    "fcvtas_asimdmiscfp16_r"_h,
         "fcvtau_asimdmiscfp16_r"_h,  "fcvtms_asimdmiscfp16_r"_h,
@@ -1221,6 +1244,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "braa_64p_branch_reg"_h,
         "brab_64p_branch_reg"_h}},
       {"'Xt, 'ILLiteral 'LValue", {"ldr_64_loadlit"_h, "ldrsw_64_loadlit"_h}},
+      {"'Xt, 'IY", {"mrs_rs_systemmove"_h}},
       {"'Xt, 'Xt2, ['Xns'(2115?, #'s2115*16)]", {"stgp_64_ldstpair_off"_h}},
       {"'Xt, 'Xt2, ['Xns'(2115?, #'s2115*4)]", {"ldpsw_64_ldstpair_off"_h}},
       {"'Xt, 'Xt2, ['Xns'(2115?, #'s2115*8)]",
@@ -1347,6 +1371,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fnmsb_z_p_zzz"_h}},
       {"'Zd.'t, 'Pgl/m, 'Zn.'t, 'Zm.'t, #'u1413*90", {"fcmla_z_p_zzz"_h}},
       {"'Zd.'t, 'Pgl/m, 'Zn.'th", {"sadalp_z_p_z"_h, "uadalp_z_p_z"_h}},
+      {"'Zd.'t, 'Pgl/z, 'Zn.'t, 'Zm.'t", {"histcnt_z_p_zz"_h}},
       {"'Zd.'t, 'Pn",
        {"decp_z_p_z"_h,
         "incp_z_p_z"_h,
@@ -1386,6 +1411,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Zd.'t, 'Zn.'t, 'Zm.'t, #'u1110*90",
        {"cmla_z_zzz"_h, "sqrdcmlah_z_zzz"_h}},
       {"'Zd.'t, 'Zn.'t, 'Zm.d", {"asr_z_zw"_h, "lsl_z_zw"_h, "lsr_z_zw"_h}},
+      {"'Zd.'t, 'Zn.'tq, 'Zm.'tq, #'u1110*90", {"cdot_z_zzz"_h}},
       {"'Zd.'t, ['Zn.'t, 'Zm.'t'(1110?, lsl #'u1110)]",
        {"adr_z_az_sd_same_scaled"_h}},
       {"'Zd.'t, {'Zn.'t, 'Zn2.'t}, 'Zm.'t", {"tbl_z_zz_2"_h}},
@@ -1995,7 +2021,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ldff1h_z_p_bz_s_x32_unscaled"_h,
         "ldff1sb_z_p_bz_s_x32_unscaled"_h,
         "ldff1sh_z_p_bz_s_x32_unscaled"_h,
-        "ldff1w_z_p_bz_s_x32_unscaled"_h}}};
+        "ldff1w_z_p_bz_s_x32_unscaled"_h}},
+      {"x16", {"chkfeat_hf_hints"_h}}};
 
   for (auto &itm : forms) {
     const std::unordered_set<uint32_t> &s = forms.at(itm.first);
@@ -2126,10 +2153,6 @@ const Disassembler::FormToVisitorFnMap *Disassembler::GetFormToVisitorFnMap() {
       {"uqshrn_asisdshf_n"_h,
        &Disassembler::DisassembleNEONScalarShiftRightNarrowImm},
       {"pmull_asimddiff_l"_h, &Disassembler::DisassembleNEONPolynomialMul},
-      {"cdot_z_zzz"_h, &Disassembler::Disassemble_ZdaT_ZnTb_ZmTb_const},
-      {"histcnt_z_p_zz"_h, &Disassembler::Disassemble_ZdT_PgZ_ZnT_ZmT},
-      {"match_p_p_zz"_h, &Disassembler::Disassemble_PdT_PgZ_ZnT_ZmT},
-      {"nmatch_p_p_zz"_h, &Disassembler::Disassemble_PdT_PgZ_ZnT_ZmT},
       {"sqshl_z_p_zi"_h, &Disassembler::VisitSVEBitwiseShiftByImm_Predicated},
       {"sqshlu_z_p_zi"_h, &Disassembler::VisitSVEBitwiseShiftByImm_Predicated},
       {"srshr_z_p_zi"_h, &Disassembler::VisitSVEBitwiseShiftByImm_Predicated},
@@ -2864,41 +2887,6 @@ void Disassembler::VisitSystem(const Instruction *instr) {
   const char *suffix = NULL;
 
   switch (form_hash_) {
-    case "clrex_bn_barriers"_h:
-      form = "'(1108=15?:#0x'x1108)";
-      break;
-    case "mrs_rs_systemmove"_h:
-      form = "'Xt, 'IY";
-      break;
-    case "msr_sr_systemmove"_h:
-      form = "'IY, 'Xt";
-      break;
-    case "bti_hb_hints"_h:
-      switch (instr->ExtractBits(7, 6)) {
-        case 0:
-          form = "";
-          break;
-        case 1:
-          form = "c";
-          break;
-        case 2:
-          form = "j";
-          break;
-        case 3:
-          form = "jc";
-          break;
-      }
-      break;
-    case "chkfeat_hf_hints"_h:
-      mnemonic = "chkfeat";
-      form = "x16";
-      break;
-    case "hint_hm_hints"_h:
-      form = "#'u1105";
-      break;
-    case Hash("dmb_bo_barriers"):
-      form = "'M";
-      break;
     case Hash("dsb_bo_barriers"): {
       int crm = instr->GetCRm();
       if (crm == 0) {
@@ -3051,24 +3039,11 @@ void Disassembler::VisitNEON2RegMisc(const Instruction *instr) {
   if (vform_dst != kFormatUndefined) {
     uint32_t ls_dst = LaneSizeInBitsFromFormat(vform_dst);
     switch (form_hash_) {
-      case "cnt_asimdmisc_r"_h:
-      case "rev16_asimdmisc_r"_h:
-        if (ls_dst != kBRegSize) {
-          mnemonic = NULL;
-        }
-        break;
       case "rev32_asimdmisc_r"_h:
         if ((ls_dst == kDRegSize) || (ls_dst == kSRegSize)) {
           mnemonic = NULL;
         }
         break;
-      case "urecpe_asimdmisc_r"_h:
-      case "ursqrte_asimdmisc_r"_h:
-        // For urecpe and ursqrte, only S-sized elements are supported. The MSB
-        // of the size field is always set by the instruction (0b1x) so we need
-        // only check and discard D-sized elements here.
-        VIXL_ASSERT((ls_dst == kSRegSize) || (ls_dst == kDRegSize));
-        VIXL_FALLTHROUGH();
       case "clz_asimdmisc_r"_h:
       case "cls_asimdmisc_r"_h:
       case "rev64_asimdmisc_r"_h:
@@ -4413,38 +4388,6 @@ void Disassembler::Visit(Metadata *metadata, const Instruction *instr) {
   } else {
     SetMnemonicFromForm(form);
     (it->second)(this, instr);
-  }
-}
-
-void Disassembler::Disassemble_PdT_PgZ_ZnT_ZmT(const Instruction *instr) {
-  const char *form = "'Pd.'t, 'Pgl/z, 'Zn.'t, 'Zm.'t";
-  VectorFormat vform = instr->GetSVEVectorFormat();
-
-  if ((vform == kFormatVnS) || (vform == kFormatVnD)) {
-    Format(instr, "unimplemented", "(PdT_PgZ_ZnT_ZmT)");
-  } else {
-    Format(instr, mnemonic_.c_str(), form);
-  }
-}
-
-void Disassembler::Disassemble_ZdT_PgZ_ZnT_ZmT(const Instruction *instr) {
-  const char *form = "'Zd.'t, 'Pgl/z, 'Zn.'t, 'Zm.'t";
-  VectorFormat vform = instr->GetSVEVectorFormat();
-  if ((vform == kFormatVnS) || (vform == kFormatVnD)) {
-    Format(instr, mnemonic_.c_str(), form);
-  } else {
-    Format(instr, "unimplemented", "(ZdT_PgZ_ZnT_ZmT)");
-  }
-}
-
-void Disassembler::Disassemble_ZdaT_ZnTb_ZmTb_const(const Instruction *instr) {
-  const char *form = "'Zd.'t, 'Zn.'tq, 'Zm.'tq, #'u1110*90";
-  VectorFormat vform = instr->GetSVEVectorFormat();
-
-  if ((vform == kFormatVnB) || (vform == kFormatVnH)) {
-    Format(instr, "unimplemented", "(ZdaT_ZnTb_ZmTb_const)");
-  } else {
-    Format(instr, mnemonic_.c_str(), form);
   }
 }
 

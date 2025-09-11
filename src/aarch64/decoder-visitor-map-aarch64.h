@@ -998,11 +998,8 @@
       {"cmgt_asimdmisc_z"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
       {"cmle_asimdmisc_z"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
       {"cmlt_asimdmisc_z"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
-      {"cnt_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                 \
       {"neg_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                 \
       {"not_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                 \
-      {"rbit_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
-      {"rev16_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
       {"rev32_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
       {"rev64_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
       {"sadalp_asimdmisc_p"_h, &VISITORCLASS::VisitNEON2RegMisc},              \
@@ -2846,6 +2843,9 @@
       {"ret_64r_branch_reg"_h,                                                 \
        &VISITORCLASS::VisitUnconditionalBranchToRegister},                     \
       {"ext_asimdext_only"_h, &VISITORCLASS::VisitNEONExtract},                \
+      {"rbit_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                \
+      {"cnt_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},                 \
+      {"rev16_asimdmisc_r"_h, &VISITORCLASS::VisitNEON2RegMisc},               \
       {"fmla_asisdelem_rh_h"_h,                                                \
        &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
       {"fmla_asisdelem_r_sd"_h,                                                \
