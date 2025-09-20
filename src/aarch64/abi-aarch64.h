@@ -37,7 +37,7 @@
 #ifndef VIXL_AARCH64_ABI_AARCH64_H_
 #define VIXL_AARCH64_ABI_AARCH64_H_
 
-#ifdef __x86_64__
+#if defined(__x86_64__) && !defined(__arm64ec__)
 #include <xmmintrin.h>
 #else
 // Can't use uint8x16_t directly from arm_neon.h here.
@@ -97,9 +97,9 @@ class ABI {
         std::is_integral<T>::value || std::is_enum<T>::value;
     const bool is_pointer_type = std::is_pointer<T>::value;
     const bool is_vector_type =
-#ifdef __x86_64__
+#if defined(__x86_64__) && !defined(__arm64ec__)
       std::is_same_v<T, __m128i>;
-#elif defined(__aarch64__)
+#elif defined(__aarch64__) || defined(__arm64ec__)
       std::is_same_v<T, uint8x16_t>;
 #else
       false;
