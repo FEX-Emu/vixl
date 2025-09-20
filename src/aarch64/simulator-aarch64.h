@@ -44,7 +44,7 @@
 #include "instructions-aarch64.h"
 #include "simulator-constants-aarch64.h"
 
-#ifdef __x86_64__
+#if defined(__x86_64__) && !defined(__arm64ec__)
 #include <xmmintrin.h>
 #else
 // Can't use uint8x16_t directly from arm_neon.h here.
@@ -3040,9 +3040,9 @@ class Simulator : public DecoderVisitor {
     ABI abi;
     std::tuple<P...> argument_operands{
         ReadGenericOperand<P>(abi.GetNextParameterGenericOperand<P>())...};
-#ifdef __x86_64__
+#if defined(__x86_64__) && !defined(__arm64ec__)
     if constexpr (std::is_same_v<R, __m128i>) {
-#elif defined(__aarch64__)
+#elif defined(__aarch64__) || defined(__arm64ec__)
     if constexpr (std::is_same_v<R, uint8x16_t>) {
 #else
     if constexpr (false) {
