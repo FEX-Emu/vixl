@@ -8754,13 +8754,33 @@ TEST(sve_usdot_sudot) {
   CLEANUP();
 }
 
-TEST(sve_bfcvt) {
+TEST(sve_bfloat16) {
   SETUP();
 
   COMPARE_MACRO(Bfcvt(z0.VnH(), p0.Merging(), z1.VnS()),
                 "bfcvt z0.h, p0/m, z1.s");
   COMPARE_MACRO(Bfcvtnt(z0.VnH(), p1.Merging(), z1.VnS()),
                 "bfcvtnt z0.h, p1/m, z1.s");
+  COMPARE_MACRO(Bfdot(z10.VnS(), z20.VnH(), z30.VnH()),
+                "bfdot z10.s, z20.h, z30.h");
+  COMPARE_MACRO(Bfdot(z10.VnS(), z20.VnH(), z3.VnH(), 0),
+                "bfdot z10.s, z20.h, z3.h[0]");
+  COMPARE_MACRO(Bfdot(z10.VnS(), z20.VnH(), z3.VnH(), 3),
+                "bfdot z10.s, z20.h, z3.h[3]");
+  COMPARE_MACRO(Bfmlalb(z10.VnS(), z20.VnH(), z30.VnH()),
+                "bfmlalb z10.s, z20.h, z30.h");
+  COMPARE_MACRO(Bfmlalt(z10.VnS(), z20.VnH(), z30.VnH()),
+                "bfmlalt z10.s, z20.h, z30.h");
+  COMPARE_MACRO(Bfmlalb(z10.VnS(), z20.VnH(), z7.VnH(), 0),
+                "bfmlalb z10.s, z20.h, z7.h[0]");
+  COMPARE_MACRO(Bfmlalb(z10.VnS(), z20.VnH(), z0.VnH(), 7),
+                "bfmlalb z10.s, z20.h, z0.h[7]");
+  COMPARE_MACRO(Bfmlalt(z10.VnS(), z20.VnH(), z7.VnH(), 0),
+                "bfmlalt z10.s, z20.h, z7.h[0]");
+  COMPARE_MACRO(Bfmlalt(z10.VnS(), z20.VnH(), z0.VnH(), 7),
+                "bfmlalt z10.s, z20.h, z0.h[7]");
+  COMPARE_MACRO(Bfmmla(z10.VnS(), z20.VnH(), z30.VnH()),
+                "bfmmla z10.s, z20.h, z30.h");
 
   CLEANUP();
 }

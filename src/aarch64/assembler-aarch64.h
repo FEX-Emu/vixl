@@ -2469,6 +2469,36 @@ class Assembler : public vixl::internal::AssemblerBase {
   // part).
   void bfcvtn2(const VRegister& vd, const VRegister& vn);
 
+  // BFloat16 floating-point dot product (vector).
+  void bfdot(const VRegister& vd, const VRegister& vn, const VRegister& vm);
+
+  // BFloat16 floating-point dot product (vector, by element).
+  void bfdot(const VRegister& vd,
+             const VRegister& vn,
+             const VRegister& vm,
+             int vm_index);
+
+  // BFloat16 floating-point widening multiply-add long (vector, bottom).
+  void bfmlalb(const VRegister& vd, const VRegister& vn, const VRegister& vm);
+
+  // BFloat16 floating-point widening multiply-add long (vector, top).
+  void bfmlalt(const VRegister& vd, const VRegister& vn, const VRegister& vm);
+
+  // BFloat16 floating-point widening multiply-add long (by element, bottom).
+  void bfmlalb(const VRegister& vd,
+               const VRegister& vn,
+               const VRegister& vm,
+               int vm_index);
+
+  // BFloat16 floating-point widening multiply-add long (by element, top).
+  void bfmlalt(const VRegister& vd,
+               const VRegister& vn,
+               const VRegister& vm,
+               int vm_index);
+
+  // BFloat16 floating-point matrix multiply-accumulate into 2x2 matrix.
+  void bfmmla(const VRegister& vd, const VRegister& vn, const VRegister& vm);
+
   // Convert signed integer or fixed point to FP.
   void scvtf(const VRegister& fd, const Register& rn, int fbits = 0);
 
@@ -3864,11 +3894,43 @@ class Assembler : public vixl::internal::AssemblerBase {
             const PRegisterWithLaneSize& pn,
             const PRegisterWithLaneSize& pm);
 
+  // BFloat16 floating-point dot product.
+  void bfdot(const ZRegister& zda, const ZRegister& zn, const ZRegister& zm);
+
+  // BFloat16 floating-point indexed dot product.
+  void bfdot(const ZRegister& zda,
+             const ZRegister& zn,
+             const ZRegister& zm,
+             int index);
+
   // Floating-point down convert to BFloat16 format (predicated).
   void bfcvt(const ZRegister& zd, const PRegisterM& pg, const ZRegister& zn);
 
   // Floating-point down convert and narrow to BFloat16 (top, predicated).
   void bfcvtnt(const ZRegister& zd, const PRegisterM& pg, const ZRegister& zn);
+
+  // BFloat16 floating-point multiply-add long to single-precision (bottom).
+  void bfmlalb(const ZRegister& zda, const ZRegister& zn, const ZRegister& zm);
+
+  // BFloat16 floating-point multiply-add long to single-precision (bottom,
+  // indexed).
+  void bfmlalb(const ZRegister& zda,
+               const ZRegister& zn,
+               const ZRegister& zm,
+               int index);
+
+  // BFloat16 floating-point multiply-add long to single-precision (top).
+  void bfmlalt(const ZRegister& zda, const ZRegister& zn, const ZRegister& zm);
+
+  // BFloat16 floating-point multiply-add long to single-precision (top,
+  // indexed).
+  void bfmlalt(const ZRegister& zda,
+               const ZRegister& zn,
+               const ZRegister& zm,
+               int index);
+
+  // BFloat16 floating-point matrix multiply-accumulate into 2×2 matrices.
+  void bfmmla(const ZRegister& zda, const ZRegister& zn, const ZRegister& zm);
 
   // Break after first true condition.
   void brka(const PRegisterWithLaneSize& pd,

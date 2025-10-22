@@ -4059,6 +4059,24 @@ TEST(neon_bfloat16) {
   COMPARE_MACRO(Bfcvt(h10, s5), "bfcvt h10, s5");
   COMPARE_MACRO(Bfcvtn(v0.V4H(), v1.V4S()), "bfcvtn v0.4h, v1.4s");
   COMPARE_MACRO(Bfcvtn2(v2.V8H(), v3.V4S()), "bfcvtn2 v2.8h, v3.4s");
+  COMPARE_MACRO(Bfdot(v5.V2S(), v6.V4H(), v7.V4H()),
+                "bfdot v5.2s, v6.4h, v7.4h");
+  COMPARE_MACRO(Bfdot(v5.V4S(), v6.V8H(), v7.V8H()),
+                "bfdot v5.4s, v6.8h, v7.8h");
+  COMPARE_MACRO(Bfdot(v5.V2S(), v6.V4H(), v31.V4H(), 0),
+                "bfdot v5.2s, v6.4h, v31.2h[0]");
+  COMPARE_MACRO(Bfdot(v5.V4S(), v6.V8H(), v0.V8H(), 3),
+                "bfdot v5.4s, v6.8h, v0.2h[3]");
+  COMPARE_MACRO(Bfmlalb(v5.V4S(), v6.V8H(), v7.V8H()),
+                "bfmlalb v5.4s, v6.8h, v7.8h");
+  COMPARE_MACRO(Bfmlalt(v5.V4S(), v6.V8H(), v7.V8H()),
+                "bfmlalt v5.4s, v6.8h, v7.8h");
+  COMPARE_MACRO(Bfmlalb(v5.V4S(), v6.V8H(), v15.H(), 0),
+                "bfmlalb v5.4s, v6.8h, v15.h[0]");
+  COMPARE_MACRO(Bfmlalt(v5.V4S(), v6.V8H(), v0.H(), 7),
+                "bfmlalt v5.4s, v6.8h, v0.h[7]");
+  COMPARE_MACRO(Bfmmla(v31.V4S(), v30.V8H(), v29.V8H()),
+                "bfmmla v31.4s, v30.8h, v29.8h");
 
   CLEANUP();
 }

@@ -1228,6 +1228,98 @@ class MacroAssembler : public Assembler, public MacroAssemblerInterface {
     SingleEmissionCheckScope guard(this);
     bfcvtnt(zd, pg, zn);
   }
+  void Bfdot(const VRegister& vd, const VRegister& vn, const VRegister& vm) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfdot(vd, vn, vm);
+  }
+  void Bfdot(const VRegister& vd,
+             const VRegister& vn,
+             const VRegister& vm,
+             int vm_index) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfdot(vd, vn, vm, vm_index);
+  }
+  void Bfdot(const ZRegister& zda, const ZRegister& zn, const ZRegister& zm) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfdot(zda, zn, zm);
+  }
+  void Bfdot(const ZRegister& zda,
+             const ZRegister& zn,
+             const ZRegister& zm,
+             int index) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfdot(zda, zn, zm, index);
+  }
+  void Bfmlalb(const VRegister& vd, const VRegister& vn, const VRegister& vm) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfmlalb(vd, vn, vm);
+  }
+  void Bfmlalt(const VRegister& vd, const VRegister& vn, const VRegister& vm) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfmlalt(vd, vn, vm);
+  }
+  void Bfmlalb(const VRegister& vd,
+               const VRegister& vn,
+               const VRegister& vm,
+               int vm_index) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    VIXL_CHECK(vm.GetCode() < 16);
+    bfmlalb(vd, vn, vm, vm_index);
+  }
+  void Bfmlalt(const VRegister& vd,
+               const VRegister& vn,
+               const VRegister& vm,
+               int vm_index) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    VIXL_CHECK(vm.GetCode() < 16);
+    bfmlalt(vd, vn, vm, vm_index);
+  }
+  void Bfmlalb(const ZRegister& zda, const ZRegister& zn, const ZRegister& zm) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfmlalb(zda, zn, zm);
+  }
+  void Bfmlalt(const ZRegister& zda, const ZRegister& zn, const ZRegister& zm) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfmlalt(zda, zn, zm);
+  }
+  void Bfmlalb(const ZRegister& zda,
+               const ZRegister& zn,
+               const ZRegister& zm,
+               int index) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    VIXL_CHECK(zm.GetCode() < 16);
+    bfmlalb(zda, zn, zm, index);
+  }
+  void Bfmlalt(const ZRegister& zda,
+               const ZRegister& zn,
+               const ZRegister& zm,
+               int index) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    VIXL_CHECK(zm.GetCode() < 16);
+    bfmlalt(zda, zn, zm, index);
+  }
+  void Bfmmla(const VRegister& vd, const VRegister& vn, const VRegister& vm) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfmmla(vd, vn, vm);
+  }
+  void Bfmmla(const ZRegister& zda, const ZRegister& zn, const ZRegister& zm) {
+    VIXL_ASSERT(allow_macro_instructions_);
+    SingleEmissionCheckScope guard(this);
+    bfmmla(zda, zn, zm);
+  }
   void Braa(const Register& xn, const Register& xm) {
     VIXL_ASSERT(allow_macro_instructions_);
     SingleEmissionCheckScope guard(this);
