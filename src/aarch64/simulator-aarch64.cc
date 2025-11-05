@@ -4219,6 +4219,7 @@ void Simulator::VisitRotateRightIntoFlags(const Instruction* instr) {
       uint64_t rotated = RotateRight(value, shift, kXRegSize);
 
       ReadNzcv().SetFlags((rotated & mask) | (ReadNzcv().GetFlags() & ~mask));
+      LogSystemRegister(NZCV);
       break;
     }
   }
@@ -4234,6 +4235,7 @@ void Simulator::VisitEvaluateIntoFlags(const Instruction* instr) {
   ReadNzcv().SetN(sign_bit);
   ReadNzcv().SetZ((value << (31 - msb)) == 0);
   ReadNzcv().SetV(sign_bit ^ overflow_bit);
+  LogSystemRegister(NZCV);
 }
 
 
@@ -7098,12 +7100,14 @@ void Simulator::VisitSystem(const Instruction* instr) {
   switch (form_hash_) {
     case "cfinv_m_pstate"_h:
       ReadNzcv().SetC(!ReadC());
+      LogSystemRegister(NZCV);
       break;
     case "axflag_m_pstate"_h:
       ReadNzcv().SetN(0);
       ReadNzcv().SetZ(ReadNzcv().GetZ() | ReadNzcv().GetV());
       ReadNzcv().SetC(ReadNzcv().GetC() & ~ReadNzcv().GetV());
       ReadNzcv().SetV(0);
+      LogSystemRegister(NZCV);
       break;
     case "xaflag_m_pstate"_h: {
       // Can't set the flags in place due to the logical dependencies.
@@ -7115,6 +7119,7 @@ void Simulator::VisitSystem(const Instruction* instr) {
       ReadNzcv().SetZ(z);
       ReadNzcv().SetC(c);
       ReadNzcv().SetV(v);
+      LogSystemRegister(NZCV);
       break;
     }
     case "xpaclri_hi_hints"_h:

@@ -52,6 +52,9 @@ static void GenerateTestSequenceBase(MacroAssembler* masm) {
   ExactAssemblyScope guard(masm,
                            masm->GetBuffer()->GetRemainingBytes(),
                            ExactAssemblyScope::kMaximumSize);
+  CPUFeaturesScope feature_guard(masm,
+                                 CPUFeatures::kFlagM,
+                                 CPUFeatures::kAXFlag);
 
   __ adc(w3, w4, w5);
   __ adc(x6, x7, x8);
@@ -379,6 +382,13 @@ static void GenerateTestSequenceBase(MacroAssembler* masm) {
   __ ldrsh(xzr, MemOperand(sp, 16, PostIndex));
   __ str(xzr, MemOperand(sp, -16, PreIndex));
   __ ldrsw(xzr, MemOperand(sp, 16, PostIndex));
+  __ bics(x3, x3, x3);
+  __ rmif(x3, 63, CFlag);
+  __ cfinv();
+  __ setf8(x3);
+  __ setf16(x3);
+  __ axflag();
+  __ xaflag();
 
   // Branch tests.
   {
