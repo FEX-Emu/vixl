@@ -65,6 +65,12 @@ class TestQueue(object):
 
   # Run the specified tests.
   def Run(self, jobs, verbose, run_function):
+
+    # If there are no tests to run, return 0 as "success"
+    if (len(self.queue) == 0):
+      printer.Print("No tests to run")
+      return 0
+
     with multiprocessing.Manager() as manager:
       def InitGlobals():
         # Initialisation.

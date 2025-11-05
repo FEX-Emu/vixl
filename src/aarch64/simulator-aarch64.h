@@ -643,7 +643,7 @@ class SimVRegister : public SimRegisterBase<kZRegMaxSize> {
 class LogicPRegister {
  public:
   inline LogicPRegister(
-      SimPRegister& other)  // NOLINT(runtime/references)(runtime/explicit)
+      SimPRegister& other)  // NOLINT(google-runtime-references)
       : register_(other) {}
 
   // Set a conveniently-sized block to 16 bits as the minimum predicate length
@@ -744,7 +744,7 @@ using vixl_uint128_t = std::pair<uint64_t, uint64_t>;
 class LogicVRegister {
  public:
   inline LogicVRegister(
-      SimVRegister& other)  // NOLINT(runtime/references)(runtime/explicit)
+      SimVRegister& other)  // NOLINT(google-runtime-references)
       : register_(other) {
     for (size_t i = 0; i < ArrayLength(saturated_); i++) {
       saturated_[i] = kNotSaturated;
@@ -5452,9 +5452,10 @@ class Simulator : public DecoderVisitor {
   // in vreg is non-zero. Clear the flag, otherwise. This is almost the opposite
   // operation to ExpandToSimVRegister(), except that any non-zero lane is
   // interpreted as true.
-  void ExtractFromSimVRegister(VectorFormat vform,
-                               SimPRegister& pd,  // NOLINT(runtime/references)
-                               SimVRegister vreg);
+  void ExtractFromSimVRegister(
+      VectorFormat vform,
+      SimPRegister& pd,  // NOLINT(google-runtime-references)
+      SimVRegister vreg);
 
   bool coloured_trace_;
 
