@@ -37,20 +37,9 @@
 
 // List macro containing all visitors needed by the decoder class.
 #define VISITOR_LIST_THAT_RETURN(V)                              \
-  V(AddSubExtended)                                              \
-  V(AddSubImmediate)                                             \
-  V(AddSubShifted)                                               \
-  V(AddSubWithCarry)                                             \
   V(AtomicMemory)                                                \
   V(Bitfield)                                                    \
-  V(ConditionalBranch)                                           \
-  V(ConditionalSelect)                                           \
-  V(DataProcessing2Source)                                       \
-  V(DataProcessing3Source)                                       \
-  V(Extract)                                                     \
   V(LoadStoreExclusive)                                          \
-  V(LogicalImmediate)                                            \
-  V(LogicalShifted)                                              \
   V(MoveWideImmediate)                                           \
   V(NEON2RegMisc)                                                \
   V(NEON3Different)                                              \
@@ -265,7 +254,18 @@
   V(SVEFPArithmeticWithImm_Predicated)                           \
   V(SVEBitwiseLogicalWithImm_Unpredicated)                       \
   V(UnconditionalBranchToRegister)                               \
-  V(NEONExtract)
+  V(NEONExtract)                                                 \
+  V(ConditionalSelect)                                           \
+  V(LogicalImmediate)                                            \
+  V(AddSubImmediate)                                             \
+  V(AddSubShifted)                                               \
+  V(AddSubExtended)                                              \
+  V(LogicalShifted)                                              \
+  V(Extract)                                                     \
+  V(DataProcessing2Source)                                       \
+  V(DataProcessing3Source)                                       \
+  V(ConditionalBranch)                                           \
+  V(AddSubWithCarry)
 
 #define VISITOR_LIST_THAT_DONT_RETURN(V) V(Reserved)
 

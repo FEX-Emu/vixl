@@ -33,6 +33,161 @@
 namespace vixl {
 namespace aarch64 {
 
+std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
+  // Representation of a simple condition for an alias to apply. Mask and
+  // post-mask value are combined into a single 64-bit field (similar to
+  // unallocated instruction detection elsewhere) such that an alias
+  // should be applied if (i & mask_value >> 32) == (mask_value & 0xffffffff).
+  using MaskAlias = struct {
+    uint64_t mask_value;
+    std::string alias;
+  };
+
+  // "Simple" alias detection. For each form, one or more masking tests are
+  // independently applied to determine if the alias is used.
+  using MaskAliasMap = std::unordered_map<uint32_t, std::vector<MaskAlias>>;
+
+  const uint64_t kAllCases = 0x00000000'00000000;
+  const uint64_t kRdIsZROrSP = 0x0000001f'0000001f;
+  const uint64_t kRnIsZROrSP = 0x000003e0'000003e0;
+  const uint64_t kRaIsZROrSP = 0x00007c00'00007c00;
+  const uint64_t kAddSubImmZero = 0x003ffc00'00000000;
+  const uint64_t kLogImmIsZeroLSL = 0x00c0fc00'00000000;
+
+  static const MaskAliasMap maskmap =
+      {{"adds_32s_addsub_imm"_h, {{kRdIsZROrSP, "cmn"}}},
+       {"adds_64s_addsub_imm"_h, {{kRdIsZROrSP, "cmn"}}},
+       {"subs_32s_addsub_imm"_h, {{kRdIsZROrSP, "cmp"}}},
+       {"subs_64s_addsub_imm"_h, {{kRdIsZROrSP, "cmp"}}},
+       {"add_32_addsub_imm"_h,
+        {{kRdIsZROrSP | kAddSubImmZero, "mov"},
+         {kRnIsZROrSP | kAddSubImmZero, "mov"}}},
+       {"add_64_addsub_imm"_h,
+        {{kRdIsZROrSP | kAddSubImmZero, "mov"},
+         {kRnIsZROrSP | kAddSubImmZero, "mov"}}},
+       {"adds_32_addsub_shift"_h, {{kRdIsZROrSP, "cmn"}}},
+       {"adds_64_addsub_shift"_h, {{kRdIsZROrSP, "cmn"}}},
+       {"sub_32_addsub_shift"_h, {{kRnIsZROrSP, "neg"}}},
+       {"sub_64_addsub_shift"_h, {{kRnIsZROrSP, "neg"}}},
+       {"subs_32_addsub_shift"_h,
+        {{kRdIsZROrSP, "cmp"}, {kRnIsZROrSP, "negs"}}},
+       {"subs_64_addsub_shift"_h,
+        {{kRdIsZROrSP, "cmp"}, {kRnIsZROrSP, "negs"}}},
+       {"sbc_32_addsub_carry"_h, {{kRnIsZROrSP, "ngc"}}},
+       {"sbc_64_addsub_carry"_h, {{kRnIsZROrSP, "ngc"}}},
+       {"sbcs_32_addsub_carry"_h, {{kRnIsZROrSP, "ngcs"}}},
+       {"sbcs_64_addsub_carry"_h, {{kRnIsZROrSP, "ngcs"}}},
+       {"adds_32s_addsub_ext"_h, {{kRdIsZROrSP, "cmn"}}},
+       {"adds_64s_addsub_ext"_h, {{kRdIsZROrSP, "cmn"}}},
+       {"subs_32s_addsub_ext"_h, {{kRdIsZROrSP, "cmp"}}},
+       {"subs_64s_addsub_ext"_h, {{kRdIsZROrSP, "cmp"}}},
+       {"ands_32_log_shift"_h, {{kRdIsZROrSP, "tst"}}},
+       {"ands_64_log_shift"_h, {{kRdIsZROrSP, "tst"}}},
+       {"orr_32_log_shift"_h, {{kRnIsZROrSP | kLogImmIsZeroLSL, "mov"}}},
+       {"orr_64_log_shift"_h, {{kRnIsZROrSP | kLogImmIsZeroLSL, "mov"}}},
+       {"orn_32_log_shift"_h, {{kRnIsZROrSP, "mvn"}}},
+       {"orn_64_log_shift"_h, {{kRnIsZROrSP, "mvn"}}},
+       {"ands_32s_log_imm"_h, {{kRdIsZROrSP, "tst"}}},
+       {"ands_64s_log_imm"_h, {{kRdIsZROrSP, "tst"}}},
+       {"madd_32a_dp_3src"_h, {{kRaIsZROrSP, "mul"}}},
+       {"madd_64a_dp_3src"_h, {{kRaIsZROrSP, "mul"}}},
+       {"msub_32a_dp_3src"_h, {{kRaIsZROrSP, "mneg"}}},
+       {"msub_64a_dp_3src"_h, {{kRaIsZROrSP, "mneg"}}},
+       {"smaddl_64wa_dp_3src"_h, {{kRaIsZROrSP, "smull"}}},
+       {"smsubl_64wa_dp_3src"_h, {{kRaIsZROrSP, "smnegl"}}},
+       {"umaddl_64wa_dp_3src"_h, {{kRaIsZROrSP, "umull"}}},
+       {"umsubl_64wa_dp_3src"_h, {{kRaIsZROrSP, "umnegl"}}},
+       {"asrv_32_dp_2src"_h, {{kAllCases, "asr"}}},
+       {"asrv_64_dp_2src"_h, {{kAllCases, "asr"}}},
+       {"lslv_32_dp_2src"_h, {{kAllCases, "lsl"}}},
+       {"lslv_64_dp_2src"_h, {{kAllCases, "lsl"}}},
+       {"lsrv_32_dp_2src"_h, {{kAllCases, "lsr"}}},
+       {"lsrv_64_dp_2src"_h, {{kAllCases, "lsr"}}},
+       {"rorv_32_dp_2src"_h, {{kAllCases, "ror"}}},
+       {"rorv_64_dp_2src"_h, {{kAllCases, "ror"}}},
+       {"b_only_condbranch"_h, {{kAllCases, "b.'CBrn"}}},
+       {"bc_only_condbranch"_h, {{kAllCases, "bc.'CBrn"}}}};
+
+  // "Complex" alias detection. For each form, one or more function groups are
+  // applied to the encoding. If ALL of the functions in a group return true
+  // (ie. intersection) then the alias for that group is used.
+  using FuncAlias = struct {
+    std::vector<std::function<bool(const Instruction *)>> conditions;
+    std::string alias;
+  };
+
+  auto RnRmAliased = [](const Instruction *i) {
+    return (i->GetRn() == i->GetRm());
+  };
+
+  auto CondNotAlNv = [](const Instruction *i) {
+    return (i->GetCondition() != al) && (i->GetCondition() != nv);
+  };
+
+  auto IsNotMovzMovnImmW = [this](const Instruction *i) {
+    return !IsMovzMovnImm(kWRegSize, i->GetImmLogical());
+  };
+
+  auto IsNotMovzMovnImmX = [this](const Instruction *i) {
+    return !IsMovzMovnImm(kXRegSize, i->GetImmLogical());
+  };
+
+  using FuncAliasMap = std::unordered_map<uint32_t, std::vector<FuncAlias>>;
+  static const FuncAliasMap funcmap = {
+      {"csinc_32_condsel"_h,
+       {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "cset"},
+        {{RnRmAliased, CondNotAlNv}, "cinc"}}},
+      {"csinc_64_condsel"_h,
+       {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "cset"},
+        {{RnRmAliased, CondNotAlNv}, "cinc"}}},
+      {"csinv_32_condsel"_h,
+       {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "csetm"},
+        {{RnRmAliased, CondNotAlNv}, "cinv"}}},
+      {"csinv_64_condsel"_h,
+       {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "csetm"},
+        {{RnRmAliased, CondNotAlNv}, "cinv"}}},
+      {"csneg_32_condsel"_h, {{{RnRmAliased, CondNotAlNv}, "cneg"}}},
+      {"csneg_64_condsel"_h, {{{RnRmAliased, CondNotAlNv}, "cneg"}}},
+      {"extr_32_extract"_h, {{{RnRmAliased}, "ror"}}},
+      {"extr_64_extract"_h, {{{RnRmAliased}, "ror"}}},
+      {"orr_32_log_imm"_h, {{{RnIsZROrSP, IsNotMovzMovnImmW}, "mov"}}},
+      {"orr_64_log_imm"_h, {{{RnIsZROrSP, IsNotMovzMovnImmX}, "mov"}}},
+  };
+
+
+  std::string alias;
+  MaskAliasMap::const_iterator ita = maskmap.find(form_hash_);
+  if (ita != maskmap.end()) {
+    // Simple alias detection implies there is no complex alias for this form.
+    VIXL_ASSERT(funcmap.count(form_hash_) == 0);
+    for (auto rule : ita->second) {
+      uint64_t mv = rule.mask_value;
+      uint32_t mask = mv >> 32;
+      uint32_t value = mv & 0xffffffff;
+      if ((mask == 0) || (instr->Mask(mask) == value)) {
+        alias = rule.alias;
+        break;
+      }
+    }
+  } else {
+    FuncAliasMap::const_iterator ita2 = funcmap.find(form_hash_);
+    if (ita2 != funcmap.end()) {
+      for (auto rule : ita2->second) {
+        bool all = true;
+        for (auto cond : rule.conditions) {
+          all = all && cond(instr);
+        }
+        if (all == true) {
+          alias = rule.alias;
+          break;
+        }
+      }
+    }
+  }
+
+  return alias;
+}
+
 void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
   using UnallocToFormMap =
       std::unordered_map<uint64_t, std::unordered_set<uint32_t>>;
@@ -44,8 +199,76 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
   // map from instruction to mask/value, allowing fast lookup during
   // disassembly.
   static const UnallocToFormMap forms =
-      {{0x000207e0'000007c0, {"and_z_zi"_h, "eor_z_zi"_h, "orr_z_zi"_h}},
+      {{0x00001c00'00001400,
+        {"add_32_addsub_ext"_h,
+         "add_64_addsub_ext"_h,
+         "subs_32s_addsub_ext"_h,
+         "subs_64s_addsub_ext"_h,
+         "sub_32_addsub_ext"_h,
+         "sub_64_addsub_ext"_h}},
+       {0x00001800'00001800,
+        {"add_32_addsub_ext"_h,
+         "add_64_addsub_ext"_h,
+         "subs_32s_addsub_ext"_h,
+         "subs_64s_addsub_ext"_h,
+         "sub_32_addsub_ext"_h,
+         "sub_64_addsub_ext"_h}},
+       {0x000207e0'000007c0, {"and_z_zi"_h, "eor_z_zi"_h, "orr_z_zi"_h}},
        {0x000207e0'000007e0, {"and_z_zi"_h, "eor_z_zi"_h, "orr_z_zi"_h}},
+       {0x0040f800'0000f800,
+        {"ands_32s_log_imm"_h,
+         "ands_64s_log_imm"_h,
+         "and_32_log_imm"_h,
+         "and_64_log_imm"_h,
+         "eor_32_log_imm"_h,
+         "eor_64_log_imm"_h,
+         "orr_32_log_imm"_h,
+         "orr_64_log_imm"_h}},
+       {0x0040fc00'00007c00,
+        {"ands_32s_log_imm"_h,
+         "ands_64s_log_imm"_h,
+         "and_32_log_imm"_h,
+         "and_64_log_imm"_h,
+         "eor_32_log_imm"_h,
+         "eor_64_log_imm"_h,
+         "orr_32_log_imm"_h,
+         "orr_64_log_imm"_h}},
+       {0x0040fc00'0000bc00,
+        {"ands_32s_log_imm"_h,
+         "ands_64s_log_imm"_h,
+         "and_32_log_imm"_h,
+         "and_64_log_imm"_h,
+         "eor_32_log_imm"_h,
+         "eor_64_log_imm"_h,
+         "orr_32_log_imm"_h,
+         "orr_64_log_imm"_h}},
+       {0x0040fc00'0000dc00,
+        {"ands_32s_log_imm"_h,
+         "ands_64s_log_imm"_h,
+         "and_32_log_imm"_h,
+         "and_64_log_imm"_h,
+         "eor_32_log_imm"_h,
+         "eor_64_log_imm"_h,
+         "orr_32_log_imm"_h,
+         "orr_64_log_imm"_h}},
+       {0x0040fc00'0000ec00,
+        {"ands_32s_log_imm"_h,
+         "ands_64s_log_imm"_h,
+         "and_32_log_imm"_h,
+         "and_64_log_imm"_h,
+         "eor_32_log_imm"_h,
+         "eor_64_log_imm"_h,
+         "orr_32_log_imm"_h,
+         "orr_64_log_imm"_h}},
+       {0x0040fc00'0000f400,
+        {"ands_32s_log_imm"_h,
+         "ands_64s_log_imm"_h,
+         "and_32_log_imm"_h,
+         "and_64_log_imm"_h,
+         "eor_32_log_imm"_h,
+         "eor_64_log_imm"_h,
+         "orr_32_log_imm"_h,
+         "orr_64_log_imm"_h}},
        {0x00200000'00200000, {"fcmla_asimdelem_c_s"_h}},
        {0x00400000'00000000,
         {"shl_asisdshf_r"_h,
@@ -330,7 +553,15 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "lsr_z_zw"_h,
          "pmul_asimdsame_only"_h,
          "match_p_p_zz"_h,
-         "nmatch_p_p_zz"_h}},
+         "nmatch_p_p_zz"_h,
+         "adds_32_addsub_shift"_h,
+         "adds_64_addsub_shift"_h,
+         "add_32_addsub_shift"_h,
+         "add_64_addsub_shift"_h,
+         "subs_32_addsub_shift"_h,
+         "subs_64_addsub_shift"_h,
+         "sub_32_addsub_shift"_h,
+         "sub_64_addsub_shift"_h}},
        {0x00d80000'00000000,
         {"xar_z_zzi"_h,
          "asr_z_zi"_h,
@@ -803,6 +1034,11 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"ldr_q_ldst_regoff"_h, "str_q_ldst_regoff"_h}},
       {"'Qt, ['Xns], #'s2012",
        {"ldr_q_ldst_immpost"_h, "str_q_ldst_immpost"_h}},
+      {"'Rd, 'CInv",
+       {"cset_csinc_32_condsel"_h,
+        "cset_csinc_64_condsel"_h,
+        "csetm_csinv_32_condsel"_h,
+        "csetm_csinv_64_condsel"_h}},
       {"'Rd, 'Fn", {"fcvtas_32d_float2int"_h,  "fcvtas_32h_float2int"_h,
                     "fcvtas_32s_float2int"_h,  "fcvtas_64d_float2int"_h,
                     "fcvtas_64h_float2int"_h,  "fcvtas_64s_float2int"_h,
@@ -849,6 +1085,19 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fcvtzu_64d_float2fix"_h,
         "fcvtzu_64h_float2fix"_h,
         "fcvtzu_64s_float2fix"_h}},
+      {"'Rd, 'Rm",
+       {"ngc_sbc_32_addsub_carry"_h,
+        "ngc_sbc_64_addsub_carry"_h,
+        "ngcs_sbcs_32_addsub_carry"_h,
+        "ngcs_sbcs_64_addsub_carry"_h,
+        "mov_orr_32_log_shift"_h,
+        "mov_orr_64_log_shift"_h}},
+      {"'Rd, 'Rm'NDP",
+       {"neg_sub_32_addsub_shift"_h,
+        "neg_sub_64_addsub_shift"_h,
+        "negs_subs_32_addsub_shift"_h,
+        "negs_subs_64_addsub_shift"_h}},
+      {"'Rd, 'Rm'NLo", {"mvn_orn_32_log_shift"_h, "mvn_orn_64_log_shift"_h}},
       {"'Rd, 'Rn",
        {"abs_32_dp_1src"_h,
         "abs_64_dp_1src"_h,
@@ -872,42 +1121,137 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "smax_64_minmax_imm"_h,
         "smin_32_minmax_imm"_h,
         "smin_64_minmax_imm"_h}},
+      {"'Rd, 'Rn, #'u1510", {"ror_extr_32_extract"_h, "ror_extr_64_extract"_h}},
       {"'Rd, 'Rn, #'u1710",
        {"umax_32u_minmax_imm"_h,
         "umax_64u_minmax_imm"_h,
         "umin_32u_minmax_imm"_h,
         "umin_64u_minmax_imm"_h}},
-      {"'Rd, 'Rn, 'Rm",
-       {"crc32b_32c_dp_2src"_h,
-        "crc32cb_32c_dp_2src"_h,
-        "crc32ch_32c_dp_2src"_h,
-        "crc32cw_32c_dp_2src"_h,
-        "crc32h_32c_dp_2src"_h,
-        "crc32w_32c_dp_2src"_h,
-        "sdiv_32_dp_2src"_h,
-        "sdiv_64_dp_2src"_h,
-        "smax_32_dp_2src"_h,
-        "smax_64_dp_2src"_h,
-        "smin_32_dp_2src"_h,
-        "smin_64_dp_2src"_h,
-        "udiv_32_dp_2src"_h,
-        "udiv_64_dp_2src"_h,
-        "umax_32_dp_2src"_h,
-        "umax_64_dp_2src"_h,
-        "umin_32_dp_2src"_h,
-        "umin_64_dp_2src"_h}},
+      {"'Rd, 'Rn, 'CInv",
+       {"cinc_csinc_32_condsel"_h,
+        "cinc_csinc_64_condsel"_h,
+        "cinv_csinv_32_condsel"_h,
+        "cinv_csinv_64_condsel"_h,
+        "cneg_csneg_32_condsel"_h,
+        "cneg_csneg_64_condsel"_h}},
+      {"'Rd, 'Rn, 'Rm", {"crc32b_32c_dp_2src"_h,    "crc32cb_32c_dp_2src"_h,
+                         "crc32ch_32c_dp_2src"_h,   "crc32cw_32c_dp_2src"_h,
+                         "crc32h_32c_dp_2src"_h,    "crc32w_32c_dp_2src"_h,
+                         "sdiv_32_dp_2src"_h,       "sdiv_64_dp_2src"_h,
+                         "smax_32_dp_2src"_h,       "smax_64_dp_2src"_h,
+                         "smin_32_dp_2src"_h,       "smin_64_dp_2src"_h,
+                         "udiv_32_dp_2src"_h,       "udiv_64_dp_2src"_h,
+                         "umax_32_dp_2src"_h,       "umax_64_dp_2src"_h,
+                         "umin_32_dp_2src"_h,       "umin_64_dp_2src"_h,
+                         "adcs_32_addsub_carry"_h,  "adcs_64_addsub_carry"_h,
+                         "adc_32_addsub_carry"_h,   "adc_64_addsub_carry"_h,
+                         "sbcs_32_addsub_carry"_h,  "sbcs_64_addsub_carry"_h,
+                         "sbc_32_addsub_carry"_h,   "sbc_64_addsub_carry"_h,
+                         "mul_madd_32a_dp_3src"_h,  "mul_madd_64a_dp_3src"_h,
+                         "mneg_msub_32a_dp_3src"_h, "mneg_msub_64a_dp_3src"_h,
+                         "asr_asrv_32_dp_2src"_h,   "asr_asrv_64_dp_2src"_h,
+                         "lsl_lslv_32_dp_2src"_h,   "lsl_lslv_64_dp_2src"_h,
+                         "lsr_lsrv_32_dp_2src"_h,   "lsr_lsrv_64_dp_2src"_h,
+                         "ror_rorv_32_dp_2src"_h,   "ror_rorv_64_dp_2src"_h}},
+      {"'Rd, 'Rn, 'Rm, #'u1510", {"extr_32_extract"_h, "extr_64_extract"_h}},
+      {"'Rd, 'Rn, 'Rm, 'Cond",
+       {"csel_32_condsel"_h,
+        "csel_64_condsel"_h,
+        "csinc_32_condsel"_h,
+        "csinc_64_condsel"_h,
+        "csinv_32_condsel"_h,
+        "csinv_64_condsel"_h,
+        "csneg_32_condsel"_h,
+        "csneg_64_condsel"_h}},
+      {"'Rd, 'Rn, 'Rm, 'Ra",
+       {"madd_32a_dp_3src"_h,
+        "madd_64a_dp_3src"_h,
+        "msub_32a_dp_3src"_h,
+        "msub_64a_dp_3src"_h}},
+      {"'Rd, 'Rn, 'Rm'NDP",
+       {"adds_32_addsub_shift"_h,
+        "adds_64_addsub_shift"_h,
+        "add_32_addsub_shift"_h,
+        "add_64_addsub_shift"_h,
+        "subs_32_addsub_shift"_h,
+        "subs_64_addsub_shift"_h,
+        "sub_32_addsub_shift"_h,
+        "sub_64_addsub_shift"_h}},
+      {"'Rd, 'Rn, 'Rm'NLo",
+       {"ands_32_log_shift"_h,
+        "ands_64_log_shift"_h,
+        "and_32_log_shift"_h,
+        "and_64_log_shift"_h,
+        "bics_32_log_shift"_h,
+        "bics_64_log_shift"_h,
+        "bic_32_log_shift"_h,
+        "bic_64_log_shift"_h,
+        "eon_32_log_shift"_h,
+        "eon_64_log_shift"_h,
+        "eor_32_log_shift"_h,
+        "eor_64_log_shift"_h,
+        "orn_32_log_shift"_h,
+        "orn_64_log_shift"_h,
+        "orr_32_log_shift"_h,
+        "orr_64_log_shift"_h}},
       {"'Rd, 'Vn.D[1]", {"fmov_64vx_float2int"_h}},
       {"'Rd, 'Xns, 'Rm", {"gmi_64g_dp_2src"_h}},
+      {"'Rds, 'ITri", {"mov_orr_32_log_imm"_h, "mov_orr_64_log_imm"_h}},
+      {"'Rds, 'Rn, 'ITri",
+       {"ands_32s_log_imm"_h,
+        "ands_64s_log_imm"_h,
+        "and_32_log_imm"_h,
+        "and_64_log_imm"_h,
+        "eor_32_log_imm"_h,
+        "eor_64_log_imm"_h,
+        "orr_32_log_imm"_h,
+        "orr_64_log_imm"_h}},
+      {"'Rds, 'Rns", {"mov_add_32_addsub_imm"_h, "mov_add_64_addsub_imm"_h}},
+      {"'Rds, 'Rns, '(1413=3?x:w)'(2016=31?zr:'u2016)'Ext",
+       {"adds_32s_addsub_ext"_h,
+        "adds_64s_addsub_ext"_h,
+        "add_32_addsub_ext"_h,
+        "add_64_addsub_ext"_h,
+        "subs_32s_addsub_ext"_h,
+        "subs_64s_addsub_ext"_h,
+        "sub_32_addsub_ext"_h,
+        "sub_64_addsub_ext"_h}},
+      {"'Rds, 'Rns, 'IAddSub",
+       {"adds_32s_addsub_imm"_h,
+        "adds_64s_addsub_imm"_h,
+        "add_32_addsub_imm"_h,
+        "add_64_addsub_imm"_h,
+        "subs_32s_addsub_imm"_h,
+        "subs_64s_addsub_imm"_h,
+        "sub_32_addsub_imm"_h,
+        "sub_64_addsub_imm"_h}},
       {"'Rn, #'u2016, 'INzcv, 'Cond",
        {"ccmn_32_condcmp_imm"_h,
         "ccmn_64_condcmp_imm"_h,
         "ccmp_32_condcmp_imm"_h,
         "ccmp_64_condcmp_imm"_h}},
+      {"'Rn, 'ITri", {"tst_ands_32s_log_imm"_h, "tst_ands_64s_log_imm"_h}},
       {"'Rn, 'Rm, 'INzcv, 'Cond",
        {"ccmn_32_condcmp_reg"_h,
         "ccmn_64_condcmp_reg"_h,
         "ccmp_32_condcmp_reg"_h,
         "ccmp_64_condcmp_reg"_h}},
+      {"'Rn, 'Rm'NDP",
+       {"cmn_adds_32_addsub_shift"_h,
+        "cmn_adds_64_addsub_shift"_h,
+        "cmp_subs_32_addsub_shift"_h,
+        "cmp_subs_64_addsub_shift"_h}},
+      {"'Rn, 'Rm'NLo", {"tst_ands_32_log_shift"_h, "tst_ands_64_log_shift"_h}},
+      {"'Rns, '(1413=3?x:w)'(2016=31?zr:'u2016)'Ext",
+       {"cmn_adds_32s_addsub_ext"_h,
+        "cmn_adds_64s_addsub_ext"_h,
+        "cmp_subs_32s_addsub_ext"_h,
+        "cmp_subs_64s_addsub_ext"_h}},
+      {"'Rns, 'IAddSub",
+       {"cmn_adds_32s_addsub_imm"_h,
+        "cmn_adds_64s_addsub_imm"_h,
+        "cmp_subs_32s_addsub_imm"_h,
+        "cmp_subs_64s_addsub_imm"_h}},
       {"'Rt, #'u3131:2319, 'TImmTest",
        {"tbnz_only_testbranch"_h, "tbz_only_testbranch"_h}},
       {"'Rt, 'TImmCmpa",
@@ -942,6 +1286,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"ldr_s_ldst_regoff"_h, "str_s_ldst_regoff"_h}},
       {"'St, ['Xns], #'s2012",
        {"ldr_s_ldst_immpost"_h, "str_s_ldst_immpost"_h}},
+      {"'TImmCond",
+       {"b.'CBrn_b_only_condbranch"_h, "bc.'CBrn_bc_only_condbranch"_h}},
       {"'TImmUncn", {"b_only_branch_imm"_h, "bl_only_branch_imm"_h}},
       {"'Vd.'(2222=1?2d:'?30:42s), 'Vn.'(2222=1?2d:'?30:42s)",
        {"fabs_asimdmisc_r"_h,     "fcvtas_asimdmisc_r"_h,
@@ -1196,6 +1542,17 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "uqdecp_r_p_r_x"_h,
         "uqincp_r_p_r_x"_h}},
       {"'Xd, 'Pn.'t, 'Wd", {"sqdecp_r_p_r_sx"_h, "sqincp_r_p_r_sx"_h}},
+      {"'Xd, 'Wn, 'Wm",
+       {"smull_smaddl_64wa_dp_3src"_h,
+        "smnegl_smsubl_64wa_dp_3src"_h,
+        "umull_umaddl_64wa_dp_3src"_h,
+        "umnegl_umsubl_64wa_dp_3src"_h}},
+      {"'Xd, 'Wn, 'Wm, 'Xa",
+       {"smaddl_64wa_dp_3src"_h,
+        "smsubl_64wa_dp_3src"_h,
+        "umaddl_64wa_dp_3src"_h,
+        "umsubl_64wa_dp_3src"_h}},
+      {"'Xd, 'Xn, 'Xm", {"smulh_64_dp_3src"_h, "umulh_64_dp_3src"_h}},
       {"'Xd, 'Xn, 'Xms", {"pacga_64p_dp_2src"_h}},
       {"'Xd, 'Xns",
        {"autda_64p_dp_1src"_h,
@@ -2271,175 +2628,6 @@ Disassembler::~Disassembler() {
 
 char *Disassembler::GetOutput() { return buffer_; }
 
-void Disassembler::VisitAddSubImmediate(const Instruction *instr) {
-  bool rd_is_zr = RdIsZROrSP(instr);
-  bool stack_op =
-      (rd_is_zr || RnIsZROrSP(instr)) && (instr->GetImmAddSub() == 0) ? true
-                                                                      : false;
-  const char *mnemonic = mnemonic_.c_str();
-  const char *form = "'Rds, 'Rns, 'IAddSub";
-  const char *form_cmp = "'Rns, 'IAddSub";
-  const char *form_mov = "'Rds, 'Rns";
-
-  switch (form_hash_) {
-    case "add_32_addsub_imm"_h:
-    case "add_64_addsub_imm"_h:
-      if (stack_op) {
-        mnemonic = "mov";
-        form = form_mov;
-      }
-      break;
-    case "adds_32s_addsub_imm"_h:
-    case "adds_64s_addsub_imm"_h:
-      if (rd_is_zr) {
-        mnemonic = "cmn";
-        form = form_cmp;
-      }
-      break;
-    case "subs_32s_addsub_imm"_h:
-    case "subs_64s_addsub_imm"_h:
-      if (rd_is_zr) {
-        mnemonic = "cmp";
-        form = form_cmp;
-      }
-      break;
-  }
-  Format(instr, mnemonic, form);
-}
-
-void Disassembler::VisitAddSubShifted(const Instruction *instr) {
-  bool rd_is_zr = RdIsZROrSP(instr);
-  bool rn_is_zr = RnIsZROrSP(instr);
-  const char *mnemonic = mnemonic_.c_str();
-  const char *form = "'Rd, 'Rn, 'Rm'NDP";
-  const char *form_cmp = "'Rn, 'Rm'NDP";
-  const char *form_neg = "'Rd, 'Rm'NDP";
-
-  if (instr->GetShiftDP() == ROR) {
-    // Add/sub/adds/subs don't allow ROR as a shift mode.
-    VisitUnallocated(instr);
-    return;
-  }
-
-  switch (form_hash_) {
-    case "adds_32_addsub_shift"_h:
-    case "adds_64_addsub_shift"_h:
-      if (rd_is_zr) {
-        mnemonic = "cmn";
-        form = form_cmp;
-      }
-      break;
-    case "sub_32_addsub_shift"_h:
-    case "sub_64_addsub_shift"_h:
-      if (rn_is_zr) {
-        mnemonic = "neg";
-        form = form_neg;
-      }
-      break;
-    case "subs_32_addsub_shift"_h:
-    case "subs_64_addsub_shift"_h:
-      if (rd_is_zr) {
-        mnemonic = "cmp";
-        form = form_cmp;
-      } else if (rn_is_zr) {
-        mnemonic = "negs";
-        form = form_neg;
-      }
-  }
-  Format(instr, mnemonic, form);
-}
-
-void Disassembler::VisitAddSubExtended(const Instruction *instr) {
-  if (instr->GetImmExtendShift() > 4) {
-    VisitUnallocated(instr);
-    return;
-  }
-  bool rd_is_zr = RdIsZROrSP(instr);
-  const char *mnemonic = mnemonic_.c_str();
-  const char *form = "'Rds, 'Rns, '(1413=3?x:w)'(2016=31?zr:'u2016)'Ext";
-  const char *form_cmp = "'Rns, '(1413=3?x:w)'(2016=31?zr:'u2016)'Ext";
-
-  switch (form_hash_) {
-    case "adds_32s_addsub_ext"_h:
-    case "adds_64s_addsub_ext"_h:
-      if (rd_is_zr) {
-        mnemonic = "cmn";
-        form = form_cmp;
-      }
-      break;
-    case "subs_32s_addsub_ext"_h:
-    case "subs_64s_addsub_ext"_h:
-      if (rd_is_zr) {
-        mnemonic = "cmp";
-        form = form_cmp;
-      }
-      break;
-  }
-  Format(instr, mnemonic, form);
-}
-
-void Disassembler::VisitAddSubWithCarry(const Instruction *instr) {
-  bool rn_is_zr = RnIsZROrSP(instr);
-  const char *mnemonic = mnemonic_.c_str();
-  const char *form = "'Rd, 'Rn, 'Rm";
-  const char *form_neg = "'Rd, 'Rm";
-
-  switch (form_hash_) {
-    case "sbc_32_addsub_carry"_h:
-    case "sbc_64_addsub_carry"_h: {
-      if (rn_is_zr) {
-        mnemonic = "ngc";
-        form = form_neg;
-      }
-      break;
-    }
-    case "sbcs_32_addsub_carry"_h:
-    case "sbcs_64_addsub_carry"_h: {
-      if (rn_is_zr) {
-        mnemonic = "ngcs";
-        form = form_neg;
-      }
-      break;
-    }
-  }
-  Format(instr, mnemonic, form);
-}
-
-void Disassembler::VisitLogicalImmediate(const Instruction *instr) {
-  bool rd_is_zr = RdIsZROrSP(instr);
-  bool rn_is_zr = RnIsZROrSP(instr);
-  const char *mnemonic = mnemonic_.c_str();
-  const char *form = "'Rds, 'Rn, 'ITri";
-
-  if (instr->GetImmLogical() == 0) {
-    // The immediate encoded in the instruction is not in the expected format.
-    Format(instr, "unallocated", "(LogicalImmediate)");
-    return;
-  }
-
-  unsigned reg_size = kXRegSize;
-  switch (form_hash_) {
-    case "orr_32_log_imm"_h:
-      reg_size = kWRegSize;
-      VIXL_FALLTHROUGH();
-    case "orr_64_log_imm"_h:
-      if (rn_is_zr && !IsMovzMovnImm(reg_size, instr->GetImmLogical())) {
-        mnemonic = "mov";
-        form = "'Rds, 'ITri";
-      }
-      break;
-    case "ands_32s_log_imm"_h:
-    case "ands_64s_log_imm"_h: {
-      if (rd_is_zr) {
-        mnemonic = "tst";
-        form = "'Rn, 'ITri";
-      }
-      break;
-    }
-  }
-  Format(instr, mnemonic, form);
-}
-
 bool Disassembler::IsMovzMovnImm(unsigned reg_size, uint64_t value) {
   VIXL_ASSERT((reg_size == kXRegSize) ||
               ((reg_size == kWRegSize) && (value <= 0xffffffff)));
@@ -2465,87 +2653,6 @@ bool Disassembler::IsMovzMovnImm(unsigned reg_size, uint64_t value) {
     return true;
   }
   return false;
-}
-
-void Disassembler::VisitLogicalShifted(const Instruction *instr) {
-  bool rd_is_zr = RdIsZROrSP(instr);
-  bool rn_is_zr = RnIsZROrSP(instr);
-  const char *mnemonic = mnemonic_.c_str();
-  const char *form = "'Rd, 'Rn, 'Rm'NLo";
-
-  switch (form_hash_) {
-    case "ands_32_log_shift"_h:
-    case "ands_64_log_shift"_h:
-      if (rd_is_zr) {
-        mnemonic = "tst";
-        form = "'Rn, 'Rm'NLo";
-      }
-      break;
-    case "orr_32_log_shift"_h:
-    case "orr_64_log_shift"_h:
-      if (rn_is_zr && (instr->GetImmDPShift() == 0) &&
-          (instr->GetShiftDP() == LSL)) {
-        mnemonic = "mov";
-        form = "'Rd, 'Rm";
-      }
-      break;
-    case "orn_32_log_shift"_h:
-    case "orn_64_log_shift"_h:
-      if (rn_is_zr) {
-        mnemonic = "mvn";
-        form = "'Rd, 'Rm'NLo";
-      }
-      break;
-  }
-
-  Format(instr, mnemonic, form);
-}
-
-void Disassembler::VisitConditionalSelect(const Instruction *instr) {
-  bool rnm_is_zr = (RnIsZROrSP(instr) && RmIsZROrSP(instr));
-  bool rn_is_rm = (instr->GetRn() == instr->GetRm());
-  const char *mnemonic = mnemonic_.c_str();
-  const char *form = "'Rd, 'Rn, 'Rm, 'Cond";
-  const char *form_test = "'Rd, 'CInv";
-  const char *form_update = "'Rd, 'Rn, 'CInv";
-
-  Condition cond = static_cast<Condition>(instr->GetCondition());
-  if ((cond == al) || (cond == nv)) {
-    // Condition can't be inverted: always use the "cs" form of instruction.
-    FormatWithDecodedMnemonic(instr, form);
-    return;
-  }
-
-  switch (form_hash_) {
-    case "csinc_32_condsel"_h:
-    case "csinc_64_condsel"_h:
-      if (rnm_is_zr) {
-        mnemonic = "cset";
-        form = form_test;
-      } else if (rn_is_rm) {
-        mnemonic = "cinc";
-        form = form_update;
-      }
-      break;
-    case "csinv_32_condsel"_h:
-    case "csinv_64_condsel"_h:
-      if (rnm_is_zr) {
-        mnemonic = "csetm";
-        form = form_test;
-      } else if (rn_is_rm) {
-        mnemonic = "cinv";
-        form = form_update;
-      }
-      break;
-    case "csneg_32_condsel"_h:
-    case "csneg_64_condsel"_h:
-      if (rn_is_rm) {
-        mnemonic = "cneg";
-        form = form_update;
-      }
-      break;
-  }
-  Format(instr, mnemonic, form);
 }
 
 void Disassembler::VisitBitfield(const Instruction *instr) {
@@ -2633,110 +2740,6 @@ void Disassembler::VisitBitfield(const Instruction *instr) {
         }
       }
   }
-  Format(instr, mnemonic, form);
-}
-
-void Disassembler::VisitExtract(const Instruction *instr) {
-  const char *mnemonic = mnemonic_.c_str();
-  const char *form = "'Rd, 'Rn, 'Rm, #'u1510";
-  if (instr->GetRn() == instr->GetRm()) {
-    mnemonic = "ror";
-    form = "'Rd, 'Rn, #'u1510";
-  }
-  Format(instr, mnemonic, form);
-}
-
-void Disassembler::VisitConditionalBranch(const Instruction *instr) {
-  // We can't use the mnemonic directly here, as there's no space between it and
-  // the condition. Assert that we have the correct mnemonic, then use "b"
-  // explicitly for formatting the output.
-  if (form_hash_ == "bc_only_condbranch"_h) {
-    Format(instr, "bc.'CBrn", "'TImmCond");
-  } else {
-    VIXL_ASSERT(form_hash_ == "b_only_condbranch"_h);
-    Format(instr, "b.'CBrn", "'TImmCond");
-  }
-}
-
-void Disassembler::VisitDataProcessing2Source(const Instruction *instr) {
-  std::string mnemonic = mnemonic_;
-  const char *form = "'Rd, 'Rn, 'Rm";
-
-  switch (form_hash_) {
-    case "asrv_32_dp_2src"_h:
-    case "asrv_64_dp_2src"_h:
-    case "lslv_32_dp_2src"_h:
-    case "lslv_64_dp_2src"_h:
-    case "lsrv_32_dp_2src"_h:
-    case "lsrv_64_dp_2src"_h:
-    case "rorv_32_dp_2src"_h:
-    case "rorv_64_dp_2src"_h:
-      // Drop the last 'v' character.
-      VIXL_ASSERT(mnemonic[3] == 'v');
-      mnemonic.pop_back();
-      break;
-    default:
-      VIXL_UNREACHABLE();
-  }
-  Format(instr, mnemonic.c_str(), form);
-}
-
-void Disassembler::VisitDataProcessing3Source(const Instruction *instr) {
-  bool ra_is_zr = RaIsZROrSP(instr);
-  const char *mnemonic = mnemonic_.c_str();
-  const char *form = "'Xd, 'Wn, 'Wm, 'Xa";
-  const char *form_rrr = "'Rd, 'Rn, 'Rm";
-  const char *form_rrrr = "'Rd, 'Rn, 'Rm, 'Ra";
-  const char *form_xww = "'Xd, 'Wn, 'Wm";
-  const char *form_xxx = "'Xd, 'Xn, 'Xm";
-
-  switch (form_hash_) {
-    case "madd_32a_dp_3src"_h:
-    case "madd_64a_dp_3src"_h:
-      form = form_rrrr;
-      if (ra_is_zr) {
-        mnemonic = "mul";
-        form = form_rrr;
-      }
-      break;
-    case "msub_32a_dp_3src"_h:
-    case "msub_64a_dp_3src"_h:
-      form = form_rrrr;
-      if (ra_is_zr) {
-        mnemonic = "mneg";
-        form = form_rrr;
-      }
-      break;
-    case "smaddl_64wa_dp_3src"_h:
-      if (ra_is_zr) {
-        mnemonic = "smull";
-        form = form_xww;
-      }
-      break;
-    case "smsubl_64wa_dp_3src"_h:
-      if (ra_is_zr) {
-        mnemonic = "smnegl";
-        form = form_xww;
-      }
-      break;
-    case "umaddl_64wa_dp_3src"_h:
-      if (ra_is_zr) {
-        mnemonic = "umull";
-        form = form_xww;
-      }
-      break;
-    case "umsubl_64wa_dp_3src"_h:
-      if (ra_is_zr) {
-        mnemonic = "umnegl";
-        form = form_xww;
-      }
-      break;
-    case "smulh_64_dp_3src"_h:
-    case "umulh_64_dp_3src"_h:
-      form = form_xxx;
-      break;
-  }
-
   Format(instr, mnemonic, form);
 }
 
@@ -4361,9 +4364,10 @@ void Disassembler::VisitUnallocated(const Instruction *instr) {
 
 void Disassembler::Visit(Metadata *metadata, const Instruction *instr) {
   VIXL_ASSERT(metadata->count("form") > 0);
-  const std::string &form = (*metadata)["form"];
+  std::string form = (*metadata)["form"];
   form_hash_ = Hash(form.c_str());
 
+  // Check for unallocated encodings.
   auto range = form_to_unalloc_.equal_range(form_hash_);
   for (auto itu = range.first; itu != range.second; ++itu) {
     uint32_t mask = itu->second >> 32;
@@ -4374,6 +4378,14 @@ void Disassembler::Visit(Metadata *metadata, const Instruction *instr) {
     }
   }
 
+  // Find the alias of the decoded instruction, if any.
+  std::string alias = GetMnemonicAlias(instr);
+  if (alias.length() > 0) {
+    form = alias + "_" + form;
+    form_hash_ = Hash(form.c_str());
+  }
+
+  // Get the disassembly string for this form or alias.
   FormToStringMap::const_iterator its = form_to_string_.find(form_hash_);
   if (its != form_to_string_.end()) {
     SetMnemonicFromForm(form);
@@ -4381,6 +4393,13 @@ void Disassembler::Visit(Metadata *metadata, const Instruction *instr) {
     return;
   }
 
+  if (alias.length() > 0) {
+    printf("Unhandled %s\n", form.c_str());
+  }
+  // All aliases should be handled by this point.
+  VIXL_ASSERT(alias.length() == 0);
+
+  // Call a legacy visitor-based handler.
   const FormToVisitorFnMap *fv = Disassembler::GetFormToVisitorFnMap();
   FormToVisitorFnMap::const_iterator it = fv->find(form_hash_);
   if (it == fv->end()) {

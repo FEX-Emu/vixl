@@ -805,6 +805,25 @@ TEST(logical_immediate) {
   COMPARE(orr(x9, xzr, Operand(0xffffffffc001ffff)),
           "orr x9, xzr, #0xffffffffc001ffff");
 
+  // Test unallocated.
+  COMPARE_PREFIX(dci(0x7200f400), "unallocated");  // ands imm, imms == 0x3d
+  COMPARE_PREFIX(dci(0x7200f800), "unallocated");  // ands imm, imms == 0x3e
+  COMPARE_PREFIX(dci(0x7200fc00), "unallocated");  // ands imm, imms == 0x3f
+  COMPARE_PREFIX(dci(0x1200f400), "unallocated");  // and imm, imms == 0x3d
+  COMPARE_PREFIX(dci(0x1200f800), "unallocated");  // and imm, imms == 0x3e
+  COMPARE_PREFIX(dci(0x1200fc00), "unallocated");  // and imm, imms == 0x3f
+  COMPARE_PREFIX(dci(0x5200f400), "unallocated");  // eor imm, imms == 0x3d
+  COMPARE_PREFIX(dci(0x5200f800), "unallocated");  // eor imm, imms == 0x3e
+  COMPARE_PREFIX(dci(0x5200fc00), "unallocated");  // eor imm, imms == 0x3f
+  COMPARE_PREFIX(dci(0x3200f400), "unallocated");  // orr imm, imms == 0x3d
+  COMPARE_PREFIX(dci(0x3200f800), "unallocated");  // orr imm, imms == 0x3e
+  COMPARE_PREFIX(dci(0x3200fc00), "unallocated");  // orr imm, imms == 0x3f
+
+  COMPARE_PREFIX(dci(0x12007c00), "unallocated");  // and 32-bit imm, all set
+  COMPARE_PREFIX(dci(0x1200bc00), "unallocated");  // and 16-bit imm, all set
+  COMPARE_PREFIX(dci(0x1200dc00), "unallocated");  // and 8-bit imm, all set
+  COMPARE_PREFIX(dci(0x1200ec00), "unallocated");  // and 4-bit imm, all set
+
   CLEANUP();
 }
 

@@ -419,38 +419,6 @@
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"uqincw_z_zs"_h,                                                        \
        &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"adds_32s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
-      {"adds_64s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
-      {"add_32_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},             \
-      {"add_64_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},             \
-      {"subs_32s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
-      {"subs_64s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
-      {"sub_32_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},             \
-      {"sub_64_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},             \
-      {"adds_32s_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},          \
-      {"adds_64s_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},          \
-      {"add_32_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},            \
-      {"add_64_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},            \
-      {"subs_32s_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},          \
-      {"subs_64s_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},          \
-      {"sub_32_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},            \
-      {"sub_64_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},            \
-      {"adds_32_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},           \
-      {"adds_64_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},           \
-      {"add_32_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},            \
-      {"add_64_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},            \
-      {"subs_32_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},           \
-      {"subs_64_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},           \
-      {"sub_32_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},            \
-      {"sub_64_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},            \
-      {"adcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
-      {"adcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
-      {"adc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \
-      {"adc_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \
-      {"sbcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
-      {"sbcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
-      {"sbc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \
-      {"sbc_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \
       {"ldaddab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
       {"ldaddah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
       {"ldaddalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
@@ -605,49 +573,6 @@
       {"sbfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
       {"ubfm_32m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
       {"ubfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
-      {"b_only_condbranch"_h, &VISITORCLASS::VisitConditionalBranch},          \
-      {"bc_only_condbranch"_h, &VISITORCLASS::VisitConditionalBranch},         \
-      {"csel_32_condsel"_h, &VISITORCLASS::VisitConditionalSelect},            \
-      {"csel_64_condsel"_h, &VISITORCLASS::VisitConditionalSelect},            \
-      {"csinc_32_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
-      {"csinc_64_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
-      {"csinv_32_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
-      {"csinv_64_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
-      {"csneg_32_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
-      {"csneg_64_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
-      {"asrv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"asrv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"crc32b_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},     \
-      {"crc32cb_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},    \
-      {"crc32ch_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},    \
-      {"crc32cw_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},    \
-      {"crc32cx_64c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},    \
-      {"crc32h_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},     \
-      {"crc32w_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},     \
-      {"crc32x_64c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},     \
-      {"lslv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"lslv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"lsrv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"lsrv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"pacga_64p_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},      \
-      {"rorv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"rorv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"sdiv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"sdiv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"udiv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"udiv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
-      {"madd_32a_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
-      {"madd_64a_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
-      {"msub_32a_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
-      {"msub_64a_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
-      {"smaddl_64wa_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},    \
-      {"smsubl_64wa_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},    \
-      {"smulh_64_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
-      {"umaddl_64wa_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},    \
-      {"umsubl_64wa_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},    \
-      {"umulh_64_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
-      {"extr_32_extract"_h, &VISITORCLASS::VisitExtract},                      \
-      {"extr_64_extract"_h, &VISITORCLASS::VisitExtract},                      \
       {"casab_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"casah_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"casalb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
@@ -712,30 +637,6 @@
       {"stxrh_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
       {"stxr_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"stxr_sr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"ands_32s_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},            \
-      {"ands_64s_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},            \
-      {"and_32_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
-      {"and_64_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
-      {"eor_32_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
-      {"eor_64_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
-      {"orr_32_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
-      {"orr_64_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
-      {"ands_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},             \
-      {"ands_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},             \
-      {"and_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"and_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"bics_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},             \
-      {"bics_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},             \
-      {"bic_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"bic_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"eon_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"eon_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"eor_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"eor_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"orn_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"orn_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"orr_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
-      {"orr_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
       {"movk_32_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
       {"movk_64_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
       {"movn_32_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
@@ -2860,6 +2761,105 @@
        &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
       {"fmul_asisdelem_rh_h"_h,                                                \
        &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
-  {                                                                            \
-    "fmul_asisdelem_r_sd"_h, &VISITORCLASS::VisitNEONScalarByIndexedElement    \
+      {"fmul_asisdelem_r_sd"_h,                                                \
+       &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
+      {"csel_32_condsel"_h, &VISITORCLASS::VisitConditionalSelect},            \
+      {"csel_64_condsel"_h, &VISITORCLASS::VisitConditionalSelect},            \
+      {"csinc_32_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
+      {"csinc_64_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
+      {"csinv_32_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
+      {"csinv_64_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
+      {"csneg_32_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
+      {"csneg_64_condsel"_h, &VISITORCLASS::VisitConditionalSelect},           \
+      {"ands_32s_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},            \
+      {"ands_64s_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},            \
+      {"and_32_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
+      {"and_64_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
+      {"eor_32_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
+      {"eor_64_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
+      {"orr_32_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
+      {"orr_64_log_imm"_h, &VISITORCLASS::VisitLogicalImmediate},              \
+      {"adds_32_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},           \
+      {"adds_64_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},           \
+      {"add_32_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},            \
+      {"add_64_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},            \
+      {"subs_32_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},           \
+      {"subs_64_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},           \
+      {"sub_32_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},            \
+      {"sub_64_addsub_shift"_h, &VISITORCLASS::VisitAddSubShifted},            \
+      {"adds_32s_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},          \
+      {"adds_64s_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},          \
+      {"add_32_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},            \
+      {"add_64_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},            \
+      {"subs_32s_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},          \
+      {"subs_64s_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},          \
+      {"sub_32_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},            \
+      {"sub_64_addsub_imm"_h, &VISITORCLASS::VisitAddSubImmediate},            \
+      {"adds_32s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
+      {"adds_64s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
+      {"add_32_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},             \
+      {"add_64_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},             \
+      {"subs_32s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
+      {"subs_64s_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},           \
+      {"sub_32_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},             \
+      {"sub_64_addsub_ext"_h, &VISITORCLASS::VisitAddSubExtended},             \
+      {"ands_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},             \
+      {"ands_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},             \
+      {"and_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"and_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"bics_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},             \
+      {"bics_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},             \
+      {"bic_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"bic_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"eon_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"eon_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"eor_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"eor_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"orn_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"orn_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"orr_32_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"orr_64_log_shift"_h, &VISITORCLASS::VisitLogicalShifted},              \
+      {"extr_32_extract"_h, &VISITORCLASS::VisitExtract},                      \
+      {"extr_64_extract"_h, &VISITORCLASS::VisitExtract},                      \
+      {"asrv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"asrv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"crc32b_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},     \
+      {"crc32cb_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},    \
+      {"crc32ch_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},    \
+      {"crc32cw_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},    \
+      {"crc32cx_64c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},    \
+      {"crc32h_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},     \
+      {"crc32w_32c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},     \
+      {"crc32x_64c_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},     \
+      {"lslv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"lslv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"lsrv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"lsrv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"pacga_64p_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},      \
+      {"rorv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"rorv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"sdiv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"sdiv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"udiv_32_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"udiv_64_dp_2src"_h, &VISITORCLASS::VisitDataProcessing2Source},        \
+      {"madd_32a_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
+      {"madd_64a_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
+      {"msub_32a_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
+      {"msub_64a_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
+      {"smaddl_64wa_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},    \
+      {"smsubl_64wa_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},    \
+      {"smulh_64_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
+      {"umaddl_64wa_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},    \
+      {"umsubl_64wa_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},    \
+      {"umulh_64_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
+      {"b_only_condbranch"_h, &VISITORCLASS::VisitConditionalBranch},          \
+      {"bc_only_condbranch"_h, &VISITORCLASS::VisitConditionalBranch},         \
+      {"adcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
+      {"adcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
+      {"adc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \
+      {"adc_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \
+      {"sbcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
+      {"sbcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
+      {"sbc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry}, {        \
+    "sbc_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry               \
   }

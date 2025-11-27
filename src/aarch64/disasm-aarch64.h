@@ -118,6 +118,8 @@ class Disassembler : public DecoderVisitor {
   VISITOR_LIST(DECLARE)
 #undef DECLARE
 
+  std::string GetMnemonicAlias(const Instruction* instr);
+
   using FormToVisitorFnMap = std::unordered_map<
       uint32_t,
       std::function<void(Disassembler*, const Instruction*)>>;
@@ -204,15 +206,16 @@ class Disassembler : public DecoderVisitor {
                                                   char reg_prefix,
                                                   const char* field);
 
-  bool RdIsZROrSP(const Instruction* instr) const {
+ public:
+  static bool RdIsZROrSP(const Instruction* instr) {
     return (instr->GetRd() == kZeroRegCode);
   }
 
-  bool RnIsZROrSP(const Instruction* instr) const {
+  static bool RnIsZROrSP(const Instruction* instr) {
     return (instr->GetRn() == kZeroRegCode);
   }
 
-  bool RmIsZROrSP(const Instruction* instr) const {
+  static bool RmIsZROrSP(const Instruction* instr) {
     return (instr->GetRm() == kZeroRegCode);
   }
 
@@ -222,6 +225,7 @@ class Disassembler : public DecoderVisitor {
 
   bool IsMovzMovnImm(unsigned reg_size, uint64_t value);
 
+ private:
   int64_t code_address_offset() const { return code_address_offset_; }
 
  protected:
