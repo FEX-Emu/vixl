@@ -567,12 +567,6 @@
       {"swpl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
       {"swp_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                    \
       {"swp_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                    \
-      {"bfm_32m_bitfield"_h, &VISITORCLASS::VisitBitfield},                    \
-      {"bfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                    \
-      {"sbfm_32m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
-      {"sbfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
-      {"ubfm_32m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
-      {"ubfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
       {"casab_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"casah_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"casalb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
@@ -2854,6 +2848,12 @@
       {"umulh_64_dp_3src"_h, &VISITORCLASS::VisitDataProcessing3Source},       \
       {"b_only_condbranch"_h, &VISITORCLASS::VisitConditionalBranch},          \
       {"bc_only_condbranch"_h, &VISITORCLASS::VisitConditionalBranch},         \
+      {"bfm_32m_bitfield"_h, &VISITORCLASS::VisitBitfield},                    \
+      {"bfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                    \
+      {"sbfm_32m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
+      {"sbfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
+      {"ubfm_32m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
+      {"ubfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
       {"adcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \

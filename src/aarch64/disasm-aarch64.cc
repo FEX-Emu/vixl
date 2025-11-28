@@ -53,6 +53,11 @@ std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
   const uint64_t kRaIsZROrSP = 0x00007c00'00007c00;
   const uint64_t kAddSubImmZero = 0x003ffc00'00000000;
   const uint64_t kLogImmIsZeroLSL = 0x00c0fc00'00000000;
+  const uint64_t kBFMr0s7 = 0x003ffc00'00001c00;
+  const uint64_t kBFMr0s15 = 0x003ffc00'00003c00;
+  const uint64_t kBFMr0s31 = 0x003ffc00'00007c00;
+  const uint64_t kBFMs31 = 0x0000fc00'00007c00;
+  const uint64_t kBFMs63 = 0x0000fc00'0000fc00;
 
   static const MaskAliasMap maskmap =
       {{"adds_32s_addsub_imm"_h, {{kRdIsZROrSP, "cmn"}}},
@@ -106,7 +111,18 @@ std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
        {"rorv_32_dp_2src"_h, {{kAllCases, "ror"}}},
        {"rorv_64_dp_2src"_h, {{kAllCases, "ror"}}},
        {"b_only_condbranch"_h, {{kAllCases, "b.'CBrn"}}},
-       {"bc_only_condbranch"_h, {{kAllCases, "bc.'CBrn"}}}};
+       {"bc_only_condbranch"_h, {{kAllCases, "bc.'CBrn"}}},
+       {"sbfm_32m_bitfield"_h,
+        {{kBFMr0s7, "sxtb"}, {kBFMr0s15, "sxth"}, {kBFMs31, "asr"}}},
+       {"sbfm_64m_bitfield"_h,
+        {{kBFMr0s7, "sxtb"},
+         {kBFMr0s15, "sxth"},
+         {kBFMr0s31, "sxtw"},
+         {kBFMs63, "asr"}}},
+       {"ubfm_32m_bitfield"_h,
+        {{kBFMr0s7, "uxtb"}, {kBFMr0s15, "uxth"}, {kBFMs31, "lsr"}}},
+       {"ubfm_64m_bitfield"_h,
+        {{kBFMr0s7, "uxtb"}, {kBFMr0s15, "uxth"}, {kBFMs63, "lsr"}}}};
 
   // "Complex" alias detection. For each form, one or more function groups are
   // applied to the encoding. If ALL of the functions in a group return true
@@ -132,34 +148,64 @@ std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
     return !IsMovzMovnImm(kXRegSize, i->GetImmLogical());
   };
 
-  using FuncAliasMap = std::unordered_map<uint32_t, std::vector<FuncAlias>>;
-  static const FuncAliasMap funcmap = {
-      {"csinc_32_condsel"_h,
-       {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "cset"},
-        {{RnRmAliased, CondNotAlNv}, "cinc"}}},
-      {"csinc_64_condsel"_h,
-       {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "cset"},
-        {{RnRmAliased, CondNotAlNv}, "cinc"}}},
-      {"csinv_32_condsel"_h,
-       {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "csetm"},
-        {{RnRmAliased, CondNotAlNv}, "cinv"}}},
-      {"csinv_64_condsel"_h,
-       {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "csetm"},
-        {{RnRmAliased, CondNotAlNv}, "cinv"}}},
-      {"csneg_32_condsel"_h, {{{RnRmAliased, CondNotAlNv}, "cneg"}}},
-      {"csneg_64_condsel"_h, {{{RnRmAliased, CondNotAlNv}, "cneg"}}},
-      {"extr_32_extract"_h, {{{RnRmAliased}, "ror"}}},
-      {"extr_64_extract"_h, {{{RnRmAliased}, "ror"}}},
-      {"orr_32_log_imm"_h, {{{RnIsZROrSP, IsNotMovzMovnImmW}, "mov"}}},
-      {"orr_64_log_imm"_h, {{{RnIsZROrSP, IsNotMovzMovnImmX}, "mov"}}},
+  auto BitfieldSLessThanR = [](const Instruction *i) {
+    return i->GetImmS() < i->GetImmR();
+  };
+  auto BitfieldRIsSPlus1 = [](const Instruction *i) {
+    return i->GetImmR() == (i->GetImmS() + 1);
   };
 
+  auto AllCases = [](const Instruction *i) {
+    USE(i);
+    return true;
+  };
 
+  using FuncAliasMap = std::unordered_map<uint32_t, std::vector<FuncAlias>>;
+  static const FuncAliasMap funcmap =
+      {{"csinc_32_condsel"_h,
+        {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "cset"},
+         {{RnRmAliased, CondNotAlNv}, "cinc"}}},
+       {"csinc_64_condsel"_h,
+        {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "cset"},
+         {{RnRmAliased, CondNotAlNv}, "cinc"}}},
+       {"csinv_32_condsel"_h,
+        {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "csetm"},
+         {{RnRmAliased, CondNotAlNv}, "cinv"}}},
+       {"csinv_64_condsel"_h,
+        {{{RnIsZROrSP, RmIsZROrSP, CondNotAlNv}, "csetm"},
+         {{RnRmAliased, CondNotAlNv}, "cinv"}}},
+       {"csneg_32_condsel"_h, {{{RnRmAliased, CondNotAlNv}, "cneg"}}},
+       {"csneg_64_condsel"_h, {{{RnRmAliased, CondNotAlNv}, "cneg"}}},
+       {"extr_32_extract"_h, {{{RnRmAliased}, "ror"}}},
+       {"extr_64_extract"_h, {{{RnRmAliased}, "ror"}}},
+       {"orr_32_log_imm"_h, {{{RnIsZROrSP, IsNotMovzMovnImmW}, "mov"}}},
+       {"orr_64_log_imm"_h, {{{RnIsZROrSP, IsNotMovzMovnImmX}, "mov"}}},
+       {"sbfm_32m_bitfield"_h,
+        {{{BitfieldSLessThanR}, "sbfiz"}, {{AllCases}, "sbfx"}}},
+       {"sbfm_64m_bitfield"_h,
+        {{{BitfieldSLessThanR}, "sbfiz"}, {{AllCases}, "sbfx"}}},
+       {"ubfm_32m_bitfield"_h,
+        {{{BitfieldRIsSPlus1}, "lsl"},
+         {{BitfieldSLessThanR}, "ubfiz"},
+         {{AllCases}, "ubfx"}}},
+       {"ubfm_64m_bitfield"_h,
+        {{{BitfieldRIsSPlus1}, "lsl"},
+         {{BitfieldSLessThanR}, "ubfiz"},
+         {{AllCases}, "ubfx"}}},
+       {"bfm_32m_bitfield"_h,
+        {{{BitfieldSLessThanR, RnIsZROrSP}, "bfc"},
+         {{BitfieldSLessThanR}, "bfi"},
+         {{AllCases}, "bfxil"}}},
+       {"bfm_64m_bitfield"_h,
+        {{{BitfieldSLessThanR, RnIsZROrSP}, "bfc"},
+         {{BitfieldSLessThanR}, "bfi"},
+         {{AllCases}, "bfxil"}}}};
+
+
+  // Check simple aliases.
   std::string alias;
   MaskAliasMap::const_iterator ita = maskmap.find(form_hash_);
   if (ita != maskmap.end()) {
-    // Simple alias detection implies there is no complex alias for this form.
-    VIXL_ASSERT(funcmap.count(form_hash_) == 0);
     for (auto rule : ita->second) {
       uint64_t mv = rule.mask_value;
       uint32_t mask = mv >> 32;
@@ -169,7 +215,10 @@ std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
         break;
       }
     }
-  } else {
+  }
+
+  // If there was no simple alias, check for a complex one.
+  if (alias.length() == 0) {
     FuncAliasMap::const_iterator ita2 = funcmap.find(form_hash_);
     if (ita2 != funcmap.end()) {
       for (auto rule : ita2->second) {
@@ -605,7 +654,28 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
         {"fmaxnmv_asimdall_only_sd"_h,
          "fminnmv_asimdall_only_sd"_h,
          "fmaxv_asimdall_only_sd"_h,
-         "fminv_asimdall_only_sd"_h}}};
+         "fminv_asimdall_only_sd"_h}},
+       {0x80400000'00400000,
+        {"sbfm_64m_bitfield"_h,
+         "sbfm_32m_bitfield"_h,
+         "ubfm_32m_bitfield"_h,
+         "ubfm_64m_bitfield"_h,
+         "bfm_32m_bitfield"_h,
+         "bfm_64m_bitfield"_h}},
+       {0x80200000'00200000,
+        {"sbfm_64m_bitfield"_h,
+         "sbfm_32m_bitfield"_h,
+         "ubfm_32m_bitfield"_h,
+         "ubfm_64m_bitfield"_h,
+         "bfm_32m_bitfield"_h,
+         "bfm_64m_bitfield"_h}},
+       {0x80008000'00008000,
+        {"sbfm_64m_bitfield"_h,
+         "sbfm_32m_bitfield"_h,
+         "ubfm_32m_bitfield"_h,
+         "ubfm_64m_bitfield"_h,
+         "bfm_32m_bitfield"_h,
+         "bfm_64m_bitfield"_h}}};
 
   for (auto &itm : forms) {
     const std::unordered_set<uint32_t> &s = forms.at(itm.first);
@@ -1085,6 +1155,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fcvtzu_64d_float2fix"_h,
         "fcvtzu_64h_float2fix"_h,
         "fcvtzu_64s_float2fix"_h}},
+      {"'Rd, 'IBZ-r, #'s1510+1",
+       {"bfc_bfm_32m_bitfield"_h, "bfc_bfm_64m_bitfield"_h}},
       {"'Rd, 'Rm",
        {"ngc_sbc_32_addsub_carry"_h,
         "ngc_sbc_64_addsub_carry"_h,
@@ -1134,6 +1206,27 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "cinv_csinv_64_condsel"_h,
         "cneg_csneg_32_condsel"_h,
         "cneg_csneg_64_condsel"_h}},
+      {"'Rd, 'Rn, #'u2116",
+       {"asr_sbfm_32m_bitfield"_h,
+        "asr_sbfm_64m_bitfield"_h,
+        "lsr_ubfm_32m_bitfield"_h,
+        "lsr_ubfm_64m_bitfield"_h}},
+      {"'Rd, 'Rn, #'u2116, 'IBs-r+1",
+       {"sbfx_sbfm_32m_bitfield"_h,
+        "sbfx_sbfm_64m_bitfield"_h,
+        "ubfx_ubfm_32m_bitfield"_h,
+        "ubfx_ubfm_64m_bitfield"_h,
+        "bfxil_bfm_32m_bitfield"_h,
+        "bfxil_bfm_64m_bitfield"_h}},
+      {"'Rd, 'Rn, 'IBZ-r",
+       {"lsl_ubfm_32m_bitfield"_h, "lsl_ubfm_64m_bitfield"_h}},
+      {"'Rd, 'Rn, 'IBZ-r, #'s1510+1",
+       {"sbfiz_sbfm_32m_bitfield"_h,
+        "sbfiz_sbfm_64m_bitfield"_h,
+        "ubfiz_ubfm_32m_bitfield"_h,
+        "ubfiz_ubfm_64m_bitfield"_h,
+        "bfi_bfm_32m_bitfield"_h,
+        "bfi_bfm_64m_bitfield"_h}},
       {"'Rd, 'Rn, 'Rm", {"crc32b_32c_dp_2src"_h,    "crc32cb_32c_dp_2src"_h,
                          "crc32ch_32c_dp_2src"_h,   "crc32cw_32c_dp_2src"_h,
                          "crc32h_32c_dp_2src"_h,    "crc32w_32c_dp_2src"_h,
@@ -1195,6 +1288,16 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "orr_32_log_shift"_h,
         "orr_64_log_shift"_h}},
       {"'Rd, 'Vn.D[1]", {"fmov_64vx_float2int"_h}},
+      {"'Rd, 'Wn",
+       {"sxtb_sbfm_32m_bitfield"_h,
+        "sxtb_sbfm_64m_bitfield"_h,
+        "sxth_sbfm_32m_bitfield"_h,
+        "sxth_sbfm_64m_bitfield"_h,
+        "sxtw_sbfm_64m_bitfield"_h,
+        "uxtb_ubfm_32m_bitfield"_h,
+        "uxtb_ubfm_64m_bitfield"_h,
+        "uxth_ubfm_32m_bitfield"_h,
+        "uxth_ubfm_64m_bitfield"_h}},
       {"'Rd, 'Xns, 'Rm", {"gmi_64g_dp_2src"_h}},
       {"'Rds, 'ITri", {"mov_orr_32_log_imm"_h, "mov_orr_64_log_imm"_h}},
       {"'Rds, 'Rn, 'ITri",
@@ -2653,94 +2756,6 @@ bool Disassembler::IsMovzMovnImm(unsigned reg_size, uint64_t value) {
     return true;
   }
   return false;
-}
-
-void Disassembler::VisitBitfield(const Instruction *instr) {
-  unsigned s = instr->GetImmS();
-  unsigned r = instr->GetImmR();
-  unsigned rd_size_minus_1 =
-      ((instr->GetSixtyFourBits() == 1) ? kXRegSize : kWRegSize) - 1;
-  const char *mnemonic = "";
-  const char *form = "";
-  const char *form_shift_right = "'Rd, 'Rn, 'IBr";
-  const char *form_extend = "'Rd, 'Wn";
-  const char *form_bfiz = "'Rd, 'Rn, 'IBZ-r, 'IBs+1";
-  const char *form_bfc = "'Rd, 'IBZ-r, 'IBs+1";
-  const char *form_bfx = "'Rd, 'Rn, 'IBr, 'IBs-r+1";
-  const char *form_lsl = "'Rd, 'Rn, 'IBZ-r";
-
-  // The decoder ensures this.
-  VIXL_ASSERT(instr->GetSixtyFourBits() == instr->GetBitN());
-
-  if ((instr->GetSixtyFourBits() == 0) && ((s > 31) || (r > 31))) {
-    VisitUnallocated(instr);
-    return;
-  }
-
-  switch (form_hash_) {
-    case "sbfm_64m_bitfield"_h:
-    case "sbfm_32m_bitfield"_h:
-      mnemonic = "sbfx";
-      form = form_bfx;
-      if (r == 0) {
-        form = form_extend;
-        if (s == 7) {
-          mnemonic = "sxtb";
-        } else if (s == 15) {
-          mnemonic = "sxth";
-        } else if ((s == 31) && (instr->GetSixtyFourBits() == 1)) {
-          mnemonic = "sxtw";
-        } else {
-          form = form_bfx;
-        }
-      } else if (s == rd_size_minus_1) {
-        mnemonic = "asr";
-        form = form_shift_right;
-      } else if (s < r) {
-        mnemonic = "sbfiz";
-        form = form_bfiz;
-      }
-      break;
-    case "ubfm_32m_bitfield"_h:
-    case "ubfm_64m_bitfield"_h:
-      mnemonic = "ubfx";
-      form = form_bfx;
-      if (r == 0) {
-        form = form_extend;
-        if (s == 7) {
-          mnemonic = "uxtb";
-        } else if (s == 15) {
-          mnemonic = "uxth";
-        } else {
-          form = form_bfx;
-        }
-      }
-      if (s == rd_size_minus_1) {
-        mnemonic = "lsr";
-        form = form_shift_right;
-      } else if (r == s + 1) {
-        mnemonic = "lsl";
-        form = form_lsl;
-      } else if (s < r) {
-        mnemonic = "ubfiz";
-        form = form_bfiz;
-      }
-      break;
-    case "bfm_32m_bitfield"_h:
-    case "bfm_64m_bitfield"_h:
-      mnemonic = "bfxil";
-      form = form_bfx;
-      if (s < r) {
-        if (instr->GetRn() == kZeroRegCode) {
-          mnemonic = "bfc";
-          form = form_bfc;
-        } else {
-          mnemonic = "bfi";
-          form = form_bfiz;
-        }
-      }
-  }
-  Format(instr, mnemonic, form);
 }
 
 void Disassembler::VisitMoveWideImmediate(const Instruction *instr) {
@@ -4940,11 +4955,6 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
         }
       }
     }
-    case 'C': {  // ICondB - Immediate Conditional Branch.
-      int64_t offset = instr->GetImmCondBranch() << 2;
-      AppendPCRelativeOffsetToOutput(instr, offset);
-      return 6;
-    }
     case 'A': {  // IAddSub.
       int64_t imm = instr->GetImmAddSub() << (12 * instr->GetImmAddSubShift());
       AppendToOutput("#0x%" PRIx64 " (%" PRId64 ")", imm, imm);
@@ -5227,21 +5237,11 @@ int Disassembler::SubstituteBitfieldImmediateField(const Instruction *instr,
   unsigned r = instr->GetImmR();
   unsigned s = instr->GetImmS();
 
-  switch (format[2]) {
-    case 'r': {  // IBr.
-      AppendToOutput("#%d", r);
-      return 3;
-    }
+  switch (format[2])
     case 's': {  // IBs+1 or IBs-r+1.
-      if (format[3] == '+') {
-        AppendToOutput("#%d", s + 1);
-        return 5;
-      } else {
-        VIXL_ASSERT(format[3] == '-');
-        AppendToOutput("#%d", s - r + 1);
-        return 7;
-      }
-    }
+      VIXL_ASSERT(format[3] == '-');
+      AppendToOutput("#%d", s - r + 1);
+      return 7;
     case 'Z': {  // IBZ-r.
       VIXL_ASSERT((format[3] == '-') && (format[4] == 'r'));
       unsigned reg_size =

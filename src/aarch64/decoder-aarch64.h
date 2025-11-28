@@ -38,7 +38,6 @@
 // List macro containing all visitors needed by the decoder class.
 #define VISITOR_LIST_THAT_RETURN(V)                              \
   V(AtomicMemory)                                                \
-  V(Bitfield)                                                    \
   V(LoadStoreExclusive)                                          \
   V(MoveWideImmediate)                                           \
   V(NEON2RegMisc)                                                \
@@ -265,6 +264,7 @@
   V(DataProcessing2Source)                                       \
   V(DataProcessing3Source)                                       \
   V(ConditionalBranch)                                           \
+  V(Bitfield)                                                    \
   V(AddSubWithCarry)
 
 #define VISITOR_LIST_THAT_DONT_RETURN(V) V(Reserved)
