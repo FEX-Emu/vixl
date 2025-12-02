@@ -34,29 +34,10 @@
 // shared.
 
 #define DEFAULT_FORM_TO_VISITOR_MAP(VISITORCLASS)                              \
-  {"ands_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},                \
-      {"and_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"asrd_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},  \
-      {"asr_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},   \
-      {"bics_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
-      {"bic_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"clasta_r_p_z"_h,                                                       \
-       &VISITORCLASS::VisitSVEConditionallyExtractElementToGeneralRegister},   \
-      {"clastb_r_p_z"_h,                                                       \
-       &VISITORCLASS::VisitSVEConditionallyExtractElementToGeneralRegister},   \
-      {"cntb_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
+  {"cntb_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                         \
       {"cntd_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
       {"cnth_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
       {"cntw_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
-      {"compact_z_p_z"_h, &VISITORCLASS::VisitSVECompressActiveElements},      \
-      {"cpy_z_o_i"_h, &VISITORCLASS::VisitSVECopyIntImm_Predicated},           \
-      {"cpy_z_p_i"_h, &VISITORCLASS::VisitSVECopyIntImm_Predicated},           \
-      {"cpy_z_p_r"_h,                                                          \
-       &VISITORCLASS::VisitSVECopyGeneralRegisterToVector_Predicated},         \
-      {"cpy_z_p_v"_h,                                                          \
-       &VISITORCLASS::VisitSVECopySIMDFPScalarRegisterToVector_Predicated},    \
-      {"ctermeq_rr"_h, &VISITORCLASS::VisitSVEConditionallyTerminateScalars},  \
-      {"ctermne_rr"_h, &VISITORCLASS::VisitSVEConditionallyTerminateScalars},  \
       {"decb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"decd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"decd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
@@ -65,19 +46,13 @@
       {"decw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"decw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
       {"dupm_z_i"_h, &VISITORCLASS::VisitSVEBroadcastBitmaskImm},              \
-      {"dup_z_i"_h, &VISITORCLASS::VisitSVEBroadcastIntImm_Unpredicated},      \
-      {"dup_z_r"_h, &VISITORCLASS::VisitSVEBroadcastGeneralRegister},          \
       {"dup_z_zi"_h, &VISITORCLASS::VisitSVEBroadcastIndexElement},            \
-      {"eors_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
-      {"eor_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"fcpy_z_p_i"_h, &VISITORCLASS::VisitSVECopyFPImm_Predicated},           \
       {"fcvt_z_p_z_d2h"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
       {"fcvt_z_p_z_d2s"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
       {"fcvt_z_p_z_h2d"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
       {"fcvt_z_p_z_h2s"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
       {"fcvt_z_p_z_s2d"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
       {"fcvt_z_p_z_s2h"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
-      {"fdup_z_i"_h, &VISITORCLASS::VisitSVEBroadcastFPImm_Unpredicated},      \
       {"incb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"incd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"incd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
@@ -85,10 +60,6 @@
       {"inch_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
       {"incw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"incw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
-      {"lasta_r_p_z"_h,                                                        \
-       &VISITORCLASS::VisitSVEExtractElementToGeneralRegister},                \
-      {"lastb_r_p_z"_h,                                                        \
-       &VISITORCLASS::VisitSVEExtractElementToGeneralRegister},                \
       {"ld1b_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
       {"ld1b_z_p_ai_s"_h,                                                      \
@@ -185,38 +156,6 @@
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
       {"ldff1w_z_p_br_u64"_h,                                                  \
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldnf1b_z_p_bi_u16"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1b_z_p_bi_u32"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1b_z_p_bi_u64"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1b_z_p_bi_u8"_h,                                                   \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1d_z_p_bi_u64"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1h_z_p_bi_u16"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1h_z_p_bi_u32"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1h_z_p_bi_u64"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1sb_z_p_bi_s16"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1sb_z_p_bi_s32"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1sb_z_p_bi_s64"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1sh_z_p_bi_s32"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1sh_z_p_bi_s64"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1sw_z_p_bi_s64"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1w_z_p_bi_u32"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
-      {"ldnf1w_z_p_bi_u64"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
       {"ldnt1b_z_p_bi_contiguous"_h,                                           \
        &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
       {"ldnt1d_z_p_bi_contiguous"_h,                                           \
@@ -227,78 +166,6 @@
        &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
       {"ldr_p_bi"_h, &VISITORCLASS::VisitSVELoadPredicateRegister},            \
       {"ldr_z_bi"_h, &VISITORCLASS::VisitSVELoadVectorRegister},               \
-      {"lsl_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},   \
-      {"lsr_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},   \
-      {"nands_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},           \
-      {"nand_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
-      {"nors_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
-      {"nor_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"orns_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
-      {"orn_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"orrs_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
-      {"orr_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
-      {"orr_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
-      {"prfb_i_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitGatherPrefetch_VectorPlusImm},              \
-      {"prfb_i_p_ai_s"_h,                                                      \
-       &VISITORCLASS::VisitSVE32BitGatherPrefetch_VectorPlusImm},              \
-      {"prfb_i_p_bi_s"_h,                                                      \
-       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusImm},               \
-      {"prfb_i_p_br_s"_h,                                                      \
-       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusScalar},            \
-      {"prfb_i_p_bz_d_64_scaled"_h,                                            \
-       &VISITORCLASS::                                                         \
-           VisitSVE64BitGatherPrefetch_ScalarPlus64BitScaledOffsets},          \
-      {"prfb_i_p_bz_d_x32_scaled"_h,                                           \
-       &VISITORCLASS::                                                         \
-           VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets},  \
-      {"prfd_i_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitGatherPrefetch_VectorPlusImm},              \
-      {"prfd_i_p_ai_s"_h,                                                      \
-       &VISITORCLASS::VisitSVE32BitGatherPrefetch_VectorPlusImm},              \
-      {"prfd_i_p_bi_s"_h,                                                      \
-       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusImm},               \
-      {"prfd_i_p_br_s"_h,                                                      \
-       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusScalar},            \
-      {"prfd_i_p_bz_d_64_scaled"_h,                                            \
-       &VISITORCLASS::                                                         \
-           VisitSVE64BitGatherPrefetch_ScalarPlus64BitScaledOffsets},          \
-      {"prfd_i_p_bz_d_x32_scaled"_h,                                           \
-       &VISITORCLASS::                                                         \
-           VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets},  \
-      {"prfh_i_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitGatherPrefetch_VectorPlusImm},              \
-      {"prfh_i_p_ai_s"_h,                                                      \
-       &VISITORCLASS::VisitSVE32BitGatherPrefetch_VectorPlusImm},              \
-      {"prfh_i_p_bi_s"_h,                                                      \
-       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusImm},               \
-      {"prfh_i_p_br_s"_h,                                                      \
-       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusScalar},            \
-      {"prfh_i_p_bz_d_64_scaled"_h,                                            \
-       &VISITORCLASS::                                                         \
-           VisitSVE64BitGatherPrefetch_ScalarPlus64BitScaledOffsets},          \
-      {"prfh_i_p_bz_d_x32_scaled"_h,                                           \
-       &VISITORCLASS::                                                         \
-           VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets},  \
-      {"prfw_i_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitGatherPrefetch_VectorPlusImm},              \
-      {"prfw_i_p_ai_s"_h,                                                      \
-       &VISITORCLASS::VisitSVE32BitGatherPrefetch_VectorPlusImm},              \
-      {"prfw_i_p_bi_s"_h,                                                      \
-       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusImm},               \
-      {"prfw_i_p_br_s"_h,                                                      \
-       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusScalar},            \
-      {"prfw_i_p_bz_d_64_scaled"_h,                                            \
-       &VISITORCLASS::                                                         \
-           VisitSVE64BitGatherPrefetch_ScalarPlus64BitScaledOffsets},          \
-      {"prfw_i_p_bz_d_x32_scaled"_h,                                           \
-       &VISITORCLASS::                                                         \
-           VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets},  \
-      {"sdivr_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},  \
-      {"sdiv_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},   \
-      {"sdot_z_zzz"_h, &VISITORCLASS::VisitSVEIntMulAddUnpredicated},          \
-      {"sel_p_p_pp"_h, &VISITORCLASS::VisitSVEPredicateLogical},               \
-      {"sel_z_p_zz"_h, &VISITORCLASS::VisitSVEVectorSelect},                   \
       {"sqdecb_r_rs_sx"_h,                                                     \
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"sqdecb_r_rs_x"_h,                                                      \
@@ -347,20 +214,16 @@
        &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
       {"st1b_z_p_ai_s"_h,                                                      \
        &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
-      {"st1b_z_p_bi"_h, &VISITORCLASS::VisitSVEContiguousStore_ScalarPlusImm}, \
       {"st1d_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
-      {"st1d_z_p_bi"_h, &VISITORCLASS::VisitSVEContiguousStore_ScalarPlusImm}, \
       {"st1h_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
       {"st1h_z_p_ai_s"_h,                                                      \
        &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
-      {"st1h_z_p_bi"_h, &VISITORCLASS::VisitSVEContiguousStore_ScalarPlusImm}, \
       {"st1w_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
       {"st1w_z_p_ai_s"_h,                                                      \
        &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
-      {"st1w_z_p_bi"_h, &VISITORCLASS::VisitSVEContiguousStore_ScalarPlusImm}, \
       {"stnt1b_z_p_bi_contiguous"_h,                                           \
        &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
       {"stnt1d_z_p_bi_contiguous"_h,                                           \
@@ -372,9 +235,6 @@
       {"str_p_bi"_h, &VISITORCLASS::VisitSVEStorePredicateRegister},           \
       {"str_z_bi"_h, &VISITORCLASS::VisitSVEStoreVectorRegister},              \
       {"udf_only_perm_undef"_h, &VISITORCLASS::VisitReserved},                 \
-      {"udivr_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},  \
-      {"udiv_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},   \
-      {"udot_z_zzz"_h, &VISITORCLASS::VisitSVEIntMulAddUnpredicated},          \
       {"uqdecb_r_rs_uw"_h,                                                     \
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"uqdecb_r_rs_x"_h,                                                      \
@@ -419,154 +279,6 @@
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"uqincw_z_zs"_h,                                                        \
        &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"ldaddab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldaddah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldaddalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldaddalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldaddal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldaddal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldadda_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldadda_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldaddb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldaddh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldaddlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldaddlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldaddl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldaddl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldadd_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"ldadd_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"ldaprb_32l_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldaprh_32l_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldapr_32l_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldapr_64l_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldclrab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldclrah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldclralb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldclralh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldclral_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldclral_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldclra_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldclra_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldclrb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldclrh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldclrlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldclrlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldclrl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldclrl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldclr_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"ldclr_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"ldeorab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldeorah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldeoralb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldeoralh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldeoral_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldeoral_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldeora_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldeora_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldeorb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldeorh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldeorlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldeorlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldeorl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldeorl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldeor_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"ldeor_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"ldsetab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsetah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsetalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsetalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsetal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsetal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldseta_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldseta_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldsetb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldseth_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldsetlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsetlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsetl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldsetl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldset_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"ldset_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"ldsmaxab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsmaxah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsmaxalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
-      {"ldsmaxalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
-      {"ldsmaxal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsmaxal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsmaxa_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsmaxa_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsmaxb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsmaxh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsmaxlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsmaxlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsmaxl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsmaxl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsmax_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldsmax_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldsminab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsminah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsminalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
-      {"ldsminalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
-      {"ldsminal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsminal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsmina_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsmina_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsminb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsminh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsminlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsminlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldsminl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsminl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldsmin_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldsmin_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldumaxab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldumaxah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldumaxalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
-      {"ldumaxalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
-      {"ldumaxal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldumaxal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldumaxa_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldumaxa_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldumaxb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldumaxh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldumaxlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldumaxlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldumaxl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldumaxl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldumax_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldumax_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"lduminab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"lduminah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"lduminalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
-      {"lduminalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
-      {"lduminal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"lduminal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"ldumina_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldumina_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"lduminb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"lduminh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"lduminlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"lduminlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
-      {"lduminl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"lduminl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
-      {"ldumin_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"ldumin_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"swpab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"swpah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"swpalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"swpalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
-      {"swpal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"swpal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"swpa_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
-      {"swpa_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
-      {"swpb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
-      {"swph_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
-      {"swplb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"swplh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
-      {"swpl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
-      {"swpl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
-      {"swp_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                    \
-      {"swp_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                    \
       {"casab_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"casah_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"casalb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
@@ -2644,6 +2356,7 @@
       {"and_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
       {"bic_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
       {"eor_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
+      {"orr_z_zz"_h, &VISITORCLASS::VisitSVEBitwiseLogicalUnpredicated},       \
       {"scvtf_z_p_z_h2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
       {"scvtf_z_p_z_w2d"_h, &VISITORCLASS::VisitSVEIntConvertToFP},            \
       {"scvtf_z_p_z_w2fp16"_h, &VISITORCLASS::VisitSVEIntConvertToFP},         \
@@ -2854,6 +2567,293 @@
       {"sbfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
       {"ubfm_32m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
       {"ubfm_64m_bitfield"_h, &VISITORCLASS::VisitBitfield},                   \
+      {"ldaddab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldaddah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldaddalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldaddalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldaddal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldaddal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldadda_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldadda_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldaddb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldaddh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldaddlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldaddlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldaddl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldaddl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldadd_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"ldadd_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"ldaprb_32l_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldaprh_32l_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldapr_32l_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldapr_64l_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldclrab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldclrah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldclralb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldclralh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldclral_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldclral_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldclra_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldclra_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldclrb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldclrh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldclrlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldclrlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldclrl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldclrl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldclr_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"ldclr_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"ldeorab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldeorah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldeoralb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldeoralh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldeoral_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldeoral_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldeora_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldeora_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldeorb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldeorh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldeorlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldeorlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldeorl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldeorl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldeor_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"ldeor_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"ldsetab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsetah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsetalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsetalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsetal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsetal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldseta_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldseta_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldsetb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldseth_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldsetlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsetlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsetl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldsetl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldset_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"ldset_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"ldsmaxab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsmaxah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsmaxalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
+      {"ldsmaxalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
+      {"ldsmaxal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsmaxal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsmaxa_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsmaxa_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsmaxb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsmaxh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsmaxlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsmaxlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsmaxl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsmaxl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsmax_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldsmax_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldsminab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsminah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsminalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
+      {"ldsminalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
+      {"ldsminal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsminal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsmina_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsmina_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsminb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsminh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsminlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsminlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldsminl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsminl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldsmin_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldsmin_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldumaxab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldumaxah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldumaxalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
+      {"ldumaxalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
+      {"ldumaxal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldumaxal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldumaxa_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldumaxa_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldumaxb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldumaxh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldumaxlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldumaxlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldumaxl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldumaxl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldumax_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldumax_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"lduminab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"lduminah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"lduminalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
+      {"lduminalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},              \
+      {"lduminal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"lduminal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"ldumina_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldumina_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"lduminb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"lduminh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"lduminlb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"lduminlh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},               \
+      {"lduminl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"lduminl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                \
+      {"ldumin_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"ldumin_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"swpab_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"swpah_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"swpalb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"swpalh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                 \
+      {"swpal_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"swpal_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"swpa_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
+      {"swpa_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
+      {"swpb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
+      {"swph_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
+      {"swplb_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"swplh_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                  \
+      {"swpl_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
+      {"swpl_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                   \
+      {"swp_32_memop"_h, &VISITORCLASS::VisitAtomicMemory},                    \
+      {"swp_64_memop"_h, &VISITORCLASS::VisitAtomicMemory},                    \
+      {"sel_z_p_zz"_h, &VISITORCLASS::VisitSVEVectorSelect},                   \
+      {"ands_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
+      {"and_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
+      {"bics_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
+      {"bic_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
+      {"eors_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
+      {"eor_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
+      {"nands_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},           \
+      {"nand_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
+      {"nors_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
+      {"nor_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
+      {"orns_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
+      {"orn_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
+      {"orrs_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},            \
+      {"orr_p_p_pp_z"_h, &VISITORCLASS::VisitSVEPredicateLogical},             \
+      {"sel_p_p_pp"_h, &VISITORCLASS::VisitSVEPredicateLogical},               \
+      {"sdivr_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},  \
+      {"sdiv_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},   \
+      {"udivr_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},  \
+      {"udiv_z_p_zz"_h, &VISITORCLASS::VisitSVEIntDivideVectors_Predicated},   \
+      {"dup_z_i"_h, &VISITORCLASS::VisitSVEBroadcastIntImm_Unpredicated},      \
+      {"fdup_z_i"_h, &VISITORCLASS::VisitSVEBroadcastFPImm_Unpredicated},      \
+      {"dup_z_r"_h, &VISITORCLASS::VisitSVEBroadcastGeneralRegister},          \
+      {"compact_z_p_z"_h, &VISITORCLASS::VisitSVECompressActiveElements},      \
+      {"ctermeq_rr"_h, &VISITORCLASS::VisitSVEConditionallyTerminateScalars},  \
+      {"ctermne_rr"_h, &VISITORCLASS::VisitSVEConditionallyTerminateScalars},  \
+      {"clasta_r_p_z"_h,                                                       \
+       &VISITORCLASS::VisitSVEConditionallyExtractElementToGeneralRegister},   \
+      {"clastb_r_p_z"_h,                                                       \
+       &VISITORCLASS::VisitSVEConditionallyExtractElementToGeneralRegister},   \
+      {"asrd_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},  \
+      {"asr_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},   \
+      {"lsl_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},   \
+      {"lsr_z_p_zi"_h, &VISITORCLASS::VisitSVEBitwiseShiftByImm_Predicated},   \
+      {"cpy_z_p_r"_h,                                                          \
+       &VISITORCLASS::VisitSVECopyGeneralRegisterToVector_Predicated},         \
+      {"cpy_z_o_i"_h, &VISITORCLASS::VisitSVECopyIntImm_Predicated},           \
+      {"cpy_z_p_i"_h, &VISITORCLASS::VisitSVECopyIntImm_Predicated},           \
+      {"cpy_z_p_v"_h,                                                          \
+       &VISITORCLASS::VisitSVECopySIMDFPScalarRegisterToVector_Predicated},    \
+      {"fcpy_z_p_i"_h, &VISITORCLASS::VisitSVECopyFPImm_Predicated},           \
+      {"lasta_r_p_z"_h,                                                        \
+       &VISITORCLASS::VisitSVEExtractElementToGeneralRegister},                \
+      {"lastb_r_p_z"_h,                                                        \
+       &VISITORCLASS::VisitSVEExtractElementToGeneralRegister},                \
+      {"sdot_z_zzz"_h, &VISITORCLASS::VisitSVEIntMulAddUnpredicated},          \
+      {"udot_z_zzz"_h, &VISITORCLASS::VisitSVEIntMulAddUnpredicated},          \
+      {"st1b_z_p_bi"_h, &VISITORCLASS::VisitSVEContiguousStore_ScalarPlusImm}, \
+      {"st1d_z_p_bi"_h, &VISITORCLASS::VisitSVEContiguousStore_ScalarPlusImm}, \
+      {"st1h_z_p_bi"_h, &VISITORCLASS::VisitSVEContiguousStore_ScalarPlusImm}, \
+      {"st1w_z_p_bi"_h, &VISITORCLASS::VisitSVEContiguousStore_ScalarPlusImm}, \
+      {"prfb_i_p_bi_s"_h,                                                      \
+       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusImm},               \
+      {"prfd_i_p_bi_s"_h,                                                      \
+       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusImm},               \
+      {"prfh_i_p_bi_s"_h,                                                      \
+       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusImm},               \
+      {"prfw_i_p_bi_s"_h,                                                      \
+       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusImm},               \
+      {"prfb_i_p_br_s"_h,                                                      \
+       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusScalar},            \
+      {"prfd_i_p_br_s"_h,                                                      \
+       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusScalar},            \
+      {"prfh_i_p_br_s"_h,                                                      \
+       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusScalar},            \
+      {"prfw_i_p_br_s"_h,                                                      \
+       &VISITORCLASS::VisitSVEContiguousPrefetch_ScalarPlusScalar},            \
+      {"ldnf1b_z_p_bi_u16"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1b_z_p_bi_u32"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1b_z_p_bi_u64"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1b_z_p_bi_u8"_h,                                                   \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1d_z_p_bi_u64"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1h_z_p_bi_u16"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1h_z_p_bi_u32"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1h_z_p_bi_u64"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1sb_z_p_bi_s16"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1sb_z_p_bi_s32"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1sb_z_p_bi_s64"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1sh_z_p_bi_s32"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1sh_z_p_bi_s64"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1sw_z_p_bi_s64"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1w_z_p_bi_u32"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"ldnf1w_z_p_bi_u64"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousNonFaultLoad_ScalarPlusImm},           \
+      {"prfb_i_p_bz_d_64_scaled"_h,                                            \
+       &VISITORCLASS::                                                         \
+           VisitSVE64BitGatherPrefetch_ScalarPlus64BitScaledOffsets},          \
+      {"prfd_i_p_bz_d_64_scaled"_h,                                            \
+       &VISITORCLASS::                                                         \
+           VisitSVE64BitGatherPrefetch_ScalarPlus64BitScaledOffsets},          \
+      {"prfh_i_p_bz_d_64_scaled"_h,                                            \
+       &VISITORCLASS::                                                         \
+           VisitSVE64BitGatherPrefetch_ScalarPlus64BitScaledOffsets},          \
+      {"prfw_i_p_bz_d_64_scaled"_h,                                            \
+       &VISITORCLASS::                                                         \
+           VisitSVE64BitGatherPrefetch_ScalarPlus64BitScaledOffsets},          \
+      {"prfb_i_p_bz_d_x32_scaled"_h,                                           \
+       &VISITORCLASS::                                                         \
+           VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets},  \
+      {"prfd_i_p_bz_d_x32_scaled"_h,                                           \
+       &VISITORCLASS::                                                         \
+           VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets},  \
+      {"prfh_i_p_bz_d_x32_scaled"_h,                                           \
+       &VISITORCLASS::                                                         \
+           VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets},  \
+      {"prfw_i_p_bz_d_x32_scaled"_h,                                           \
+       &VISITORCLASS::                                                         \
+           VisitSVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets},  \
+      {"prfb_i_p_ai_d"_h,                                                      \
+       &VISITORCLASS::VisitSVE64BitGatherPrefetch_VectorPlusImm},              \
+      {"prfd_i_p_ai_d"_h,                                                      \
+       &VISITORCLASS::VisitSVE64BitGatherPrefetch_VectorPlusImm},              \
+      {"prfh_i_p_ai_d"_h,                                                      \
+       &VISITORCLASS::VisitSVE64BitGatherPrefetch_VectorPlusImm},              \
+      {"prfw_i_p_ai_d"_h,                                                      \
+       &VISITORCLASS::VisitSVE64BitGatherPrefetch_VectorPlusImm},              \
+      {"prfb_i_p_ai_s"_h,                                                      \
+       &VISITORCLASS::VisitSVE32BitGatherPrefetch_VectorPlusImm},              \
+      {"prfd_i_p_ai_s"_h,                                                      \
+       &VISITORCLASS::VisitSVE32BitGatherPrefetch_VectorPlusImm},              \
+      {"prfh_i_p_ai_s"_h,                                                      \
+       &VISITORCLASS::VisitSVE32BitGatherPrefetch_VectorPlusImm},              \
+      {"prfw_i_p_ai_s"_h,                                                      \
+       &VISITORCLASS::VisitSVE32BitGatherPrefetch_VectorPlusImm},              \
       {"adcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \

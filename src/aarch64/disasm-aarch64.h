@@ -154,12 +154,10 @@ class Disassembler : public DecoderVisitor {
   void DisassembleNEONLoadBroadcast(const Instruction* instr);
   void DisassembleNEONMulByElementLong(const Instruction* instr);
   void DisassembleNEONFPMulByElement(const Instruction* instr);
-  void DisassembleNEON2RegLogical(const Instruction* instr);
   void DisassembleNEON2RegExtract(const Instruction* instr);
   void DisassembleNEON2RegAddlp(const Instruction* instr);
   void DisassembleNEON2RegCompare(const Instruction* instr);
   void DisassembleNEON2RegFPConvert(const Instruction* instr);
-  void DisassembleNEON3SameLogical(const Instruction* instr);
   void DisassembleNEON3SameNoD(const Instruction* instr);
   void DisassembleNEONShiftLeftLongImm(const Instruction* instr);
   void DisassembleNEONShiftRightImm(const Instruction* instr);
@@ -167,8 +165,6 @@ class Disassembler : public DecoderVisitor {
   void DisassembleNEONScalarSatMulLongIndex(const Instruction* instr);
   void DisassembleNEONScalarShiftRightNarrowImm(const Instruction* instr);
   void DisassembleNEONPolynomialMul(const Instruction* instr);
-
-  void Disassemble_Xd_XnSP_XmSP(const Instruction* instr);
 
   void Format(const Instruction* instr,
               const char* mnemonic,
