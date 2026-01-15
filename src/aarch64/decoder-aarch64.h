@@ -55,8 +55,6 @@
   V(NEONScalarCopy)                               \
   V(NEONScalarShiftImmediate)                     \
   V(NEONShiftImmediate)                           \
-  V(SVE32BitGatherLoad_VectorPlusImm)             \
-  V(SVE32BitScatterStore_VectorPlusImm)           \
   V(SVE64BitGatherLoad_VectorPlusImm)             \
   V(SVE64BitScatterStore_VectorPlusImm)           \
   V(SVEBroadcastBitmaskImm)                       \
@@ -65,16 +63,11 @@
   V(SVEContiguousNonTemporalLoad_ScalarPlusImm)   \
   V(SVEContiguousNonTemporalStore_ScalarPlusImm)  \
   V(SVEElementCount)                              \
-  V(SVEFPConvertPrecision)                        \
   V(SVEIncDecRegisterByElementCount)              \
   V(SVEIncDecVectorByElementCount)                \
   V(SVELoadAndBroadcastElement)                   \
-  V(SVELoadPredicateRegister)                     \
-  V(SVELoadVectorRegister)                        \
   V(SVESaturatingIncDecRegisterByElementCount)    \
   V(SVESaturatingIncDecVectorByElementCount)      \
-  V(SVEStorePredicateRegister)                    \
-  V(SVEStoreVectorRegister)                       \
   V(System)                                       \
   V(Unallocated)                                  \
   V(Unimplemented)
@@ -265,6 +258,13 @@
   V(SVE64BitGatherPrefetch_ScalarPlusUnpacked32BitScaledOffsets) \
   V(SVE64BitGatherPrefetch_VectorPlusImm)                        \
   V(SVE32BitGatherPrefetch_VectorPlusImm)                        \
+  V(SVELoadVectorRegister)                                       \
+  V(SVEStoreVectorRegister)                                      \
+  V(SVELoadPredicateRegister)                                    \
+  V(SVEStorePredicateRegister)                                   \
+  V(SVEFPConvertPrecision)                                       \
+  V(SVE32BitGatherLoad_VectorPlusImm)                            \
+  V(SVE32BitScatterStore_VectorPlusImm)                          \
   V(AddSubWithCarry)
 
 #define VISITOR_LIST_THAT_DONT_RETURN(V) V(Reserved)

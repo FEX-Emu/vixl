@@ -47,12 +47,6 @@
       {"decw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
       {"dupm_z_i"_h, &VISITORCLASS::VisitSVEBroadcastBitmaskImm},              \
       {"dup_z_zi"_h, &VISITORCLASS::VisitSVEBroadcastIndexElement},            \
-      {"fcvt_z_p_z_d2h"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
-      {"fcvt_z_p_z_d2s"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
-      {"fcvt_z_p_z_h2d"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
-      {"fcvt_z_p_z_h2s"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
-      {"fcvt_z_p_z_s2d"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
-      {"fcvt_z_p_z_s2h"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
       {"incb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"incd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
       {"incd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
@@ -62,14 +56,10 @@
       {"incw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
       {"ld1b_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1b_z_p_ai_s"_h,                                                      \
-       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
       {"ld1d_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
       {"ld1h_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1h_z_p_ai_s"_h,                                                      \
-       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
       {"ld1rb_z_p_bi_u16"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
       {"ld1rb_z_p_bi_u32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
       {"ld1rb_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
@@ -88,22 +78,14 @@
       {"ld1rw_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
       {"ld1sb_z_p_ai_d"_h,                                                     \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1sb_z_p_ai_s"_h,                                                     \
-       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
       {"ld1sh_z_p_ai_d"_h,                                                     \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1sh_z_p_ai_s"_h,                                                     \
-       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
       {"ld1sw_z_p_ai_d"_h,                                                     \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
       {"ld1w_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1w_z_p_ai_s"_h,                                                      \
-       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
       {"ldff1b_z_p_ai_d"_h,                                                    \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1b_z_p_ai_s"_h,                                                    \
-       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
       {"ldff1b_z_p_br_u16"_h,                                                  \
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
       {"ldff1b_z_p_br_u32"_h,                                                  \
@@ -118,8 +100,6 @@
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
       {"ldff1h_z_p_ai_d"_h,                                                    \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1h_z_p_ai_s"_h,                                                    \
-       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
       {"ldff1h_z_p_br_u16"_h,                                                  \
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
       {"ldff1h_z_p_br_u32"_h,                                                  \
@@ -128,8 +108,6 @@
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
       {"ldff1sb_z_p_ai_d"_h,                                                   \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1sb_z_p_ai_s"_h,                                                   \
-       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
       {"ldff1sb_z_p_br_s16"_h,                                                 \
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
       {"ldff1sb_z_p_br_s32"_h,                                                 \
@@ -138,8 +116,6 @@
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
       {"ldff1sh_z_p_ai_d"_h,                                                   \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1sh_z_p_ai_s"_h,                                                   \
-       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
       {"ldff1sh_z_p_br_s32"_h,                                                 \
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
       {"ldff1sh_z_p_br_s64"_h,                                                 \
@@ -150,8 +126,6 @@
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
       {"ldff1w_z_p_ai_d"_h,                                                    \
        &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1w_z_p_ai_s"_h,                                                    \
-       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
       {"ldff1w_z_p_br_u32"_h,                                                  \
        &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
       {"ldff1w_z_p_br_u64"_h,                                                  \
@@ -164,8 +138,6 @@
        &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
       {"ldnt1w_z_p_bi_contiguous"_h,                                           \
        &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
-      {"ldr_p_bi"_h, &VISITORCLASS::VisitSVELoadPredicateRegister},            \
-      {"ldr_z_bi"_h, &VISITORCLASS::VisitSVELoadVectorRegister},               \
       {"sqdecb_r_rs_sx"_h,                                                     \
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"sqdecb_r_rs_x"_h,                                                      \
@@ -212,18 +184,12 @@
        &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
       {"st1b_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
-      {"st1b_z_p_ai_s"_h,                                                      \
-       &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
       {"st1d_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
       {"st1h_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
-      {"st1h_z_p_ai_s"_h,                                                      \
-       &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
       {"st1w_z_p_ai_d"_h,                                                      \
        &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
-      {"st1w_z_p_ai_s"_h,                                                      \
-       &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
       {"stnt1b_z_p_bi_contiguous"_h,                                           \
        &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
       {"stnt1d_z_p_bi_contiguous"_h,                                           \
@@ -232,8 +198,6 @@
        &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
       {"stnt1w_z_p_bi_contiguous"_h,                                           \
        &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
-      {"str_p_bi"_h, &VISITORCLASS::VisitSVEStorePredicateRegister},           \
-      {"str_z_bi"_h, &VISITORCLASS::VisitSVEStoreVectorRegister},              \
       {"udf_only_perm_undef"_h, &VISITORCLASS::VisitReserved},                 \
       {"uqdecb_r_rs_uw"_h,                                                     \
        &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
@@ -2854,6 +2818,42 @@
        &VISITORCLASS::VisitSVE32BitGatherPrefetch_VectorPlusImm},              \
       {"prfw_i_p_ai_s"_h,                                                      \
        &VISITORCLASS::VisitSVE32BitGatherPrefetch_VectorPlusImm},              \
+      {"ldr_z_bi"_h, &VISITORCLASS::VisitSVELoadVectorRegister},               \
+      {"str_z_bi"_h, &VISITORCLASS::VisitSVEStoreVectorRegister},              \
+      {"ldr_p_bi"_h, &VISITORCLASS::VisitSVELoadPredicateRegister},            \
+      {"str_p_bi"_h, &VISITORCLASS::VisitSVEStorePredicateRegister},           \
+      {"fcvt_z_p_z_d2h"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
+      {"fcvt_z_p_z_d2s"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
+      {"fcvt_z_p_z_h2d"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
+      {"fcvt_z_p_z_h2s"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
+      {"fcvt_z_p_z_s2d"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
+      {"fcvt_z_p_z_s2h"_h, &VISITORCLASS::VisitSVEFPConvertPrecision},         \
+      {"ld1b_z_p_ai_s"_h,                                                      \
+       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
+      {"ld1h_z_p_ai_s"_h,                                                      \
+       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
+      {"ld1sb_z_p_ai_s"_h,                                                     \
+       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
+      {"ld1sh_z_p_ai_s"_h,                                                     \
+       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
+      {"ld1w_z_p_ai_s"_h,                                                      \
+       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
+      {"ldff1b_z_p_ai_s"_h,                                                    \
+       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
+      {"ldff1h_z_p_ai_s"_h,                                                    \
+       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
+      {"ldff1sb_z_p_ai_s"_h,                                                   \
+       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
+      {"ldff1sh_z_p_ai_s"_h,                                                   \
+       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
+      {"ldff1w_z_p_ai_s"_h,                                                    \
+       &VISITORCLASS::VisitSVE32BitGatherLoad_VectorPlusImm},                  \
+      {"st1b_z_p_ai_s"_h,                                                      \
+       &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
+      {"st1h_z_p_ai_s"_h,                                                      \
+       &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
+      {"st1w_z_p_ai_s"_h,                                                      \
+       &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
       {"adcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \
