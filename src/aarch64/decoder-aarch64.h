@@ -36,40 +36,35 @@
 #include "instructions-aarch64.h"
 
 // List macro containing all visitors needed by the decoder class.
-#define VISITOR_LIST_THAT_RETURN(V)               \
-  V(LoadStoreExclusive)                           \
-  V(MoveWideImmediate)                            \
-  V(NEON2RegMisc)                                 \
-  V(NEON3Different)                               \
-  V(NEON3Same)                                    \
-  V(NEON3SameExtra)                               \
-  V(NEONAcrossLanes)                              \
-  V(NEONByIndexedElement)                         \
-  V(NEONCopy)                                     \
-  V(NEONLoadStoreMultiStruct)                     \
-  V(NEONPerm)                                     \
-  V(NEONScalar2RegMisc)                           \
-  V(NEONScalar3Diff)                              \
-  V(NEONScalar3Same)                              \
-  V(NEONScalarByIndexedElement)                   \
-  V(NEONScalarCopy)                               \
-  V(NEONScalarShiftImmediate)                     \
-  V(NEONShiftImmediate)                           \
-  V(SVE64BitGatherLoad_VectorPlusImm)             \
-  V(SVE64BitScatterStore_VectorPlusImm)           \
-  V(SVEBroadcastBitmaskImm)                       \
-  V(SVEBroadcastIndexElement)                     \
-  V(SVEContiguousFirstFaultLoad_ScalarPlusScalar) \
-  V(SVEContiguousNonTemporalLoad_ScalarPlusImm)   \
-  V(SVEContiguousNonTemporalStore_ScalarPlusImm)  \
-  V(SVEElementCount)                              \
-  V(SVEIncDecRegisterByElementCount)              \
-  V(SVEIncDecVectorByElementCount)                \
-  V(SVELoadAndBroadcastElement)                   \
-  V(SVESaturatingIncDecRegisterByElementCount)    \
-  V(SVESaturatingIncDecVectorByElementCount)      \
-  V(System)                                       \
-  V(Unallocated)                                  \
+#define VISITOR_LIST_THAT_RETURN(V)            \
+  V(LoadStoreExclusive)                        \
+  V(MoveWideImmediate)                         \
+  V(NEON2RegMisc)                              \
+  V(NEON3Different)                            \
+  V(NEON3Same)                                 \
+  V(NEON3SameExtra)                            \
+  V(NEONAcrossLanes)                           \
+  V(NEONByIndexedElement)                      \
+  V(NEONCopy)                                  \
+  V(NEONLoadStoreMultiStruct)                  \
+  V(NEONPerm)                                  \
+  V(NEONScalar2RegMisc)                        \
+  V(NEONScalar3Diff)                           \
+  V(NEONScalar3Same)                           \
+  V(NEONScalarByIndexedElement)                \
+  V(NEONScalarCopy)                            \
+  V(NEONScalarShiftImmediate)                  \
+  V(NEONShiftImmediate)                        \
+  V(SVE64BitGatherLoad_VectorPlusImm)          \
+  V(SVEBroadcastBitmaskImm)                    \
+  V(SVEBroadcastIndexElement)                  \
+  V(SVEElementCount)                           \
+  V(SVEIncDecRegisterByElementCount)           \
+  V(SVEIncDecVectorByElementCount)             \
+  V(SVESaturatingIncDecRegisterByElementCount) \
+  V(SVESaturatingIncDecVectorByElementCount)   \
+  V(System)                                    \
+  V(Unallocated)                               \
   V(Unimplemented)
 
 #define SIM_AUD_VISITOR_LIST_THAT_RETURN(V)                      \
@@ -265,6 +260,11 @@
   V(SVEFPConvertPrecision)                                       \
   V(SVE32BitGatherLoad_VectorPlusImm)                            \
   V(SVE32BitScatterStore_VectorPlusImm)                          \
+  V(SVE64BitScatterStore_VectorPlusImm)                          \
+  V(SVEContiguousFirstFaultLoad_ScalarPlusScalar)                \
+  V(SVEContiguousNonTemporalLoad_ScalarPlusImm)                  \
+  V(SVEContiguousNonTemporalStore_ScalarPlusImm)                 \
+  V(SVELoadAndBroadcastElement)                                  \
   V(AddSubWithCarry)
 
 #define VISITOR_LIST_THAT_DONT_RETURN(V) V(Reserved)

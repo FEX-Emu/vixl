@@ -699,7 +699,8 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "cmle_asisdmisc_z"_h,
          "cmlt_asisdmisc_z"_h,
          "cdot_z_zzz"_h,
-         "histcnt_z_p_zz"_h}},
+         "histcnt_z_p_zz"_h,
+         "pmull_asimddiff_l"_h}},
        {0x00c00000'00800000, {"histseg_z_zz"_h,        "pmul_z_zz"_h,
                               "cmeq_asisdsame_only"_h, "cmge_asisdsame_only"_h,
                               "cmgt_asisdsame_only"_h, "cmhi_asisdsame_only"_h,
@@ -711,7 +712,8 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
                               "neg_asisdmisc_r"_h,     "cmeq_asisdmisc_z"_h,
                               "cmge_asisdmisc_z"_h,    "cmgt_asisdmisc_z"_h,
                               "cmle_asisdmisc_z"_h,    "cmlt_asisdmisc_z"_h,
-                              "match_p_p_zz"_h,        "nmatch_p_p_zz"_h}},
+                              "match_p_p_zz"_h,        "nmatch_p_p_zz"_h,
+                              "pmull_asimddiff_l"_h}},
        {0x00c00000'00c00000,
         {"asr_z_p_zw"_h,
          "lsl_z_p_zw"_h,
@@ -2536,6 +2538,24 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ldnf1sb_z_p_bi_s16"_h, "ldnf1sb_z_p_bi_s32"_h, "ldnf1sb_z_p_bi_s64"_h,
         "ldnf1sh_z_p_bi_s32"_h, "ldnf1sh_z_p_bi_s64"_h, "ldnf1sw_z_p_bi_s64"_h,
         "ldnf1w_z_p_bi_u32"_h,  "ldnf1w_z_p_bi_u64"_h}},
+      {"{'Zt.'tlss}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm)]",
+       {"ldff1b_z_p_br_u16"_h,
+        "ldff1b_z_p_br_u32"_h,
+        "ldff1b_z_p_br_u64"_h,
+        "ldff1b_z_p_br_u8"_h,
+        "ldff1sb_z_p_br_s16"_h,
+        "ldff1sb_z_p_br_s32"_h,
+        "ldff1sb_z_p_br_s64"_h}},
+      {"{'Zt.'tlss}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm, lsl #1)]",
+       {"ldff1h_z_p_br_u16"_h,
+        "ldff1h_z_p_br_u32"_h,
+        "ldff1h_z_p_br_u64"_h,
+        "ldff1sh_z_p_br_s32"_h,
+        "ldff1sh_z_p_br_s64"_h}},
+      {"{'Zt.'tlss}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm, lsl #2)]",
+       {"ldff1w_z_p_br_u32"_h, "ldff1w_z_p_br_u64"_h, "ldff1sw_z_p_br_s64"_h}},
+      {"{'Zt.'tlss}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm, lsl #3)]",
+       {"ldff1d_z_p_br_u64"_h}},
       {"{'Zt.'tlss}, 'Pgl/z, ['Xns, 'Xm, lsl #'u2423]",
        {"ld1d_z_p_br_u64"_h,
         "ld1h_z_p_br_u16"_h,
@@ -2639,6 +2659,11 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"ld1rqb_z_p_br_contiguous"_h, "ld1rob_z_p_br_contiguous"_h}},
       {"{'Zt.b}, 'Pgl, ['Xns, 'Rm]", {"stnt1b_z_p_br_contiguous"_h}},
       {"{'Zt.b}, 'Pgl/z, ['Xns, 'Rm]", {"ldnt1b_z_p_br_contiguous"_h}},
+      {"{'Zt.b}, 'Pgl/z, ['Xns'(2116?, #'u2116)]", {"ld1rb_z_p_bi_u8"_h}},
+      {"{'Zt.b}, 'Pgl'(20?:/z), ['Xns'(1916?, #'s1916, mul vl)]",
+       {"ldnt1b_z_p_bi_contiguous"_h, "stnt1b_z_p_bi_contiguous"_h}},
+      {"{'Zt.d}, 'Pgl'(20?:/z), ['Xns'(1916?, #'s1916, mul vl)]",
+       {"ldnt1d_z_p_bi_contiguous"_h, "stnt1d_z_p_bi_contiguous"_h}},
       {"{'Zt.d}, 'Pgl'(29?:/z), ['Zn.d'(2016=31?:, 'Xm)]",
        {"stnt1b_z_p_ar_d_64_unscaled"_h,
         "stnt1d_z_p_ar_d_64_unscaled"_h,
@@ -2670,6 +2695,17 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "st1d_z_p_bz_d_64_unscaled"_h,
         "st1h_z_p_bz_d_64_unscaled"_h,
         "st1w_z_p_bz_d_64_unscaled"_h}},
+      {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'u2016)]", {"st1b_z_p_ai_d"_h}},
+      {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'u2016*2)]", {"st1h_z_p_ai_d"_h}},
+      {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'u2016*4)]", {"st1w_z_p_ai_d"_h}},
+      {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'u2016*8)]", {"st1d_z_p_ai_d"_h}},
+      {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'u2116)]",
+       {"ld1rb_z_p_bi_u64"_h, "ld1rsb_z_p_bi_s64"_h}},
+      {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'u2116*2)]",
+       {"ld1rh_z_p_bi_u64"_h, "ld1rsh_z_p_bi_s64"_h}},
+      {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'u2116*4)]",
+       {"ld1rw_z_p_bi_u64"_h, "ld1rsw_z_p_bi_s64"_h}},
+      {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'u2116*8)]", {"ld1rd_z_p_bi_u64"_h}},
       {"{'Zt.d}, 'Pgl/z, ['Xns, 'Rm, lsl #3]", {"ldnt1d_z_p_br_contiguous"_h}},
       {"{'Zt.d}, 'Pgl/z, ['Xns, 'Zm.d, '?22:suxtw #'u2423]",
        {"ld1d_z_p_bz_d_x32_scaled"_h,
@@ -2725,6 +2761,11 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ldff1w_z_p_bz_d_64_unscaled"_h}},
       {"{'Zt.h}, 'Pgl'(30?:/z), ['Xns, 'Rm, lsl #1]",
        {"ldnt1h_z_p_br_contiguous"_h, "stnt1h_z_p_br_contiguous"_h}},
+      {"{'Zt.h}, 'Pgl'(20?:/z), ['Xns'(1916?, #'s1916, mul vl)]",
+       {"ldnt1h_z_p_bi_contiguous"_h, "stnt1h_z_p_bi_contiguous"_h}},
+      {"{'Zt.h}, 'Pgl/z, ['Xns'(2116?, #'u2116*2)]",
+       {"ld1rb_z_p_bi_u16"_h, "ld1rsb_z_p_bi_s16"_h}},
+      {"{'Zt.h}, 'Pgl/z, ['Xns'(2116?, #'u2116*4)]", {"ld1rh_z_p_bi_u16"_h}},
       {"{'Zt.s}, 'Pgl'(29?:/z), ['Zn.s'(2016=31?:, 'Xm)]",
        {"stnt1b_z_p_ar_s_x32_unscaled"_h,
         "stnt1h_z_p_ar_s_x32_unscaled"_h,
@@ -2741,6 +2782,14 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"st1b_z_p_bz_s_x32_unscaled"_h,
         "st1h_z_p_bz_s_x32_unscaled"_h,
         "st1w_z_p_bz_s_x32_unscaled"_h}},
+      {"{'Zt.s}, 'Pgl/z, ['Xns'(2116?, #'u2116)]",
+       {"ld1rb_z_p_bi_u32"_h, "ld1rsb_z_p_bi_s32"_h}},
+      {"{'Zt.s}, 'Pgl/z, ['Xns'(2116?, #'u2116*2)]",
+       {"ld1rh_z_p_bi_u32"_h, "ld1rsh_z_p_bi_s32"_h}},
+      {"{'Zt.s}, 'Pgl/z, ['Xns'(2116?, #'u2116*4)]",
+       {"ld1rw_z_p_bi_u32"_h, "ld1rsw_z_p_bi_s32"_h}},
+      {"{'Zt.s}, 'Pgl'(20?:/z), ['Xns'(1916?, #'s1916, mul vl)]",
+       {"ldnt1w_z_p_bi_contiguous"_h, "stnt1w_z_p_bi_contiguous"_h}},
       {"{'Zt.s}, 'Pgl/z, ['Xns, 'Rm, lsl #2]", {"ldnt1w_z_p_br_contiguous"_h}},
       {"{'Zt.s}, 'Pgl/z, ['Xns, 'Zm.s, '?22:suxtw #1]",
        {"ld1h_z_p_bz_s_x32_scaled"_h,
@@ -3471,9 +3520,7 @@ void Disassembler::DisassembleNEONPolynomialMul(const Instruction *instr) {
     // this to "8" and "16" by adding 7.
     form = "'Vd.8h, 'Vn.'u3127+7b, 'Vm.'u3127+7b";
   } else if (size == 3) {
-    form = "'Vd.1q, 'Vn.'?30:21d, 'Vm.'?30:21d";
-  } else {
-    mnemonic = NULL;
+    form = "'Vd.1q, 'Vn.'u3030+1d, 'Vm.'u3030+1d";
   }
   Format(instr, mnemonic, form);
 }
@@ -3919,28 +3966,6 @@ void Disassembler::VisitSVE64BitGatherLoad_VectorPlusImm(
   FormatWithDecodedMnemonic(instr, form);
 }
 
-void Disassembler::VisitSVE64BitScatterStore_VectorPlusImm(
-    const Instruction *instr) {
-  const char *form = "{'Zt.d}, 'Pgl, ['Zn.d";
-  const char *suffix = NULL;
-
-  switch (form_hash_) {
-    case "st1b_z_p_ai_d"_h:
-      suffix = "'(2016?, #'u2016)]";
-      break;
-    case "st1h_z_p_ai_d"_h:
-      suffix = "'(2016?, #'u2016*2)]";
-      break;
-    case "st1w_z_p_ai_d"_h:
-      suffix = "'(2016?, #'u2016*4)]";
-      break;
-    case "st1d_z_p_ai_d"_h:
-      suffix = "'(2016?, #'u2016*8)]";
-      break;
-  }
-  FormatWithDecodedMnemonic(instr, form, suffix);
-}
-
 static bool SVEMoveMaskPreferred(uint64_t value, int lane_bytes_log2) {
   VIXL_ASSERT(IsUintN(8 << lane_bytes_log2, value));
 
@@ -4044,70 +4069,6 @@ void Disassembler::VisitSVEBroadcastIndexElement(const Instruction *instr) {
   Format(instr, mnemonic, form);
 }
 
-void Disassembler::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar(
-    const Instruction *instr) {
-  const char *form = "{'Zt.'tlss}, 'Pgl/z, ['Xns";
-  const char *suffix = "'(2016=31?:, 'Xm)]";
-
-  switch (form_hash_) {
-    case "ldff1h_z_p_br_u16"_h:
-    case "ldff1h_z_p_br_u32"_h:
-    case "ldff1h_z_p_br_u64"_h:
-    case "ldff1sh_z_p_br_s32"_h:
-    case "ldff1sh_z_p_br_s64"_h:
-      suffix = "'(2016=31?:, 'Xm, lsl #1)]";
-      break;
-    case "ldff1w_z_p_br_u32"_h:
-    case "ldff1w_z_p_br_u64"_h:
-    case "ldff1sw_z_p_br_s64"_h:
-      suffix = "'(2016=31?:, 'Xm, lsl #2)]";
-      break;
-    case "ldff1d_z_p_br_u64"_h:
-      suffix = "'(2016=31?:, 'Xm, lsl #3)]";
-      break;
-  }
-
-  FormatWithDecodedMnemonic(instr, form, suffix);
-}
-
-void Disassembler::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm(
-    const Instruction *instr) {
-  const char *form = "{'Zt.b}, 'Pgl/z, ['Xns";
-  const char *suffix = "'(1916?, #'s1916, mul vl)]";
-
-  switch (form_hash_) {
-    case "ldnt1d_z_p_bi_contiguous"_h:
-      form = "{'Zt.d}, 'Pgl/z, ['Xns";
-      break;
-    case "ldnt1h_z_p_bi_contiguous"_h:
-      form = "{'Zt.h}, 'Pgl/z, ['Xns";
-      break;
-    case "ldnt1w_z_p_bi_contiguous"_h:
-      form = "{'Zt.s}, 'Pgl/z, ['Xns";
-      break;
-  }
-  FormatWithDecodedMnemonic(instr, form, suffix);
-}
-
-void Disassembler::VisitSVEContiguousNonTemporalStore_ScalarPlusImm(
-    const Instruction *instr) {
-  const char *form = "{'Zt.b}, 'Pgl, ['Xns";
-  const char *suffix = "'(1916?, #'s1916, mul vl)]";
-
-  switch (form_hash_) {
-    case "stnt1d_z_p_bi_contiguous"_h:
-      form = "{'Zt.d}, 'Pgl, ['Xns";
-      break;
-    case "stnt1h_z_p_bi_contiguous"_h:
-      form = "{'Zt.h}, 'Pgl, ['Xns";
-      break;
-    case "stnt1w_z_p_bi_contiguous"_h:
-      form = "{'Zt.s}, 'Pgl, ['Xns";
-      break;
-  }
-  FormatWithDecodedMnemonic(instr, form, suffix);
-}
-
 static const char *IncDecFormHelper(const Instruction *instr,
                                     const char *reg_pat_mul_form,
                                     const char *reg_pat_form,
@@ -4138,54 +4099,6 @@ void Disassembler::VisitSVEIncDecVectorByElementCount(
                                       "'Zd.'t, 'Ipc",
                                       "'Zd.'t");
   FormatWithDecodedMnemonic(instr, form);
-}
-
-void Disassembler::VisitSVELoadAndBroadcastElement(const Instruction *instr) {
-  const char *form = "{'Zt.d}, 'Pgl/z, ['Xns";
-  const char *suffix = "'(2116?, #'u2116)]";
-  const char *suffix_h = "'(2116?, #'u2116*2)]";
-  const char *suffix_w = "'(2116?, #'u2116*4)]";
-  const char *suffix_d = "'(2116?, #'u2116*8)]";
-
-  switch (form_hash_) {
-    case "ld1rb_z_p_bi_u8"_h:
-      form = "{'Zt.b}, 'Pgl/z, ['Xns";
-      break;
-    case "ld1rb_z_p_bi_u16"_h:
-    case "ld1rsb_z_p_bi_s16"_h:
-      form = "{'Zt.h}, 'Pgl/z, ['Xns";
-      break;
-    case "ld1rb_z_p_bi_u32"_h:
-    case "ld1rsb_z_p_bi_s32"_h:
-      form = "{'Zt.s}, 'Pgl/z, ['Xns";
-      break;
-    case "ld1rh_z_p_bi_u16"_h:
-      form = "{'Zt.h}, 'Pgl/z, ['Xns";
-      suffix = suffix_h;
-      break;
-    case "ld1rh_z_p_bi_u32"_h:
-    case "ld1rsh_z_p_bi_s32"_h:
-      form = "{'Zt.s}, 'Pgl/z, ['Xns";
-      suffix = suffix_h;
-      break;
-    case "ld1rh_z_p_bi_u64"_h:
-    case "ld1rsh_z_p_bi_s64"_h:
-      suffix = suffix_h;
-      break;
-    case "ld1rw_z_p_bi_u32"_h:
-      form = "{'Zt.s}, 'Pgl/z, ['Xns";
-      suffix = suffix_w;
-      break;
-    case "ld1rsw_z_p_bi_s64"_h:
-    case "ld1rw_z_p_bi_u64"_h:
-      suffix = suffix_w;
-      break;
-    case "ld1rd_z_p_bi_u64"_h:
-      suffix = suffix_d;
-      break;
-  }
-
-  FormatWithDecodedMnemonic(instr, form, suffix);
 }
 
 void Disassembler::VisitSVESaturatingIncDecRegisterByElementCount(

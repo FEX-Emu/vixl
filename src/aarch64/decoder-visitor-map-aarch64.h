@@ -33,504 +33,432 @@
 // the component's function, so this map initialisation will no longer be
 // shared.
 
-#define DEFAULT_FORM_TO_VISITOR_MAP(VISITORCLASS)                              \
-  {"cntb_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                         \
-      {"cntd_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
-      {"cnth_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
-      {"cntw_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
-      {"decb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
-      {"decd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
-      {"decd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
-      {"dech_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
-      {"dech_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
-      {"decw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
-      {"decw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
-      {"dupm_z_i"_h, &VISITORCLASS::VisitSVEBroadcastBitmaskImm},              \
-      {"dup_z_zi"_h, &VISITORCLASS::VisitSVEBroadcastIndexElement},            \
-      {"incb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
-      {"incd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
-      {"incd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
-      {"inch_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
-      {"inch_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
-      {"incw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
-      {"incw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
-      {"ld1b_z_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1d_z_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1h_z_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1rb_z_p_bi_u16"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
-      {"ld1rb_z_p_bi_u32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
-      {"ld1rb_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
-      {"ld1rb_z_p_bi_u8"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},   \
-      {"ld1rd_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
-      {"ld1rh_z_p_bi_u16"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
-      {"ld1rh_z_p_bi_u32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
-      {"ld1rh_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
-      {"ld1rsb_z_p_bi_s16"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
-      {"ld1rsb_z_p_bi_s32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
-      {"ld1rsb_z_p_bi_s64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
-      {"ld1rsh_z_p_bi_s32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
-      {"ld1rsh_z_p_bi_s64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
-      {"ld1rsw_z_p_bi_s64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
-      {"ld1rw_z_p_bi_u32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
-      {"ld1rw_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
-      {"ld1sb_z_p_ai_d"_h,                                                     \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1sh_z_p_ai_d"_h,                                                     \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1sw_z_p_ai_d"_h,                                                     \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ld1w_z_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1b_z_p_ai_d"_h,                                                    \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1b_z_p_br_u16"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1b_z_p_br_u32"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1b_z_p_br_u64"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1b_z_p_br_u8"_h,                                                   \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1d_z_p_ai_d"_h,                                                    \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1d_z_p_br_u64"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1h_z_p_ai_d"_h,                                                    \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1h_z_p_br_u16"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1h_z_p_br_u32"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1h_z_p_br_u64"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1sb_z_p_ai_d"_h,                                                   \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1sb_z_p_br_s16"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1sb_z_p_br_s32"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1sb_z_p_br_s64"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1sh_z_p_ai_d"_h,                                                   \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1sh_z_p_br_s32"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1sh_z_p_br_s64"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1sw_z_p_ai_d"_h,                                                   \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1sw_z_p_br_s64"_h,                                                 \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1w_z_p_ai_d"_h,                                                    \
-       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                  \
-      {"ldff1w_z_p_br_u32"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldff1w_z_p_br_u64"_h,                                                  \
-       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
-      {"ldnt1b_z_p_bi_contiguous"_h,                                           \
-       &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
-      {"ldnt1d_z_p_bi_contiguous"_h,                                           \
-       &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
-      {"ldnt1h_z_p_bi_contiguous"_h,                                           \
-       &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
-      {"ldnt1w_z_p_bi_contiguous"_h,                                           \
-       &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
-      {"sqdecb_r_rs_sx"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqdecb_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqdecd_r_rs_sx"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqdecd_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqdecd_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"sqdech_r_rs_sx"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqdech_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqdech_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"sqdecw_r_rs_sx"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqdecw_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqdecw_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"sqincb_r_rs_sx"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqincb_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqincd_r_rs_sx"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqincd_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqincd_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"sqinch_r_rs_sx"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqinch_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqinch_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"sqincw_r_rs_sx"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqincw_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"sqincw_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"st1b_z_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
-      {"st1d_z_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
-      {"st1h_z_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
-      {"st1w_z_p_ai_d"_h,                                                      \
-       &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
-      {"stnt1b_z_p_bi_contiguous"_h,                                           \
-       &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
-      {"stnt1d_z_p_bi_contiguous"_h,                                           \
-       &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
-      {"stnt1h_z_p_bi_contiguous"_h,                                           \
-       &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
-      {"stnt1w_z_p_bi_contiguous"_h,                                           \
-       &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
-      {"udf_only_perm_undef"_h, &VISITORCLASS::VisitReserved},                 \
-      {"uqdecb_r_rs_uw"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqdecb_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqdecd_r_rs_uw"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqdecd_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqdecd_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"uqdech_r_rs_uw"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqdech_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqdech_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"uqdecw_r_rs_uw"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqdecw_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqdecw_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"uqincb_r_rs_uw"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqincb_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqincd_r_rs_uw"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqincd_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqincd_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"uqinch_r_rs_uw"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqinch_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqinch_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"uqincw_r_rs_uw"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqincw_r_rs_x"_h,                                                      \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
-      {"uqincw_z_zs"_h,                                                        \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
-      {"casab_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"casah_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"casalb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"casalh_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"casal_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"casal_c64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"casa_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},         \
-      {"casa_c64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},         \
-      {"casb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},         \
-      {"cash_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},         \
-      {"caslb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"caslh_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"casl_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},         \
-      {"casl_c64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},         \
-      {"caspal_cp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
-      {"caspal_cp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
-      {"caspa_cp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"caspa_cp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"caspl_cp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"caspl_cp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"casp_cp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"casp_cp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"cas_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},          \
-      {"cas_c64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},          \
-      {"ldarb_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"ldarh_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"ldar_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"ldar_lr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"ldaxp_lp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"ldaxp_lp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"ldaxrb_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
-      {"ldaxrh_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
-      {"ldaxr_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"ldaxr_lr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"ldlarb_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
-      {"ldlarh_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
-      {"ldlar_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"ldlar_lr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"ldxp_lp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"ldxp_lp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"ldxrb_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"ldxrh_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"ldxr_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"ldxr_lr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"stllrb_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
-      {"stllrh_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
-      {"stllr_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"stllr_sl64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"stlrb_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"stlrh_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"stlr_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"stlr_sl64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"stlxp_sp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"stlxp_sp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"stlxrb_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
-      {"stlxrh_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
-      {"stlxr_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"stlxr_sr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"stxp_sp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"stxp_sp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"stxrb_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"stxrh_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
-      {"stxr_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"stxr_sr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
-      {"movk_32_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
-      {"movk_64_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
-      {"movn_32_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
-      {"movn_64_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
-      {"movz_32_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
-      {"movz_64_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
-      {"addhn_asimddiff_n"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"raddhn_asimddiff_n"_h, &VISITORCLASS::VisitNEON3Different},            \
-      {"rsubhn_asimddiff_n"_h, &VISITORCLASS::VisitNEON3Different},            \
-      {"sabal_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"sabdl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"saddl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"saddw_asimddiff_w"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"smlal_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"smlsl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"smull_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"sqdmlal_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},           \
-      {"sqdmlsl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},           \
-      {"sqdmull_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},           \
-      {"ssubl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"ssubw_asimddiff_w"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"subhn_asimddiff_n"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"uabal_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"uabdl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"uaddl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"uaddw_asimddiff_w"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"umlal_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"umlsl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"umull_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"usubl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"usubw_asimddiff_w"_h, &VISITORCLASS::VisitNEON3Different},             \
-      {"addp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"add_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                 \
-      {"cmeq_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"cmge_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"cmgt_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"cmhi_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"cmhs_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"cmtst_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"fabd_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"facge_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"facgt_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"faddp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"fadd_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"fcmeq_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"fcmge_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"fcmgt_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"fdiv_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"fmaxnmp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},             \
-      {"fmaxnm_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
-      {"fmaxp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"fmax_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"fminnmp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},             \
-      {"fminnm_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
-      {"fminp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"fmin_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"fmla_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"fmls_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"fmulx_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"fmul_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"frecps_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
-      {"frsqrts_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},             \
-      {"fsub_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"sqadd_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"sqdmulh_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},             \
-      {"sqrdmulh_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},            \
-      {"sqrshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
-      {"sqshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"sqsub_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"srshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"sshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"sub_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                 \
-      {"uqadd_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"uqrshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
-      {"uqshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"uqsub_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"urshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
-      {"ushl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
-      {"fcadd_asimdsame2_c"_h, &VISITORCLASS::VisitNEON3SameExtra},            \
-      {"fcmla_asimdsame2_c"_h, &VISITORCLASS::VisitNEON3SameExtra},            \
-      {"sdot_asimdsame2_d"_h, &VISITORCLASS::VisitNEON3SameExtra},             \
-      {"sqrdmlah_asimdsame2_only"_h, &VISITORCLASS::VisitNEON3SameExtra},      \
-      {"sqrdmlsh_asimdsame2_only"_h, &VISITORCLASS::VisitNEON3SameExtra},      \
-      {"udot_asimdsame2_d"_h, &VISITORCLASS::VisitNEON3SameExtra},             \
-      {"addv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},           \
-      {"saddlv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},         \
-      {"smaxv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},          \
-      {"sminv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},          \
-      {"uaddlv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},         \
-      {"umaxv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},          \
-      {"uminv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},          \
-      {"mla_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},         \
-      {"mls_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},         \
-      {"mul_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},         \
-      {"sqdmulh_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},     \
-      {"sqrdmlah_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},    \
-      {"sqrdmlsh_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},    \
-      {"sqrdmulh_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},    \
-      {"dup_asimdins_dr_r"_h, &VISITORCLASS::VisitNEONCopy},                   \
-      {"dup_asimdins_dv_v"_h, &VISITORCLASS::VisitNEONCopy},                   \
-      {"ins_asimdins_ir_r"_h, &VISITORCLASS::VisitNEONCopy},                   \
-      {"ins_asimdins_iv_v"_h, &VISITORCLASS::VisitNEONCopy},                   \
-      {"smov_asimdins_w_w"_h, &VISITORCLASS::VisitNEONCopy},                   \
-      {"smov_asimdins_x_x"_h, &VISITORCLASS::VisitNEONCopy},                   \
-      {"umov_asimdins_w_w"_h, &VISITORCLASS::VisitNEONCopy},                   \
-      {"umov_asimdins_x_x"_h, &VISITORCLASS::VisitNEONCopy},                   \
-      {"ld1_asisdlse_r1_1v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
-      {"ld1_asisdlse_r2_2v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
-      {"ld1_asisdlse_r3_3v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
-      {"ld1_asisdlse_r4_4v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
-      {"ld2_asisdlse_r2"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},     \
-      {"ld3_asisdlse_r3"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},     \
-      {"ld4_asisdlse_r4"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},     \
-      {"st1_asisdlse_r1_1v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
-      {"st1_asisdlse_r2_2v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
-      {"st1_asisdlse_r3_3v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
-      {"st1_asisdlse_r4_4v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},  \
-      {"st2_asisdlse_r2"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},     \
-      {"st3_asisdlse_r3"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},     \
-      {"st4_asisdlse_r4"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},     \
-      {"trn1_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
-      {"trn2_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
-      {"uzp1_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
-      {"uzp2_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
-      {"zip1_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
-      {"zip2_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                 \
-      {"sqabs_asisdmisc_r"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},         \
-      {"sqneg_asisdmisc_r"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},         \
-      {"sqxtn_asisdmisc_n"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},         \
-      {"sqxtun_asisdmisc_n"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},        \
-      {"suqadd_asisdmisc_r"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},        \
-      {"uqxtn_asisdmisc_n"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},         \
-      {"usqadd_asisdmisc_r"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},        \
-      {"sqdmlal_asisddiff_only"_h, &VISITORCLASS::VisitNEONScalar3Diff},       \
-      {"sqdmlsl_asisddiff_only"_h, &VISITORCLASS::VisitNEONScalar3Diff},       \
-      {"sqdmull_asisddiff_only"_h, &VISITORCLASS::VisitNEONScalar3Diff},       \
-      {"sqadd_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},         \
-      {"sqdmulh_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},       \
-      {"sqrdmulh_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},      \
-      {"sqrshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},        \
-      {"sqshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},         \
-      {"sqsub_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},         \
-      {"srshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},         \
-      {"sshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},          \
-      {"uqadd_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},         \
-      {"uqrshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},        \
-      {"uqshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},         \
-      {"uqsub_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},         \
-      {"urshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},         \
-      {"ushl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},          \
-      {"sqdmulh_asisdelem_r"_h,                                                \
-       &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
-      {"sqrdmlah_asisdelem_r"_h,                                               \
-       &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
-      {"sqrdmlsh_asisdelem_r"_h,                                               \
-       &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
-      {"sqrdmulh_asisdelem_r"_h,                                               \
-       &VISITORCLASS::VisitNEONScalarByIndexedElement},                        \
-      {"dup_asisdone_only"_h, &VISITORCLASS::VisitNEONScalarCopy},             \
-      {"fcvtzs_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},   \
-      {"fcvtzu_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},   \
-      {"scvtf_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},    \
-      {"sqshlu_asisdshf_r"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},   \
-      {"sqshl_asisdshf_r"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},    \
-      {"ucvtf_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},    \
-      {"uqshl_asisdshf_r"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},    \
-      {"sqshlu_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},         \
-      {"sqshl_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},          \
-      {"uqshl_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},          \
-      {"shl_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},            \
-      {"sli_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},            \
-      {"bti_hb_hints"_h, &VISITORCLASS::VisitSystem},                          \
-      {"clrex_bn_barriers"_h, &VISITORCLASS::VisitSystem},                     \
-      {"dmb_bo_barriers"_h, &VISITORCLASS::VisitSystem},                       \
-      {"dsb_bo_barriers"_h, &VISITORCLASS::VisitSystem},                       \
-      {"hint_hm_hints"_h, &VISITORCLASS::VisitSystem},                         \
-      {"chkfeat_hf_hints"_h, &VISITORCLASS::VisitSystem},                      \
-      {"mrs_rs_systemmove"_h, &VISITORCLASS::VisitSystem},                     \
-      {"msr_sr_systemmove"_h, &VISITORCLASS::VisitSystem},                     \
-      {"psb_hc_hints"_h, &VISITORCLASS::VisitSystem},                          \
-      {"sb_only_barriers"_h, &VISITORCLASS::VisitSystem},                      \
-      {"sysl_rc_systeminstrs"_h, &VISITORCLASS::VisitSystem},                  \
-      {"sys_cr_systeminstrs"_h, &VISITORCLASS::VisitSystem},                   \
-      {"tcommit_only_barriers"_h, &VISITORCLASS::VisitSystem},                 \
-      {"tsb_hc_hints"_h, &VISITORCLASS::VisitSystem},                          \
-      {"bfdot_asimdelem_e"_h, &VISITORCLASS::VisitUnimplemented},              \
-      {"bfdot_asimdsame2_d"_h, &VISITORCLASS::VisitUnimplemented},             \
-      {"bfmlal_asimdelem_f"_h, &VISITORCLASS::VisitUnimplemented},             \
-      {"bfmlal_asimdsame2_f"_h, &VISITORCLASS::VisitUnimplemented},            \
-      {"bfmmla_asimdsame2_e"_h, &VISITORCLASS::VisitUnimplemented},            \
-      {"dsb_bon_barriers"_h, &VISITORCLASS::VisitUnimplemented},               \
-      {"ld64b_64l_memop"_h, &VISITORCLASS::VisitUnimplemented},                \
-      {"ldgm_64bulk_ldsttags"_h, &VISITORCLASS::VisitUnimplemented},           \
-      {"ldtrb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
-      {"ldtrh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
-      {"ldtrsb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"ldtrsb_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"ldtrsh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"ldtrsh_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"ldtrsw_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"ldtr_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},            \
-      {"ldtr_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},            \
-      {"st64b_64l_memop"_h, &VISITORCLASS::VisitUnimplemented},                \
-      {"st64bv_64_memop"_h, &VISITORCLASS::VisitUnimplemented},                \
-      {"st64bv0_64_memop"_h, &VISITORCLASS::VisitUnimplemented},               \
-      {"stgm_64bulk_ldsttags"_h, &VISITORCLASS::VisitUnimplemented},           \
-      {"sttrb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
-      {"sttrh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
-      {"sttr_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},            \
-      {"sttr_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},            \
-      {"stzgm_64bulk_ldsttags"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"tcancel_ex_exception"_h, &VISITORCLASS::VisitUnimplemented},           \
-      {"tstart_br_systemresult"_h, &VISITORCLASS::VisitUnimplemented},         \
-      {"ttest_br_systemresult"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"wfet_only_systeminstrswithreg"_h, &VISITORCLASS::VisitUnimplemented},  \
-      {"wfit_only_systeminstrswithreg"_h, &VISITORCLASS::VisitUnimplemented},  \
-      {"bfdot_z_zzz"_h, &VISITORCLASS::VisitUnimplemented},                    \
-      {"bfdot_z_zzzi"_h, &VISITORCLASS::VisitUnimplemented},                   \
-      {"bfmlalb_z_zzz"_h, &VISITORCLASS::VisitUnimplemented},                  \
-      {"bfmlalb_z_zzzi"_h, &VISITORCLASS::VisitUnimplemented},                 \
-      {"bfmlalt_z_zzz"_h, &VISITORCLASS::VisitUnimplemented},                  \
-      {"bfmlalt_z_zzzi"_h, &VISITORCLASS::VisitUnimplemented},                 \
-      {"bfmmla_z_zzz"_h, &VISITORCLASS::VisitUnimplemented}, {                 \
-    "unallocated"_h, &VISITORCLASS::VisitUnallocated                           \
+#define DEFAULT_FORM_TO_VISITOR_MAP(VISITORCLASS)                             \
+  {"cntb_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                        \
+      {"cntd_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                    \
+      {"cnth_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                    \
+      {"cntw_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                    \
+      {"decb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
+      {"decd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
+      {"decd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
+      {"dech_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
+      {"dech_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
+      {"decw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
+      {"decw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
+      {"dupm_z_i"_h, &VISITORCLASS::VisitSVEBroadcastBitmaskImm},             \
+      {"dup_z_zi"_h, &VISITORCLASS::VisitSVEBroadcastIndexElement},           \
+      {"incb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
+      {"incd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
+      {"incd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
+      {"inch_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
+      {"inch_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
+      {"incw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
+      {"incw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
+      {"ld1b_z_p_ai_d"_h,                                                     \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ld1d_z_p_ai_d"_h,                                                     \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ld1h_z_p_ai_d"_h,                                                     \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ld1sb_z_p_ai_d"_h,                                                    \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ld1sh_z_p_ai_d"_h,                                                    \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ld1sw_z_p_ai_d"_h,                                                    \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ld1w_z_p_ai_d"_h,                                                     \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ldff1b_z_p_ai_d"_h,                                                   \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ldff1d_z_p_ai_d"_h,                                                   \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ldff1h_z_p_ai_d"_h,                                                   \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ldff1sb_z_p_ai_d"_h,                                                  \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ldff1sh_z_p_ai_d"_h,                                                  \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ldff1sw_z_p_ai_d"_h,                                                  \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"ldff1w_z_p_ai_d"_h,                                                   \
+       &VISITORCLASS::VisitSVE64BitGatherLoad_VectorPlusImm},                 \
+      {"sqdecb_r_rs_sx"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqdecb_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqdecd_r_rs_sx"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqdecd_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqdecd_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"sqdech_r_rs_sx"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqdech_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqdech_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"sqdecw_r_rs_sx"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqdecw_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqdecw_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"sqincb_r_rs_sx"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqincb_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqincd_r_rs_sx"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqincd_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqincd_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"sqinch_r_rs_sx"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqinch_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqinch_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"sqincw_r_rs_sx"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqincw_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"sqincw_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"udf_only_perm_undef"_h, &VISITORCLASS::VisitReserved},                \
+      {"uqdecb_r_rs_uw"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqdecb_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqdecd_r_rs_uw"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqdecd_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqdecd_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"uqdech_r_rs_uw"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqdech_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqdech_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"uqdecw_r_rs_uw"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqdecw_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqdecw_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"uqincb_r_rs_uw"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqincb_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqincd_r_rs_uw"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqincd_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqincd_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"uqinch_r_rs_uw"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqinch_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqinch_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"uqincw_r_rs_uw"_h,                                                    \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqincw_r_rs_x"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
+      {"uqincw_z_zs"_h,                                                       \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
+      {"casab_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"casah_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"casalb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"casalh_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"casal_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"casal_c64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"casa_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
+      {"casa_c64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
+      {"casb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
+      {"cash_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
+      {"caslb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"caslh_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"casl_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
+      {"casl_c64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
+      {"caspal_cp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},     \
+      {"caspal_cp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},     \
+      {"caspa_cp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"caspa_cp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"caspl_cp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"caspl_cp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"casp_cp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"casp_cp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"cas_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},         \
+      {"cas_c64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},         \
+      {"ldarb_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"ldarh_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"ldar_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"ldar_lr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"ldaxp_lp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"ldaxp_lp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"ldaxrb_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},     \
+      {"ldaxrh_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},     \
+      {"ldaxr_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"ldaxr_lr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"ldlarb_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},     \
+      {"ldlarh_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},     \
+      {"ldlar_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"ldlar_lr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"ldxp_lp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"ldxp_lp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"ldxrb_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"ldxrh_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"ldxr_lr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"ldxr_lr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"stllrb_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},     \
+      {"stllrh_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},     \
+      {"stllr_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"stllr_sl64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"stlrb_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"stlrh_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"stlr_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"stlr_sl64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"stlxp_sp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"stlxp_sp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"stlxrb_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},     \
+      {"stlxrh_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},     \
+      {"stlxr_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"stlxr_sr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"stxp_sp32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"stxp_sp64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"stxrb_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"stxrh_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
+      {"stxr_sr32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"stxr_sr64_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
+      {"movk_32_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},          \
+      {"movk_64_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},          \
+      {"movn_32_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},          \
+      {"movn_64_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},          \
+      {"movz_32_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},          \
+      {"movz_64_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},          \
+      {"addhn_asimddiff_n"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"raddhn_asimddiff_n"_h, &VISITORCLASS::VisitNEON3Different},           \
+      {"rsubhn_asimddiff_n"_h, &VISITORCLASS::VisitNEON3Different},           \
+      {"sabal_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"sabdl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"saddl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"saddw_asimddiff_w"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"smlal_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"smlsl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"smull_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"sqdmlal_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},          \
+      {"sqdmlsl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},          \
+      {"sqdmull_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},          \
+      {"ssubl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"ssubw_asimddiff_w"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"subhn_asimddiff_n"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"uabal_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"uabdl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"uaddl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"uaddw_asimddiff_w"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"umlal_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"umlsl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"umull_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"usubl_asimddiff_l"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"usubw_asimddiff_w"_h, &VISITORCLASS::VisitNEON3Different},            \
+      {"addp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"add_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
+      {"cmeq_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"cmge_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"cmgt_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"cmhi_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"cmhs_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"cmtst_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"fabd_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"facge_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"facgt_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"faddp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"fadd_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"fcmeq_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"fcmge_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"fcmgt_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"fdiv_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"fmaxnmp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},            \
+      {"fmaxnm_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},             \
+      {"fmaxp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"fmax_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"fminnmp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},            \
+      {"fminnm_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},             \
+      {"fminp_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"fmin_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"fmla_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"fmls_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"fmulx_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"fmul_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"frecps_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},             \
+      {"frsqrts_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},            \
+      {"fsub_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"sqadd_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"sqdmulh_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},            \
+      {"sqrdmulh_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},           \
+      {"sqrshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},             \
+      {"sqshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"sqsub_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"srshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"sshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"sub_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},                \
+      {"uqadd_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"uqrshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},             \
+      {"uqshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"uqsub_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"urshl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},              \
+      {"ushl_asimdsame_only"_h, &VISITORCLASS::VisitNEON3Same},               \
+      {"fcadd_asimdsame2_c"_h, &VISITORCLASS::VisitNEON3SameExtra},           \
+      {"fcmla_asimdsame2_c"_h, &VISITORCLASS::VisitNEON3SameExtra},           \
+      {"sdot_asimdsame2_d"_h, &VISITORCLASS::VisitNEON3SameExtra},            \
+      {"sqrdmlah_asimdsame2_only"_h, &VISITORCLASS::VisitNEON3SameExtra},     \
+      {"sqrdmlsh_asimdsame2_only"_h, &VISITORCLASS::VisitNEON3SameExtra},     \
+      {"udot_asimdsame2_d"_h, &VISITORCLASS::VisitNEON3SameExtra},            \
+      {"addv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},          \
+      {"saddlv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},        \
+      {"smaxv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},         \
+      {"sminv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},         \
+      {"uaddlv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},        \
+      {"umaxv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},         \
+      {"uminv_asimdall_only"_h, &VISITORCLASS::VisitNEONAcrossLanes},         \
+      {"mla_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},        \
+      {"mls_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},        \
+      {"mul_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},        \
+      {"sqdmulh_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},    \
+      {"sqrdmlah_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},   \
+      {"sqrdmlsh_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},   \
+      {"sqrdmulh_asimdelem_r"_h, &VISITORCLASS::VisitNEONByIndexedElement},   \
+      {"dup_asimdins_dr_r"_h, &VISITORCLASS::VisitNEONCopy},                  \
+      {"dup_asimdins_dv_v"_h, &VISITORCLASS::VisitNEONCopy},                  \
+      {"ins_asimdins_ir_r"_h, &VISITORCLASS::VisitNEONCopy},                  \
+      {"ins_asimdins_iv_v"_h, &VISITORCLASS::VisitNEONCopy},                  \
+      {"smov_asimdins_w_w"_h, &VISITORCLASS::VisitNEONCopy},                  \
+      {"smov_asimdins_x_x"_h, &VISITORCLASS::VisitNEONCopy},                  \
+      {"umov_asimdins_w_w"_h, &VISITORCLASS::VisitNEONCopy},                  \
+      {"umov_asimdins_x_x"_h, &VISITORCLASS::VisitNEONCopy},                  \
+      {"ld1_asisdlse_r1_1v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct}, \
+      {"ld1_asisdlse_r2_2v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct}, \
+      {"ld1_asisdlse_r3_3v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct}, \
+      {"ld1_asisdlse_r4_4v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct}, \
+      {"ld2_asisdlse_r2"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},    \
+      {"ld3_asisdlse_r3"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},    \
+      {"ld4_asisdlse_r4"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},    \
+      {"st1_asisdlse_r1_1v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct}, \
+      {"st1_asisdlse_r2_2v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct}, \
+      {"st1_asisdlse_r3_3v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct}, \
+      {"st1_asisdlse_r4_4v"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct}, \
+      {"st2_asisdlse_r2"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},    \
+      {"st3_asisdlse_r3"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},    \
+      {"st4_asisdlse_r4"_h, &VISITORCLASS::VisitNEONLoadStoreMultiStruct},    \
+      {"trn1_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                \
+      {"trn2_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                \
+      {"uzp1_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                \
+      {"uzp2_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                \
+      {"zip1_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                \
+      {"zip2_asimdperm_only"_h, &VISITORCLASS::VisitNEONPerm},                \
+      {"sqabs_asisdmisc_r"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},        \
+      {"sqneg_asisdmisc_r"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},        \
+      {"sqxtn_asisdmisc_n"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},        \
+      {"sqxtun_asisdmisc_n"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},       \
+      {"suqadd_asisdmisc_r"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},       \
+      {"uqxtn_asisdmisc_n"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},        \
+      {"usqadd_asisdmisc_r"_h, &VISITORCLASS::VisitNEONScalar2RegMisc},       \
+      {"sqdmlal_asisddiff_only"_h, &VISITORCLASS::VisitNEONScalar3Diff},      \
+      {"sqdmlsl_asisddiff_only"_h, &VISITORCLASS::VisitNEONScalar3Diff},      \
+      {"sqdmull_asisddiff_only"_h, &VISITORCLASS::VisitNEONScalar3Diff},      \
+      {"sqadd_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},        \
+      {"sqdmulh_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},      \
+      {"sqrdmulh_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},     \
+      {"sqrshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},       \
+      {"sqshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},        \
+      {"sqsub_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},        \
+      {"srshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},        \
+      {"sshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},         \
+      {"uqadd_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},        \
+      {"uqrshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},       \
+      {"uqshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},        \
+      {"uqsub_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},        \
+      {"urshl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},        \
+      {"ushl_asisdsame_only"_h, &VISITORCLASS::VisitNEONScalar3Same},         \
+      {"sqdmulh_asisdelem_r"_h,                                               \
+       &VISITORCLASS::VisitNEONScalarByIndexedElement},                       \
+      {"sqrdmlah_asisdelem_r"_h,                                              \
+       &VISITORCLASS::VisitNEONScalarByIndexedElement},                       \
+      {"sqrdmlsh_asisdelem_r"_h,                                              \
+       &VISITORCLASS::VisitNEONScalarByIndexedElement},                       \
+      {"sqrdmulh_asisdelem_r"_h,                                              \
+       &VISITORCLASS::VisitNEONScalarByIndexedElement},                       \
+      {"dup_asisdone_only"_h, &VISITORCLASS::VisitNEONScalarCopy},            \
+      {"fcvtzs_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},  \
+      {"fcvtzu_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},  \
+      {"scvtf_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},   \
+      {"sqshlu_asisdshf_r"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},  \
+      {"sqshl_asisdshf_r"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},   \
+      {"ucvtf_asisdshf_c"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},   \
+      {"uqshl_asisdshf_r"_h, &VISITORCLASS::VisitNEONScalarShiftImmediate},   \
+      {"sqshlu_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},        \
+      {"sqshl_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},         \
+      {"uqshl_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},         \
+      {"shl_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},           \
+      {"sli_asimdshf_r"_h, &VISITORCLASS::VisitNEONShiftImmediate},           \
+      {"bti_hb_hints"_h, &VISITORCLASS::VisitSystem},                         \
+      {"clrex_bn_barriers"_h, &VISITORCLASS::VisitSystem},                    \
+      {"dmb_bo_barriers"_h, &VISITORCLASS::VisitSystem},                      \
+      {"dsb_bo_barriers"_h, &VISITORCLASS::VisitSystem},                      \
+      {"hint_hm_hints"_h, &VISITORCLASS::VisitSystem},                        \
+      {"chkfeat_hf_hints"_h, &VISITORCLASS::VisitSystem},                     \
+      {"mrs_rs_systemmove"_h, &VISITORCLASS::VisitSystem},                    \
+      {"msr_sr_systemmove"_h, &VISITORCLASS::VisitSystem},                    \
+      {"psb_hc_hints"_h, &VISITORCLASS::VisitSystem},                         \
+      {"sb_only_barriers"_h, &VISITORCLASS::VisitSystem},                     \
+      {"sysl_rc_systeminstrs"_h, &VISITORCLASS::VisitSystem},                 \
+      {"sys_cr_systeminstrs"_h, &VISITORCLASS::VisitSystem},                  \
+      {"tcommit_only_barriers"_h, &VISITORCLASS::VisitSystem},                \
+      {"tsb_hc_hints"_h, &VISITORCLASS::VisitSystem},                         \
+      {"bfdot_asimdelem_e"_h, &VISITORCLASS::VisitUnimplemented},             \
+      {"bfdot_asimdsame2_d"_h, &VISITORCLASS::VisitUnimplemented},            \
+      {"bfmlal_asimdelem_f"_h, &VISITORCLASS::VisitUnimplemented},            \
+      {"bfmlal_asimdsame2_f"_h, &VISITORCLASS::VisitUnimplemented},           \
+      {"bfmmla_asimdsame2_e"_h, &VISITORCLASS::VisitUnimplemented},           \
+      {"dsb_bon_barriers"_h, &VISITORCLASS::VisitUnimplemented},              \
+      {"ld64b_64l_memop"_h, &VISITORCLASS::VisitUnimplemented},               \
+      {"ldgm_64bulk_ldsttags"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"ldtrb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"ldtrh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"ldtrsb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},         \
+      {"ldtrsb_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},         \
+      {"ldtrsh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},         \
+      {"ldtrsh_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},         \
+      {"ldtrsw_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},         \
+      {"ldtr_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
+      {"ldtr_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
+      {"st64b_64l_memop"_h, &VISITORCLASS::VisitUnimplemented},               \
+      {"st64bv_64_memop"_h, &VISITORCLASS::VisitUnimplemented},               \
+      {"st64bv0_64_memop"_h, &VISITORCLASS::VisitUnimplemented},              \
+      {"stgm_64bulk_ldsttags"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"sttrb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"sttrh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"sttr_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
+      {"sttr_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
+      {"stzgm_64bulk_ldsttags"_h, &VISITORCLASS::VisitUnimplemented},         \
+      {"tcancel_ex_exception"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"tstart_br_systemresult"_h, &VISITORCLASS::VisitUnimplemented},        \
+      {"ttest_br_systemresult"_h, &VISITORCLASS::VisitUnimplemented},         \
+      {"wfet_only_systeminstrswithreg"_h, &VISITORCLASS::VisitUnimplemented}, \
+      {"wfit_only_systeminstrswithreg"_h, &VISITORCLASS::VisitUnimplemented}, \
+      {"bfdot_z_zzz"_h, &VISITORCLASS::VisitUnimplemented},                   \
+      {"bfdot_z_zzzi"_h, &VISITORCLASS::VisitUnimplemented},                  \
+      {"bfmlalb_z_zzz"_h, &VISITORCLASS::VisitUnimplemented},                 \
+      {"bfmlalb_z_zzzi"_h, &VISITORCLASS::VisitUnimplemented},                \
+      {"bfmlalt_z_zzz"_h, &VISITORCLASS::VisitUnimplemented},                 \
+      {"bfmlalt_z_zzzi"_h, &VISITORCLASS::VisitUnimplemented},                \
+      {"bfmmla_z_zzz"_h, &VISITORCLASS::VisitUnimplemented}, {                \
+    "unallocated"_h, &VISITORCLASS::VisitUnallocated                          \
   }
 
 #define SIM_AUD_VISITOR_MAP(VISITORCLASS)                                      \
@@ -2854,6 +2782,78 @@
        &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
       {"st1w_z_p_ai_s"_h,                                                      \
        &VISITORCLASS::VisitSVE32BitScatterStore_VectorPlusImm},                \
+      {"st1b_z_p_ai_d"_h,                                                      \
+       &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
+      {"st1d_z_p_ai_d"_h,                                                      \
+       &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
+      {"st1h_z_p_ai_d"_h,                                                      \
+       &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
+      {"st1w_z_p_ai_d"_h,                                                      \
+       &VISITORCLASS::VisitSVE64BitScatterStore_VectorPlusImm},                \
+      {"ldff1b_z_p_br_u16"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1b_z_p_br_u32"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1b_z_p_br_u64"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1b_z_p_br_u8"_h,                                                   \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1d_z_p_br_u64"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1h_z_p_br_u16"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1h_z_p_br_u32"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1h_z_p_br_u64"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1sb_z_p_br_s16"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1sb_z_p_br_s32"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1sb_z_p_br_s64"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1sh_z_p_br_s32"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1sh_z_p_br_s64"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1sw_z_p_br_s64"_h,                                                 \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1w_z_p_br_u32"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldff1w_z_p_br_u64"_h,                                                  \
+       &VISITORCLASS::VisitSVEContiguousFirstFaultLoad_ScalarPlusScalar},      \
+      {"ldnt1b_z_p_bi_contiguous"_h,                                           \
+       &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
+      {"ldnt1d_z_p_bi_contiguous"_h,                                           \
+       &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
+      {"ldnt1h_z_p_bi_contiguous"_h,                                           \
+       &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
+      {"ldnt1w_z_p_bi_contiguous"_h,                                           \
+       &VISITORCLASS::VisitSVEContiguousNonTemporalLoad_ScalarPlusImm},        \
+      {"stnt1b_z_p_bi_contiguous"_h,                                           \
+       &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
+      {"stnt1d_z_p_bi_contiguous"_h,                                           \
+       &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
+      {"stnt1h_z_p_bi_contiguous"_h,                                           \
+       &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
+      {"stnt1w_z_p_bi_contiguous"_h,                                           \
+       &VISITORCLASS::VisitSVEContiguousNonTemporalStore_ScalarPlusImm},       \
+      {"ld1rb_z_p_bi_u16"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
+      {"ld1rb_z_p_bi_u32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
+      {"ld1rb_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
+      {"ld1rb_z_p_bi_u8"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},   \
+      {"ld1rd_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
+      {"ld1rh_z_p_bi_u16"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
+      {"ld1rh_z_p_bi_u32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
+      {"ld1rh_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
+      {"ld1rsb_z_p_bi_s16"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
+      {"ld1rsb_z_p_bi_s32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
+      {"ld1rsb_z_p_bi_s64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
+      {"ld1rsh_z_p_bi_s32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
+      {"ld1rsh_z_p_bi_s64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
+      {"ld1rsw_z_p_bi_s64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement}, \
+      {"ld1rw_z_p_bi_u32"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
+      {"ld1rw_z_p_bi_u64"_h, &VISITORCLASS::VisitSVELoadAndBroadcastElement},  \
       {"adcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \
