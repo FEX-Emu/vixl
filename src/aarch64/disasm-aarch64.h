@@ -149,23 +149,6 @@ class Disassembler : public DecoderVisitor {
   void DisassembleCpy(const Instruction* instr);
   void DisassembleSet(const Instruction* instr);
 
-  void DisassembleSVEFlogb(const Instruction* instr);
-
-  void DisassembleNEONLoadBroadcast(const Instruction* instr);
-  void DisassembleNEONMulByElementLong(const Instruction* instr);
-  void DisassembleNEONFPMulByElement(const Instruction* instr);
-  void DisassembleNEON2RegExtract(const Instruction* instr);
-  void DisassembleNEON2RegAddlp(const Instruction* instr);
-  void DisassembleNEON2RegCompare(const Instruction* instr);
-  void DisassembleNEON2RegFPConvert(const Instruction* instr);
-  void DisassembleNEON3SameNoD(const Instruction* instr);
-  void DisassembleNEONShiftLeftLongImm(const Instruction* instr);
-  void DisassembleNEONShiftRightImm(const Instruction* instr);
-  void DisassembleNEONShiftRightNarrowImm(const Instruction* instr);
-  void DisassembleNEONScalarSatMulLongIndex(const Instruction* instr);
-  void DisassembleNEONScalarShiftRightNarrowImm(const Instruction* instr);
-  void DisassembleNEONPolynomialMul(const Instruction* instr);
-
   void Format(const Instruction* instr,
               const char* mnemonic,
               const char* format0,
@@ -197,6 +180,7 @@ class Disassembler : public DecoderVisitor {
   int SubstituteSVESize(const Instruction* instr, const char* format);
   int SubstituteTernary(const Instruction* instr, const char* format);
   int SubstituteConditionalBlock(const Instruction* instr, const char* format);
+  int SubstituteGeneric(const Instruction* instr, const char* format);
 
   std::pair<unsigned, unsigned> GetRegNumForField(const Instruction* instr,
                                                   char reg_prefix,

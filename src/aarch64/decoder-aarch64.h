@@ -38,24 +38,6 @@
 // List macro containing all visitors needed by the decoder class.
 #define VISITOR_LIST_THAT_RETURN(V)            \
   V(LoadStoreExclusive)                        \
-  V(MoveWideImmediate)                         \
-  V(NEON2RegMisc)                              \
-  V(NEON3Different)                            \
-  V(NEON3Same)                                 \
-  V(NEON3SameExtra)                            \
-  V(NEONAcrossLanes)                           \
-  V(NEONByIndexedElement)                      \
-  V(NEONCopy)                                  \
-  V(NEONLoadStoreMultiStruct)                  \
-  V(NEONPerm)                                  \
-  V(NEONScalar2RegMisc)                        \
-  V(NEONScalar3Diff)                           \
-  V(NEONScalar3Same)                           \
-  V(NEONScalarByIndexedElement)                \
-  V(NEONScalarCopy)                            \
-  V(NEONScalarShiftImmediate)                  \
-  V(NEONShiftImmediate)                        \
-  V(SVE64BitGatherLoad_VectorPlusImm)          \
   V(SVEBroadcastBitmaskImm)                    \
   V(SVEBroadcastIndexElement)                  \
   V(SVEElementCount)                           \
@@ -265,6 +247,24 @@
   V(SVEContiguousNonTemporalLoad_ScalarPlusImm)                  \
   V(SVEContiguousNonTemporalStore_ScalarPlusImm)                 \
   V(SVELoadAndBroadcastElement)                                  \
+  V(NEONPerm)                                                    \
+  V(NEONLoadStoreMultiStruct)                                    \
+  V(NEON3Same)                                                   \
+  V(NEON3SameExtra)                                              \
+  V(NEON2RegMisc)                                                \
+  V(NEONByIndexedElement)                                        \
+  V(SVE64BitGatherLoad_VectorPlusImm)                            \
+  V(NEONShiftImmediate)                                          \
+  V(NEONCopy)                                                    \
+  V(NEONScalar2RegMisc)                                          \
+  V(NEONScalar3Diff)                                             \
+  V(NEONScalar3Same)                                             \
+  V(NEONScalarCopy)                                              \
+  V(NEONScalarByIndexedElement)                                  \
+  V(NEONAcrossLanes)                                             \
+  V(NEONScalarShiftImmediate)                                    \
+  V(NEON3Different)                                              \
+  V(MoveWideImmediate)                                           \
   V(AddSubWithCarry)
 
 #define VISITOR_LIST_THAT_DONT_RETURN(V) V(Reserved)
