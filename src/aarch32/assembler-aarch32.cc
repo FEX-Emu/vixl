@@ -1776,7 +1776,7 @@ static const struct ReferenceInfo kT16CbzInfo =
      0,    // Min offset.
      126,  // Max offset.
      2,    // Alignment.
-     ReferenceInfo::kDontAlignPc};
+     PcNeedsAligning::kDontAlignPc};
 
 
 // B<c>{<q>} <label> ; T1
@@ -1785,7 +1785,7 @@ static const struct ReferenceInfo kT16ConditionalBranchInfo =
      -256,  // Min offset.
      254,   // Max offset.
      2,     // Alignment.
-     ReferenceInfo::kDontAlignPc};
+     PcNeedsAligning::kDontAlignPc};
 
 
 // ADR{<c>}{<q>} <Rd>, <label> ; T1
@@ -1795,7 +1795,7 @@ static const struct ReferenceInfo kT16DataInfo =
      0,     // Min offset.
      1020,  // Max offset.
      4,     // Alignment.
-     ReferenceInfo::kAlignPc};
+     PcNeedsAligning::kAlignPc};
 
 
 // B{<c>}{<q>} <label> ; T2
@@ -1804,7 +1804,7 @@ static const struct ReferenceInfo kT16BranchInfo =
      -2048,  // Min offset.
      2046,   // Max offset.
      2,      // Alignment.
-     ReferenceInfo::kDontAlignPc};
+     PcNeedsAligning::kDontAlignPc};
 
 
 // LDRD{<c>}{<q>} <Rt>, <Rt2>, <label> ; T1
@@ -1815,7 +1815,7 @@ static const struct ReferenceInfo kT32DataInfo =
      -1020,  // Min offset.
      1020,   // Max offset.
      4,      // Alignment.
-     ReferenceInfo::kAlignPc};
+     PcNeedsAligning::kAlignPc};
 
 
 // ADR{<c>}{<q>} <Rd>, <label> ; T3
@@ -1831,7 +1831,7 @@ static const struct ReferenceInfo kT32FarDataInfo =
      -4095,  // Min offset.
      4095,   // Max offset.
      1,      // Alignment.
-     ReferenceInfo::kAlignPc};
+     PcNeedsAligning::kAlignPc};
 
 
 // B<c>{<q>} <label> ; T3
@@ -1840,7 +1840,7 @@ static const struct ReferenceInfo kT32ConditionalBranchInfo =
      -1048576,  // Min offset.
      1048574,   // Max offset.
      2,         // Alignment.
-     ReferenceInfo::kDontAlignPc};
+     PcNeedsAligning::kDontAlignPc};
 
 
 // B{<c>}{<q>} <label> ; T4
@@ -1850,7 +1850,7 @@ static const struct ReferenceInfo kT32BranchInfo =
      -16777216,  // Min offset.
      16777214,   // Max offset.
      2,          // Alignment.
-     ReferenceInfo::kDontAlignPc};
+     PcNeedsAligning::kDontAlignPc};
 
 
 // BLX{<c>}{<q>} <label> ; T2
@@ -1859,7 +1859,7 @@ static const struct ReferenceInfo kT32BlxInfo =
      -16777216,  // Min offset.
      16777212,   // Max offset.
      4,          // Alignment.
-     ReferenceInfo::kAlignPc};
+     PcNeedsAligning::kAlignPc};
 
 
 // LDRD{<c>}{<q>} <Rt>, <Rt2>, <label> ; A1
@@ -1871,7 +1871,7 @@ static const struct ReferenceInfo kA32VeryNearDataInfo =
      -255,  // Min offset.
      255,   // Max offset.
      1,     // Alignment.
-     ReferenceInfo::kAlignPc};
+     PcNeedsAligning::kAlignPc};
 
 
 // ADR{<c>}{<q>} <Rd>, <label> ; A1
@@ -1879,7 +1879,7 @@ static const struct ReferenceInfo kA32AdrInfo = {kA32InstructionSizeInBytes,
                                                  -256,  // Min offset.
                                                  256,   // Max offset.
                                                  1,     // Alignment.
-                                                 ReferenceInfo::kAlignPc};
+                                                 PcNeedsAligning::kAlignPc};
 
 
 // VLDR{<c>}{<q>}{.64} <Dd>, <label> ; A1
@@ -1888,7 +1888,7 @@ static const struct ReferenceInfo kA32DataInfo = {kA32InstructionSizeInBytes,
                                                   -1020,  // Min offset.
                                                   1020,   // Max offset.
                                                   4,      // Alignment.
-                                                  ReferenceInfo::kAlignPc};
+                                                  PcNeedsAligning::kAlignPc};
 
 
 // LDR{<c>}{<q>} <Rt>, <label> ; A1
@@ -1899,7 +1899,7 @@ static const struct ReferenceInfo kA32FarDataInfo = {kA32InstructionSizeInBytes,
                                                      -4095,  // Min offset.
                                                      4095,   // Max offset.
                                                      1,      // Alignment.
-                                                     ReferenceInfo::kAlignPc};
+                                                     PcNeedsAligning::kAlignPc};
 
 
 // B{<c>}{<q>} <label> ; A1
@@ -1909,7 +1909,7 @@ static const struct ReferenceInfo kA32BranchInfo =
      -33554432,  // Min offset.
      33554428,   // Max offset.
      4,          // Alignment.
-     ReferenceInfo::kDontAlignPc};
+     PcNeedsAligning::kDontAlignPc};
 
 
 // BLX{<c>}{<q>} <label> ; A2
@@ -1917,7 +1917,7 @@ static const struct ReferenceInfo kA32BlxInfo = {kA32InstructionSizeInBytes,
                                                  -33554432,  // Min offset.
                                                  33554430,   // Max offset.
                                                  2,          // Alignment.
-                                                 ReferenceInfo::kAlignPc};
+                                                 PcNeedsAligning::kAlignPc};
 
 
 void Assembler::adc(Condition cond,

@@ -1351,12 +1351,13 @@ inline std::ostream& operator<<(std::ostream& os, Alignment align) {
 }
 
 // Structure containing information on forward references.
+enum class PcNeedsAligning { kAlignPc, kDontAlignPc };
 struct ReferenceInfo {
   int size;
   int min_offset;
   int max_offset;
   int alignment;  // As a power of two.
-  enum { kAlignPc, kDontAlignPc } pc_needs_aligning;
+  PcNeedsAligning pc_needs_aligning;
 };
 
 }  // namespace aarch32

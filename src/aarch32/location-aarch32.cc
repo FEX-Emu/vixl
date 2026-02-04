@@ -89,7 +89,7 @@ void Location::AddForwardRef(int32_t instr_location,
                              const ReferenceInfo* info) {
   VIXL_ASSERT(referenced_);
   int32_t from = instr_location + (op.IsUsingT32() ? kT32PcDelta : kA32PcDelta);
-  if (info->pc_needs_aligning == ReferenceInfo::kAlignPc)
+  if (info->pc_needs_aligning == PcNeedsAligning::kAlignPc)
     from = AlignDown(from, 4);
   int32_t min_object_location = from + info->min_offset;
   int32_t max_object_location = from + info->max_offset;

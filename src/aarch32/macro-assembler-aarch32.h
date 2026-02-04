@@ -438,7 +438,9 @@ class MacroAssembler : public Assembler, public MacroAssemblerInterface {
     }
     int32_t from = cursor;
     from += IsUsingT32() ? kT32PcDelta : kA32PcDelta;
-    if (info->pc_needs_aligning) from = AlignDown(from, 4);
+    if (info->pc_needs_aligning == PcNeedsAligning::kAlignPc) {
+      from = AlignDown(from, 4);
+    }
     int32_t min = from + info->min_offset;
     int32_t max = from + info->max_offset;
     ForwardReference<int32_t> temp_ref(cursor,

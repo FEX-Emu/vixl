@@ -1979,6 +1979,104 @@ void GenerateLdrLiteralTriggerPoolEmission(InstructionSet isa,
   }
 }
 
+class PoolAlignmentTestLocation : public Location {
+ public:
+  PoolAlignmentTestLocation(int size, int alignment)
+      : Location(kLiteralType, size, alignment) {}
+
+  void EmitPoolObject(MacroAssemblerInterface* masm) VIXL_OVERRIDE {
+    // Advance the buffer by the object size to keep pool size accounting
+    // consistent with the pool manager's pc arithmetic.
+    masm->AsAssemblerBase()->GetBuffer()->EmitZeroedBytes(
+        GetPoolObjectSizeInBytes());
+  }
+
+  bool ShouldBeDeletedOnPlacementByPoolManager() const VIXL_OVERRIDE {
+    return true;
+  }
+};
+
+TEST_T32(check_alignment_in_pool_emission_check_for_instruction) {
+  SETUP();
+  START();
+
+  VIXL_CHECK(test.PoolIsEmpty());
+
+  const int kObjectCount = 1022;
+  {
+    // Bump the PC so we can use earlier instruction locations in the pattern.
+    int space = kObjectCount * k32BitT32InstructionSizeInBytes
+                + k16BitT32InstructionSizeInBytes;
+    ExactAssemblyScope scope(&masm, space, ExactAssemblyScope::kExactSize);
+    for (int i = 0; i < kObjectCount; ++i) {
+      __ nop();
+      __ nop();
+    }
+    __ nop();
+  }
+  // We need the PC offset to not be aligned to 4 bytes.
+  VIXL_CHECK((masm.GetCursorOffset() & 3) == 2);
+
+  // Match the T32 far data reference info used by the assembler.
+  const ReferenceInfo kT32FarDataInfo = {k32BitT32InstructionSizeInBytes,
+                                         -4095,  // Min offset.
+                                         4095,   // Max offset.
+                                         1,      // Alignment.
+                                         PcNeedsAligning::kAlignPc};
+
+  const int32_t pc_offset = masm.GetCursorOffset();
+  const ReferenceInfo* object_info = &kT32FarDataInfo;
+  for (int i = 0; i < kObjectCount; ++i) {
+    int32_t pc_for_ref = pc_offset - i * k32BitT32InstructionSizeInBytes;
+    int32_t from = pc_for_ref + kT32PcDelta;
+    if (object_info->pc_needs_aligning == PcNeedsAligning::kAlignPc) {
+      from = AlignDown(from, 4);
+    }
+    PoolAlignmentTestLocation* object = new PoolAlignmentTestLocation(4, 4);
+    ForwardReference<int32_t> ref(pc_for_ref,
+                                  object_info->size,
+                                  from + object_info->min_offset,
+                                  from + object_info->max_offset,
+                                  object_info->alignment);
+    test.AddObjectReference(&ref, object);
+  }
+  VIXL_CHECK(!test.PoolIsEmpty());
+  VIXL_CHECK(test.GetPoolCheckpoint() > pc_offset);
+
+  // Check that we get a different decision regarding emitting the pools,
+  // depending on whether we align the pc for the minimum/maximum offset
+  // calculations for the upcoming reference or not.
+  Literal<uint32_t> literal(0x12345678);
+
+  // Make sure we haven't actually emitted anything.
+  VIXL_CHECK(pc_offset == masm.GetCursorOffset());
+  const ReferenceInfo info = kT32FarDataInfo;
+  const int32_t from_unaligned = pc_offset + kT32PcDelta;
+  const int32_t from_aligned = AlignDown(from_unaligned, 4);
+
+  ForwardReference<int32_t> ref_unaligned(pc_offset,
+                                          info.size,
+                                          from_unaligned + info.min_offset,
+                                          from_unaligned + info.max_offset,
+                                          info.alignment);
+  VIXL_CHECK(!test.MustEmit(pc_offset, info.size, &ref_unaligned, &literal));
+  ForwardReference<int32_t> ref_aligned(pc_offset,
+                                        info.size,
+                                        from_aligned + info.min_offset,
+                                        from_aligned + info.max_offset,
+                                        info.alignment);
+  VIXL_CHECK(test.MustEmit(pc_offset, info.size, &ref_aligned, &literal));
+
+  // Add the reference.
+  __ Ldr(r0, &literal);
+  // If the pool emission was skipped before emitting the Ldr, this will
+  // assert because we are now past the recalculated pool checkpoint.
+  __ Mov(r1, 0);
+
+  END();
+  RUN();
+}
+
 
 TEST(ldr_literal_trigger_pool_emission) {
   GenerateLdrLiteralTriggerPoolEmission(isa, false);
@@ -6487,7 +6585,7 @@ TEST_T32(assembler_bind_label) {
                              ExactAssemblyScope::kExactSize);       \
     int32_t program_counter =                                       \
         masm.GetCursorOffset() + __ GetArchitectureStatePCOffset(); \
-    if (info->pc_needs_aligning == ReferenceInfo::kAlignPc) {       \
+    if (info->pc_needs_aligning == PcNeedsAligning::kAlignPc) {     \
       program_counter = AlignDown(program_counter, 4);              \
     }                                                               \
     Label label(program_counter + info->min_offset);                \
@@ -6499,7 +6597,7 @@ TEST_T32(assembler_bind_label) {
                              ExactAssemblyScope::kExactSize);       \
     int32_t program_counter =                                       \
         masm.GetCursorOffset() + __ GetArchitectureStatePCOffset(); \
-    if (info->pc_needs_aligning == ReferenceInfo::kAlignPc) {       \
+    if (info->pc_needs_aligning == PcNeedsAligning::kAlignPc) {     \
       program_counter = AlignDown(program_counter, 4);              \
     }                                                               \
     Label label(program_counter + info->max_offset);                \
@@ -6514,7 +6612,7 @@ TEST_T32(assembler_bind_label) {
                              ExactAssemblyScope::kMaximumSize);           \
     int32_t program_counter =                                             \
         masm.GetCursorOffset() + __ GetArchitectureStatePCOffset();       \
-    if (info->pc_needs_aligning == ReferenceInfo::kAlignPc) {             \
+    if (info->pc_needs_aligning == PcNeedsAligning::kAlignPc) {           \
       program_counter = AlignDown(program_counter, 4);                    \
     }                                                                     \
     Label label(program_counter + info->max_offset + info->alignment);    \
@@ -6529,7 +6627,7 @@ TEST_T32(assembler_bind_label) {
                              ExactAssemblyScope::kMaximumSize);           \
     int32_t program_counter =                                             \
         masm.GetCursorOffset() + __ GetArchitectureStatePCOffset();       \
-    if (info->pc_needs_aligning == ReferenceInfo::kAlignPc) {             \
+    if (info->pc_needs_aligning == PcNeedsAligning::kAlignPc) {           \
       program_counter = AlignDown(program_counter, 4);                    \
     }                                                                     \
     Label label(program_counter + info->min_offset - info->alignment);    \

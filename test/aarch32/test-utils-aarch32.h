@@ -40,12 +40,26 @@ namespace aarch32 {
 class TestMacroAssembler {
  public:
   explicit TestMacroAssembler(MacroAssembler* masm)
-      : test(&masm->pool_manager_) {}
+      : masm_(masm), test(&masm->pool_manager_) {}
   int32_t GetPoolCheckpoint() const { return test.GetPoolCheckpoint(); }
   int GetPoolSize() const { return test.GetPoolSize(); }
   bool PoolIsEmpty() const { return test.PoolIsEmpty(); }
+  bool MustEmit(int32_t pc_offset,
+                int num_bytes,
+                ForwardReference<int32_t>* reference = NULL,
+                LocationBase<int32_t>* object = NULL) const {
+    return masm_->pool_manager_.MustEmit(pc_offset,
+                                         num_bytes,
+                                         reference,
+                                         object);
+  }
+  void AddObjectReference(const ForwardReference<int32_t>* reference,
+                          LocationBase<int32_t>* object) const {
+    masm_->pool_manager_.AddObjectReference(reference, object);
+  }
 
  private:
+  MacroAssembler* masm_;
   TestPoolManager test;
 };
 
