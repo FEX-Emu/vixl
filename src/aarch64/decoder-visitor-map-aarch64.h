@@ -34,115 +34,9 @@
 // shared.
 
 #define DEFAULT_FORM_TO_VISITOR_MAP(VISITORCLASS)                             \
-  {"cntb_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                        \
-      {"cntd_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                    \
-      {"cnth_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                    \
-      {"cntw_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                    \
-      {"decb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
-      {"decd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
-      {"decd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
-      {"dech_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
-      {"dech_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
-      {"decw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
-      {"decw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
-      {"dupm_z_i"_h, &VISITORCLASS::VisitSVEBroadcastBitmaskImm},             \
+  {"dupm_z_i"_h, &VISITORCLASS::VisitSVEBroadcastBitmaskImm},                 \
       {"dup_z_zi"_h, &VISITORCLASS::VisitSVEBroadcastIndexElement},           \
-      {"incb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
-      {"incd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
-      {"incd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
-      {"inch_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
-      {"inch_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
-      {"incw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},   \
-      {"incw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},     \
-      {"sqdecb_r_rs_sx"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqdecb_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqdecd_r_rs_sx"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqdecd_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqdecd_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
-      {"sqdech_r_rs_sx"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqdech_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqdech_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
-      {"sqdecw_r_rs_sx"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqdecw_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqdecw_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
-      {"sqincb_r_rs_sx"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqincb_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqincd_r_rs_sx"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqincd_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqincd_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
-      {"sqinch_r_rs_sx"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqinch_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqinch_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
-      {"sqincw_r_rs_sx"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqincw_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"sqincw_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
       {"udf_only_perm_undef"_h, &VISITORCLASS::VisitReserved},                \
-      {"uqdecb_r_rs_uw"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqdecb_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqdecd_r_rs_uw"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqdecd_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqdecd_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
-      {"uqdech_r_rs_uw"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqdech_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqdech_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
-      {"uqdecw_r_rs_uw"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqdecw_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqdecw_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
-      {"uqincb_r_rs_uw"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqincb_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqincd_r_rs_uw"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqincd_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqincd_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
-      {"uqinch_r_rs_uw"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqinch_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqinch_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
-      {"uqincw_r_rs_uw"_h,                                                    \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqincw_r_rs_x"_h,                                                     \
-       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},        \
-      {"uqincw_z_zs"_h,                                                       \
-       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},          \
       {"casab_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
       {"casah_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
       {"casalb_c32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},      \
@@ -2854,6 +2748,112 @@
       {"movz_64_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
       {"movn_32_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
       {"movn_64_movewide"_h, &VISITORCLASS::VisitMoveWideImmediate},           \
+      {"decb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
+      {"decd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
+      {"dech_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
+      {"decw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
+      {"incb_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
+      {"incd_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
+      {"inch_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
+      {"incw_r_rs"_h, &VISITORCLASS::VisitSVEIncDecRegisterByElementCount},    \
+      {"cntb_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
+      {"cntd_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
+      {"cnth_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
+      {"cntw_r_s"_h, &VISITORCLASS::VisitSVEElementCount},                     \
+      {"decd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
+      {"dech_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
+      {"decw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
+      {"incd_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
+      {"inch_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
+      {"incw_z_zs"_h, &VISITORCLASS::VisitSVEIncDecVectorByElementCount},      \
+      {"sqdecd_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"sqdech_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"sqdecw_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"sqincd_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"sqinch_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"sqincw_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"uqdecd_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"uqdech_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"uqdecw_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"uqincd_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"uqinch_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"uqincw_z_zs"_h,                                                        \
+       &VISITORCLASS::VisitSVESaturatingIncDecVectorByElementCount},           \
+      {"sqdecb_r_rs_sx"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqdecb_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqdecd_r_rs_sx"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqdecd_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqdech_r_rs_sx"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqdech_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqdecw_r_rs_sx"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqdecw_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqincb_r_rs_sx"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqincb_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqincd_r_rs_sx"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqincd_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqinch_r_rs_sx"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqinch_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqincw_r_rs_sx"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"sqincw_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqdecb_r_rs_uw"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqdecb_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqdecd_r_rs_uw"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqdecd_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqdech_r_rs_uw"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqdech_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqdecw_r_rs_uw"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqdecw_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqincb_r_rs_uw"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqincb_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqincd_r_rs_uw"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqincd_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqinch_r_rs_uw"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqinch_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqincw_r_rs_uw"_h,                                                     \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
+      {"uqincw_r_rs_x"_h,                                                      \
+       &VISITORCLASS::VisitSVESaturatingIncDecRegisterByElementCount},         \
       {"adcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \

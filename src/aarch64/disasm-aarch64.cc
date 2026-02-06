@@ -1767,6 +1767,15 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"ldr_q_ldst_regoff"_h, "str_q_ldst_regoff"_h}},
       {"'Qt, ['Xns], #'s2012",
        {"ldr_q_ldst_immpost"_h, "str_q_ldst_immpost"_h}},
+      {"'R20d'(1916?, 'Ipc, mul #'u1916+1'$)'(0905=31?:, 'Ipc)",
+       {"sqdecb_r_rs_x"_h,  "sqdecd_r_rs_x"_h,  "sqdech_r_rs_x"_h,
+        "sqdecw_r_rs_x"_h,  "sqincb_r_rs_x"_h,  "sqincd_r_rs_x"_h,
+        "sqinch_r_rs_x"_h,  "sqincw_r_rs_x"_h,  "uqdecb_r_rs_uw"_h,
+        "uqdecb_r_rs_x"_h,  "uqdecd_r_rs_uw"_h, "uqdecd_r_rs_x"_h,
+        "uqdech_r_rs_uw"_h, "uqdech_r_rs_x"_h,  "uqdecw_r_rs_uw"_h,
+        "uqdecw_r_rs_x"_h,  "uqincb_r_rs_uw"_h, "uqincb_r_rs_x"_h,
+        "uqincd_r_rs_uw"_h, "uqincd_r_rs_x"_h,  "uqinch_r_rs_uw"_h,
+        "uqinch_r_rs_x"_h,  "uqincw_r_rs_uw"_h, "uqincw_r_rs_x"_h}},
       {"'R22n, 'R22m", {"ctermeq_rr"_h, "ctermne_rr"_h}},
       {"'Rd, #0x'x2005'(2221?, lsl #'u2221*16)",
        {"movk_32_movewide"_h, "movk_64_movewide"_h}},
@@ -1830,9 +1839,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "movn_64_movewide"_h,
         "mov_movz_32_movewide"_h,
         "mov_movz_64_movewide"_h}},
-      {"'Rd, 'IMoveNeg",
-       {"mov_movn_32_movewide"_h,
-        "mov_movn_64_movewide"_h}},
+      {"'Rd, 'IMoveNeg", {"mov_movn_32_movewide"_h, "mov_movn_64_movewide"_h}},
       {"'Rd, 'Rm",
        {"ngc_sbc_32_addsub_carry"_h,
         "ngc_sbc_64_addsub_carry"_h,
@@ -2540,6 +2547,19 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "pacizb_64z_dp_1src"_h,
         "xpacd_64z_dp_1src"_h,
         "xpaci_64z_dp_1src"_h}},
+      {"'Xd'(1916?, 'Ipc, mul #'u1916+1'$)'(0905=31?:, 'Ipc)",
+       {"decb_r_rs"_h,
+        "decd_r_rs"_h,
+        "dech_r_rs"_h,
+        "decw_r_rs"_h,
+        "incb_r_rs"_h,
+        "incd_r_rs"_h,
+        "inch_r_rs"_h,
+        "incw_r_rs"_h,
+        "cntb_r_s"_h,
+        "cntd_r_s"_h,
+        "cnth_r_s"_h,
+        "cntw_r_s"_h}},
       {"'Xd, #'s1005", {"rdvl_r_i"_h}},
       {"'Xd, 'AddrPCRelByte", {"adr_only_pcreladdr"_h}},
       {"'Xd, 'AddrPCRelPage", {"adrp_only_pcreladdr"_h}},
@@ -2557,6 +2577,15 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"mov_umov_asimdins_w_w"_h,
         "umov_asimdins_w_w"_h,
         "smov_asimdins_w_w"_h}},
+      {"'Xd, 'Wd'(1916?, 'Ipc, mul #'u1916+1'$)'(0905=31?:, 'Ipc)",
+       {"sqdecb_r_rs_sx"_h,
+        "sqdecd_r_rs_sx"_h,
+        "sqdech_r_rs_sx"_h,
+        "sqdecw_r_rs_sx"_h,
+        "sqincb_r_rs_sx"_h,
+        "sqincd_r_rs_sx"_h,
+        "sqinch_r_rs_sx"_h,
+        "sqincw_r_rs_sx"_h}},
       {"'Xd, 'Wn, 'Wm",
        {"smull_smaddl_64wa_dp_3src"_h,
         "smnegl_smsubl_64wa_dp_3src"_h,
@@ -2676,6 +2705,25 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Zd, 'Zn", {"movprfx_z_z"_h}},
       {"'Zd.'?22:ds, 'Zn.'?22:ds, 'Zm.'?22:ds",
        {"adclb_z_zzz"_h, "adclt_z_zzz"_h, "sbclb_z_zzz"_h, "sbclt_z_zzz"_h}},
+      {"'Zd.'t'(1916?, 'Ipc, mul #'u1916+1'$)'(0905=31?:, 'Ipc)",
+       {"decd_z_zs"_h,
+        "dech_z_zs"_h,
+        "decw_z_zs"_h,
+        "incd_z_zs"_h,
+        "inch_z_zs"_h,
+        "incw_z_zs"_h,
+        "sqdecd_z_zs"_h,
+        "sqdech_z_zs"_h,
+        "sqdecw_z_zs"_h,
+        "sqincd_z_zs"_h,
+        "sqinch_z_zs"_h,
+        "sqincw_z_zs"_h,
+        "uqdecd_z_zs"_h,
+        "uqdech_z_zs"_h,
+        "uqdecw_z_zs"_h,
+        "uqincd_z_zs"_h,
+        "uqinch_z_zs"_h,
+        "uqincw_z_zs"_h}},
       {"'Zd.'t, #'s0905, #'s2016", {"index_z_ii"_h}},
       {"'Zd.'t, #'s0905, '(2322=3?'Xm:'Wm)", {"index_z_ir"_h}},
       {"'Zd.'t, #'s1205'(13?, lsl #8)", {"mov_dup_z_i"_h}},
@@ -3963,79 +4011,6 @@ void Disassembler::VisitSVEBroadcastIndexElement(const Instruction *instr) {
   Format(instr, mnemonic, form);
 }
 
-static const char *IncDecFormHelper(const Instruction *instr,
-                                    const char *reg_pat_mul_form,
-                                    const char *reg_pat_form,
-                                    const char *reg_form) {
-  if (instr->ExtractBits(19, 16) == 0) {
-    if (instr->ExtractBits(9, 5) == SVE_ALL) {
-      // Use the register only form if the multiplier is one (encoded as zero)
-      // and the pattern is SVE_ALL.
-      return reg_form;
-    }
-    // Use the register and pattern form if the multiplier is one.
-    return reg_pat_form;
-  }
-  return reg_pat_mul_form;
-}
-
-void Disassembler::VisitSVEIncDecRegisterByElementCount(
-    const Instruction *instr) {
-  const char *form =
-      IncDecFormHelper(instr, "'Xd, 'Ipc, mul #'u1916+1", "'Xd, 'Ipc", "'Xd");
-  FormatWithDecodedMnemonic(instr, form);
-}
-
-void Disassembler::VisitSVEIncDecVectorByElementCount(
-    const Instruction *instr) {
-  const char *form = IncDecFormHelper(instr,
-                                      "'Zd.'t, 'Ipc, mul #'u1916+1",
-                                      "'Zd.'t, 'Ipc",
-                                      "'Zd.'t");
-  FormatWithDecodedMnemonic(instr, form);
-}
-
-void Disassembler::VisitSVESaturatingIncDecRegisterByElementCount(
-    const Instruction *instr) {
-  const char *form = IncDecFormHelper(instr,
-                                      "'R20d, 'Ipc, mul #'u1916+1",
-                                      "'R20d, 'Ipc",
-                                      "'R20d");
-  const char *form_sx = IncDecFormHelper(instr,
-                                         "'Xd, 'Wd, 'Ipc, mul #'u1916+1",
-                                         "'Xd, 'Wd, 'Ipc",
-                                         "'Xd, 'Wd");
-
-  switch (form_hash_) {
-    case "sqdecb_r_rs_sx"_h:
-    case "sqdecd_r_rs_sx"_h:
-    case "sqdech_r_rs_sx"_h:
-    case "sqdecw_r_rs_sx"_h:
-    case "sqincb_r_rs_sx"_h:
-    case "sqincd_r_rs_sx"_h:
-    case "sqinch_r_rs_sx"_h:
-    case "sqincw_r_rs_sx"_h:
-      form = form_sx;
-      break;
-  }
-  FormatWithDecodedMnemonic(instr, form);
-}
-
-void Disassembler::VisitSVESaturatingIncDecVectorByElementCount(
-    const Instruction *instr) {
-  const char *form = IncDecFormHelper(instr,
-                                      "'Zd.'t, 'Ipc, mul #'u1916+1",
-                                      "'Zd.'t, 'Ipc",
-                                      "'Zd.'t");
-  FormatWithDecodedMnemonic(instr, form);
-}
-
-void Disassembler::VisitSVEElementCount(const Instruction *instr) {
-  const char *form =
-      IncDecFormHelper(instr, "'Xd, 'Ipc, mul #'u1916+1", "'Xd, 'Ipc", "'Xd");
-  FormatWithDecodedMnemonic(instr, form);
-}
-
 void Disassembler::VisitReserved(const Instruction *instr) {
   FormatWithDecodedMnemonic(instr, "#0x'x1500");
 }
@@ -4346,6 +4321,8 @@ int Disassembler::SubstituteField(const Instruction *instr,
       return SubstituteConditionalBlock(instr, format);
     case '{':
       return SubstituteGeneric(instr, format);
+    case '$':
+      return SubstituteEnd(instr, format);
     default: {
       VIXL_UNREACHABLE();
       return 1;
@@ -5458,6 +5435,14 @@ int Disassembler::SubstituteSVESize(const Instruction *instr,
   AppendToOutput("%c", sizes[size_in_bytes_log2]);
 
   return placeholder_length;
+}
+
+int Disassembler::SubstituteEnd(const Instruction *instr, const char *format) {
+  USE(instr);
+  USE(format);
+  VIXL_ASSERT(format[0] == '$');
+  AppendToOutput("%c", '\0');
+  return 0;
 }
 
 int Disassembler::SubstituteTernary(const Instruction *instr,

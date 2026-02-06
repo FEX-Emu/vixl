@@ -36,17 +36,12 @@
 #include "instructions-aarch64.h"
 
 // List macro containing all visitors needed by the decoder class.
-#define VISITOR_LIST_THAT_RETURN(V)            \
-  V(LoadStoreExclusive)                        \
-  V(SVEBroadcastBitmaskImm)                    \
-  V(SVEBroadcastIndexElement)                  \
-  V(SVEElementCount)                           \
-  V(SVEIncDecRegisterByElementCount)           \
-  V(SVEIncDecVectorByElementCount)             \
-  V(SVESaturatingIncDecRegisterByElementCount) \
-  V(SVESaturatingIncDecVectorByElementCount)   \
-  V(System)                                    \
-  V(Unallocated)                               \
+#define VISITOR_LIST_THAT_RETURN(V) \
+  V(LoadStoreExclusive)             \
+  V(SVEBroadcastBitmaskImm)         \
+  V(SVEBroadcastIndexElement)       \
+  V(System)                         \
+  V(Unallocated)                    \
   V(Unimplemented)
 
 #define SIM_AUD_VISITOR_LIST_THAT_RETURN(V)                      \
@@ -265,6 +260,11 @@
   V(NEONScalarShiftImmediate)                                    \
   V(NEON3Different)                                              \
   V(MoveWideImmediate)                                           \
+  V(SVEElementCount)                                             \
+  V(SVEIncDecRegisterByElementCount)                             \
+  V(SVEIncDecVectorByElementCount)                               \
+  V(SVESaturatingIncDecVectorByElementCount)                     \
+  V(SVESaturatingIncDecRegisterByElementCount)                   \
   V(AddSubWithCarry)
 
 #define VISITOR_LIST_THAT_DONT_RETURN(V) V(Reserved)
