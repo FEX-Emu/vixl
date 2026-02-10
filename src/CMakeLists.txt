@@ -56,3 +56,4 @@ if (CMAKE_BUILD_TYPE MATCHES "RELEASE")
   )
 endif()
 
+add_library(vixl::vixl ALIAS vixl)
