@@ -296,6 +296,10 @@ std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
     return (i->GetRd() == i->GetRm());
   };
 
+  auto RdRnAliased = [](const Instruction *i) {
+    return (i->GetRd() == i->GetRn());
+  };
+
   auto PnPmAliased = [](const Instruction *i) {
     return (i->GetPn() == i->GetPm());
   };
@@ -393,7 +397,152 @@ std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
        {"movz_32_movewide"_h, {{{IsNonZeroNoShiftMov}, "mov"}}},
        {"movz_64_movewide"_h, {{{IsNonZeroNoShiftMov}, "mov"}}},
        {"movn_32_movewide"_h, {{{IsNonZeroNoShiftMov, IsNonOnesMov}, "mov"}}},
-       {"movn_64_movewide"_h, {{{IsNonZeroNoShiftMov}, "mov"}}}};
+       {"movn_64_movewide"_h, {{{IsNonZeroNoShiftMov}, "mov"}}},
+       {"dup_z_zi"_h, {{{DupHasOneSetBit}, "mov_1"}, {{AllCases}, "mov"}}},
+       {"cpyen_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyern_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyewn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpye_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfen_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfern_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfewn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfe_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfmn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfmrn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfmwn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfm_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfpn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfprn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfpwn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyfp_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpymn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpymrn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpymwn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpym_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpypn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyprn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpypwn_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"cpyp_cpy_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"seten_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"sete_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"setgen_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"setge_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"setgmn_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"setgm_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"setgpn_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"setgp_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"setmn_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"setm_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"setpn_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}},
+       {"setp_set_memcms"_h,
+        {{{RdRnAliased}, "unallocated"},
+         {{RdRmAliased}, "unallocated"},
+         {{RnRmAliased}, "unallocated"}}}};
 
 
   // Check simple aliases.
@@ -442,7 +591,33 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
   // map from instruction to mask/value, allowing fast lookup during
   // disassembly.
   static const UnallocToFormMap forms =
-      {{0x00001c00'00001400,
+      {{0x0000001f'0000001f,
+        {"cpyen_cpy_memcms"_h,   "cpyern_cpy_memcms"_h,  "cpyewn_cpy_memcms"_h,
+         "cpye_cpy_memcms"_h,    "cpyfen_cpy_memcms"_h,  "cpyfern_cpy_memcms"_h,
+         "cpyfewn_cpy_memcms"_h, "cpyfe_cpy_memcms"_h,   "cpyfmn_cpy_memcms"_h,
+         "cpyfmrn_cpy_memcms"_h, "cpyfmwn_cpy_memcms"_h, "cpyfm_cpy_memcms"_h,
+         "cpyfpn_cpy_memcms"_h,  "cpyfprn_cpy_memcms"_h, "cpyfpwn_cpy_memcms"_h,
+         "cpyfp_cpy_memcms"_h,   "cpymn_cpy_memcms"_h,   "cpymrn_cpy_memcms"_h,
+         "cpymwn_cpy_memcms"_h,  "cpym_cpy_memcms"_h,    "cpypn_cpy_memcms"_h,
+         "cpyprn_cpy_memcms"_h,  "cpypwn_cpy_memcms"_h,  "cpyp_cpy_memcms"_h,
+         "seten_set_memcms"_h,   "sete_set_memcms"_h,    "setgen_set_memcms"_h,
+         "setge_set_memcms"_h,   "setgmn_set_memcms"_h,  "setgm_set_memcms"_h,
+         "setgpn_set_memcms"_h,  "setgp_set_memcms"_h,   "setmn_set_memcms"_h,
+         "setm_set_memcms"_h,    "setpn_set_memcms"_h,   "setp_set_memcms"_h}},
+       {0x000003e0'000003e0,
+        {"cpyen_cpy_memcms"_h,   "cpyern_cpy_memcms"_h,  "cpyewn_cpy_memcms"_h,
+         "cpye_cpy_memcms"_h,    "cpyfen_cpy_memcms"_h,  "cpyfern_cpy_memcms"_h,
+         "cpyfewn_cpy_memcms"_h, "cpyfe_cpy_memcms"_h,   "cpyfmn_cpy_memcms"_h,
+         "cpyfmrn_cpy_memcms"_h, "cpyfmwn_cpy_memcms"_h, "cpyfm_cpy_memcms"_h,
+         "cpyfpn_cpy_memcms"_h,  "cpyfprn_cpy_memcms"_h, "cpyfpwn_cpy_memcms"_h,
+         "cpyfp_cpy_memcms"_h,   "cpymn_cpy_memcms"_h,   "cpymrn_cpy_memcms"_h,
+         "cpymwn_cpy_memcms"_h,  "cpym_cpy_memcms"_h,    "cpypn_cpy_memcms"_h,
+         "cpyprn_cpy_memcms"_h,  "cpypwn_cpy_memcms"_h,  "cpyp_cpy_memcms"_h,
+         "seten_set_memcms"_h,   "sete_set_memcms"_h,    "setgen_set_memcms"_h,
+         "setge_set_memcms"_h,   "setgmn_set_memcms"_h,  "setgm_set_memcms"_h,
+         "setgpn_set_memcms"_h,  "setgp_set_memcms"_h,   "setmn_set_memcms"_h,
+         "setm_set_memcms"_h,    "setpn_set_memcms"_h,   "setp_set_memcms"_h}},
+       {0x00001c00'00001400,
         {"add_32_addsub_ext"_h,
          "add_64_addsub_ext"_h,
          "subs_32s_addsub_ext"_h,
@@ -468,10 +643,16 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "ins_asimdins_iv_v"_h,
          "ins_asimdins_ir_r"_h}},
        {0x001f0000'001f0000,
-        {"prfb_i_p_br_s"_h,
-         "prfd_i_p_br_s"_h,
-         "prfh_i_p_br_s"_h,
-         "prfw_i_p_br_s"_h}},
+        {"prfb_i_p_br_s"_h,      "prfd_i_p_br_s"_h,      "prfh_i_p_br_s"_h,
+         "prfw_i_p_br_s"_h,      "cpyen_cpy_memcms"_h,   "cpyern_cpy_memcms"_h,
+         "cpyewn_cpy_memcms"_h,  "cpye_cpy_memcms"_h,    "cpyfen_cpy_memcms"_h,
+         "cpyfern_cpy_memcms"_h, "cpyfewn_cpy_memcms"_h, "cpyfe_cpy_memcms"_h,
+         "cpyfmn_cpy_memcms"_h,  "cpyfmrn_cpy_memcms"_h, "cpyfmwn_cpy_memcms"_h,
+         "cpyfm_cpy_memcms"_h,   "cpyfpn_cpy_memcms"_h,  "cpyfprn_cpy_memcms"_h,
+         "cpyfpwn_cpy_memcms"_h, "cpyfp_cpy_memcms"_h,   "cpymn_cpy_memcms"_h,
+         "cpymrn_cpy_memcms"_h,  "cpymwn_cpy_memcms"_h,  "cpym_cpy_memcms"_h,
+         "cpypn_cpy_memcms"_h,   "cpyprn_cpy_memcms"_h,  "cpypwn_cpy_memcms"_h,
+         "cpyp_cpy_memcms"_h}},
        {0x0040f800'0000f800,
         {"ands_32s_log_imm"_h,
          "ands_64s_log_imm"_h,
@@ -1154,7 +1335,46 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "ubfm_32m_bitfield"_h,
          "ubfm_64m_bitfield"_h,
          "bfm_32m_bitfield"_h,
-         "bfm_64m_bitfield"_h}}};
+         "bfm_64m_bitfield"_h}},
+       {0xc0000000'40000000,
+        {"cpyen_cpy_memcms"_h,   "cpyern_cpy_memcms"_h,  "cpyewn_cpy_memcms"_h,
+         "cpye_cpy_memcms"_h,    "cpyfen_cpy_memcms"_h,  "cpyfern_cpy_memcms"_h,
+         "cpyfewn_cpy_memcms"_h, "cpyfe_cpy_memcms"_h,   "cpyfmn_cpy_memcms"_h,
+         "cpyfmrn_cpy_memcms"_h, "cpyfmwn_cpy_memcms"_h, "cpyfm_cpy_memcms"_h,
+         "cpyfpn_cpy_memcms"_h,  "cpyfprn_cpy_memcms"_h, "cpyfpwn_cpy_memcms"_h,
+         "cpyfp_cpy_memcms"_h,   "cpymn_cpy_memcms"_h,   "cpymrn_cpy_memcms"_h,
+         "cpymwn_cpy_memcms"_h,  "cpym_cpy_memcms"_h,    "cpypn_cpy_memcms"_h,
+         "cpyprn_cpy_memcms"_h,  "cpypwn_cpy_memcms"_h,  "cpyp_cpy_memcms"_h,
+         "seten_set_memcms"_h,   "sete_set_memcms"_h,    "setgen_set_memcms"_h,
+         "setge_set_memcms"_h,   "setgmn_set_memcms"_h,  "setgm_set_memcms"_h,
+         "setgpn_set_memcms"_h,  "setgp_set_memcms"_h,   "setmn_set_memcms"_h,
+         "setm_set_memcms"_h,    "setpn_set_memcms"_h,   "setp_set_memcms"_h}},
+       {0xc0000000'80000000,
+        {"cpyen_cpy_memcms"_h,   "cpyern_cpy_memcms"_h,  "cpyewn_cpy_memcms"_h,
+         "cpye_cpy_memcms"_h,    "cpyfen_cpy_memcms"_h,  "cpyfern_cpy_memcms"_h,
+         "cpyfewn_cpy_memcms"_h, "cpyfe_cpy_memcms"_h,   "cpyfmn_cpy_memcms"_h,
+         "cpyfmrn_cpy_memcms"_h, "cpyfmwn_cpy_memcms"_h, "cpyfm_cpy_memcms"_h,
+         "cpyfpn_cpy_memcms"_h,  "cpyfprn_cpy_memcms"_h, "cpyfpwn_cpy_memcms"_h,
+         "cpyfp_cpy_memcms"_h,   "cpymn_cpy_memcms"_h,   "cpymrn_cpy_memcms"_h,
+         "cpymwn_cpy_memcms"_h,  "cpym_cpy_memcms"_h,    "cpypn_cpy_memcms"_h,
+         "cpyprn_cpy_memcms"_h,  "cpypwn_cpy_memcms"_h,  "cpyp_cpy_memcms"_h,
+         "seten_set_memcms"_h,   "sete_set_memcms"_h,    "setgen_set_memcms"_h,
+         "setge_set_memcms"_h,   "setgmn_set_memcms"_h,  "setgm_set_memcms"_h,
+         "setgpn_set_memcms"_h,  "setgp_set_memcms"_h,   "setmn_set_memcms"_h,
+         "setm_set_memcms"_h,    "setpn_set_memcms"_h,   "setp_set_memcms"_h}},
+       {0xc0000000'c0000000,
+        {"cpyen_cpy_memcms"_h,   "cpyern_cpy_memcms"_h,  "cpyewn_cpy_memcms"_h,
+         "cpye_cpy_memcms"_h,    "cpyfen_cpy_memcms"_h,  "cpyfern_cpy_memcms"_h,
+         "cpyfewn_cpy_memcms"_h, "cpyfe_cpy_memcms"_h,   "cpyfmn_cpy_memcms"_h,
+         "cpyfmrn_cpy_memcms"_h, "cpyfmwn_cpy_memcms"_h, "cpyfm_cpy_memcms"_h,
+         "cpyfpn_cpy_memcms"_h,  "cpyfprn_cpy_memcms"_h, "cpyfpwn_cpy_memcms"_h,
+         "cpyfp_cpy_memcms"_h,   "cpymn_cpy_memcms"_h,   "cpymrn_cpy_memcms"_h,
+         "cpymwn_cpy_memcms"_h,  "cpym_cpy_memcms"_h,    "cpypn_cpy_memcms"_h,
+         "cpyprn_cpy_memcms"_h,  "cpypwn_cpy_memcms"_h,  "cpyp_cpy_memcms"_h,
+         "seten_set_memcms"_h,   "sete_set_memcms"_h,    "setgen_set_memcms"_h,
+         "setge_set_memcms"_h,   "setgmn_set_memcms"_h,  "setgm_set_memcms"_h,
+         "setgpn_set_memcms"_h,  "setgp_set_memcms"_h,   "setmn_set_memcms"_h,
+         "setm_set_memcms"_h,    "setpn_set_memcms"_h,   "setp_set_memcms"_h}}};
 
   for (auto &itm : forms) {
     const std::unordered_set<uint32_t> &s = forms.at(itm.first);
@@ -1202,6 +1422,47 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
             "yield_hi_hints"_h,
             "retaa_64e_branch_reg"_h,
             "retab_64e_branch_reg"_h}},
+      {"(Unallocated)",
+       {"unallocated_cpyen_cpy_memcms"_h,   "unallocated_cpyern_cpy_memcms"_h,
+        "unallocated_cpyewn_cpy_memcms"_h,  "unallocated_cpye_cpy_memcms"_h,
+        "unallocated_cpyfen_cpy_memcms"_h,  "unallocated_cpyfern_cpy_memcms"_h,
+        "unallocated_cpyfewn_cpy_memcms"_h, "unallocated_cpyfe_cpy_memcms"_h,
+        "unallocated_cpyfmn_cpy_memcms"_h,  "unallocated_cpyfmrn_cpy_memcms"_h,
+        "unallocated_cpyfmwn_cpy_memcms"_h, "unallocated_cpyfm_cpy_memcms"_h,
+        "unallocated_cpyfpn_cpy_memcms"_h,  "unallocated_cpyfprn_cpy_memcms"_h,
+        "unallocated_cpyfpwn_cpy_memcms"_h, "unallocated_cpyfp_cpy_memcms"_h,
+        "unallocated_cpymn_cpy_memcms"_h,   "unallocated_cpymrn_cpy_memcms"_h,
+        "unallocated_cpymwn_cpy_memcms"_h,  "unallocated_cpym_cpy_memcms"_h,
+        "unallocated_cpypn_cpy_memcms"_h,   "unallocated_cpyprn_cpy_memcms"_h,
+        "unallocated_cpypwn_cpy_memcms"_h,  "unallocated_cpyp_cpy_memcms"_h,
+        "unallocated_seten_set_memcms"_h,   "unallocated_sete_set_memcms"_h,
+        "unallocated_setgen_set_memcms"_h,  "unallocated_setge_set_memcms"_h,
+        "unallocated_setgmn_set_memcms"_h,  "unallocated_setgm_set_memcms"_h,
+        "unallocated_setgpn_set_memcms"_h,  "unallocated_setgp_set_memcms"_h,
+        "unallocated_setmn_set_memcms"_h,   "unallocated_setm_set_memcms"_h,
+        "unallocated_setpn_set_memcms"_h,   "unallocated_setp_set_memcms"_h}},
+      {"['Xd]!, ['Xs]!, 'Xn!",
+       {"cpyen_cpy_memcms"_h,   "cpyern_cpy_memcms"_h,  "cpyewn_cpy_memcms"_h,
+        "cpye_cpy_memcms"_h,    "cpyfen_cpy_memcms"_h,  "cpyfern_cpy_memcms"_h,
+        "cpyfewn_cpy_memcms"_h, "cpyfe_cpy_memcms"_h,   "cpyfmn_cpy_memcms"_h,
+        "cpyfmrn_cpy_memcms"_h, "cpyfmwn_cpy_memcms"_h, "cpyfm_cpy_memcms"_h,
+        "cpyfpn_cpy_memcms"_h,  "cpyfprn_cpy_memcms"_h, "cpyfpwn_cpy_memcms"_h,
+        "cpyfp_cpy_memcms"_h,   "cpymn_cpy_memcms"_h,   "cpymrn_cpy_memcms"_h,
+        "cpymwn_cpy_memcms"_h,  "cpym_cpy_memcms"_h,    "cpypn_cpy_memcms"_h,
+        "cpyprn_cpy_memcms"_h,  "cpypwn_cpy_memcms"_h,  "cpyp_cpy_memcms"_h}},
+      {"['Xd]!, 'Xn!, 'Xs",
+       {"seten_set_memcms"_h,
+        "sete_set_memcms"_h,
+        "setgen_set_memcms"_h,
+        "setge_set_memcms"_h,
+        "setgmn_set_memcms"_h,
+        "setgm_set_memcms"_h,
+        "setgpn_set_memcms"_h,
+        "setgp_set_memcms"_h,
+        "setmn_set_memcms"_h,
+        "setm_set_memcms"_h,
+        "setpn_set_memcms"_h,
+        "setp_set_memcms"_h}},
       {"#'u1105", {"hint_hm_hints"_h}},
       {"#0x'x2005",
        {"brk_ex_exception"_h,
@@ -3653,42 +3914,6 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
 const Disassembler::FormToVisitorFnMap *Disassembler::GetFormToVisitorFnMap() {
   static const FormToVisitorFnMap form_to_visitor = {
       DEFAULT_FORM_TO_VISITOR_MAP(Disassembler),
-      {"cpyen_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyern_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyewn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpye_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfen_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfern_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfewn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfe_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfmn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfmrn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfmwn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfm_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfpn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfprn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfpwn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyfp_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpymn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpymrn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpymwn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpym_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpypn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyprn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpypwn_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"cpyp_cpy_memcms"_h, &Disassembler::DisassembleCpy},
-      {"seten_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"sete_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"setgen_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"setge_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"setgmn_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"setgm_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"setgpn_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"setgp_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"setmn_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"setm_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"setpn_set_memcms"_h, &Disassembler::DisassembleSet},
-      {"setp_set_memcms"_h, &Disassembler::DisassembleSet},
   };
   return &form_to_visitor;
 }  // NOLINT(readability/fn_size)
@@ -4069,46 +4294,6 @@ void Disassembler::Visit(Metadata *metadata, const Instruction *instr) {
     SetMnemonicFromForm(form);
     (it->second)(this, instr);
   }
-}
-
-void Disassembler::DisassembleCpy(const Instruction *instr) {
-  const char *form = "['Xd]!, ['Xs]!, 'Xn!";
-
-  int d = instr->GetRd();
-  int n = instr->GetRn();
-  int s = instr->GetRs();
-
-  // Aliased registers and sp/zr are disallowed.
-  if ((d == n) || (d == s) || (n == s) || (d == 31) || (n == 31) || (s == 31)) {
-    form = NULL;
-  }
-
-  // Bits 31 and 30 must be zero.
-  if (instr->ExtractBits(31, 30)) {
-    form = NULL;
-  }
-
-  Format(instr, mnemonic_.c_str(), form);
-}
-
-void Disassembler::DisassembleSet(const Instruction *instr) {
-  const char *form = "['Xd]!, 'Xn!, 'Xs";
-
-  int d = instr->GetRd();
-  int n = instr->GetRn();
-  int s = instr->GetRs();
-
-  // Aliased registers are disallowed. Only Xs may be xzr.
-  if ((d == n) || (d == s) || (n == s) || (d == 31) || (n == 31)) {
-    form = NULL;
-  }
-
-  // Bits 31 and 30 must be zero.
-  if (instr->ExtractBits(31, 30)) {
-    form = NULL;
-  }
-
-  Format(instr, mnemonic_.c_str(), form);
 }
 
 void Disassembler::ProcessOutput(const Instruction * /*instr*/) {

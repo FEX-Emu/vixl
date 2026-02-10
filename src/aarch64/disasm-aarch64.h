@@ -143,12 +143,6 @@ class Disassembler : public DecoderVisitor {
     }
   }
 
-  void Disassemble_ZdaT_ZnT_const(const Instruction* instr);
-  void Disassemble_ZdnT_PgM_ZdnT_const(const Instruction* instr);
-
-  void DisassembleCpy(const Instruction* instr);
-  void DisassembleSet(const Instruction* instr);
-
   void Format(const Instruction* instr,
               const char* mnemonic,
               const char* format0,
