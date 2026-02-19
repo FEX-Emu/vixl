@@ -1207,6 +1207,43 @@ TEST(load_store_regoffset) {
   COMPARE(strh(w21, MemOperand(x22, x23, SXTX, 1)),
           "strh w21, [x22, x23, sxtx #1]");
 
+  COMPARE(ldrsb(x0, MemOperand(x1, w2, UXTW)), "ldrsb x0, [x1, w2, uxtw]");
+  COMPARE(ldrsb(x6, MemOperand(x7, x8)), "ldrsb x6, [x7, x8]");
+  COMPARE(ldrsb(x12, MemOperand(x13, w14, SXTW)),
+          "ldrsb x12, [x13, w14, sxtw]");
+  COMPARE(ldrsb(x18, MemOperand(x19, x20, SXTX)),
+          "ldrsb x18, [x19, x20, sxtx]");
+
+  COMPARE(ldrsh(x0, MemOperand(x1, w2, UXTW)), "ldrsh x0, [x1, w2, uxtw]");
+  COMPARE(ldrsh(x3, MemOperand(x4, w5, UXTW, 1)),
+          "ldrsh x3, [x4, w5, uxtw #1]");
+  COMPARE(ldrsh(x6, MemOperand(x7, x8)), "ldrsh x6, [x7, x8]");
+  COMPARE(ldrsh(x9, MemOperand(x10, x11, LSL, 1)),
+          "ldrsh x9, [x10, x11, lsl #1]");
+  COMPARE(ldrsh(x12, MemOperand(x13, w14, SXTW)),
+          "ldrsh x12, [x13, w14, sxtw]");
+  COMPARE(ldrsh(x15, MemOperand(x16, w17, SXTW, 1)),
+          "ldrsh x15, [x16, w17, sxtw #1]");
+  COMPARE(ldrsh(x18, MemOperand(x19, x20, SXTX)),
+          "ldrsh x18, [x19, x20, sxtx]");
+  COMPARE(ldrsh(x21, MemOperand(x22, x23, SXTX, 1)),
+          "ldrsh x21, [x22, x23, sxtx #1]");
+
+  COMPARE(ldrsw(x0, MemOperand(x1, w2, UXTW)), "ldrsw x0, [x1, w2, uxtw]");
+  COMPARE(ldrsw(x3, MemOperand(x4, w5, UXTW, 2)),
+          "ldrsw x3, [x4, w5, uxtw #2]");
+  COMPARE(ldrsw(x6, MemOperand(x7, x8)), "ldrsw x6, [x7, x8]");
+  COMPARE(ldrsw(x9, MemOperand(x10, x11, LSL, 2)),
+          "ldrsw x9, [x10, x11, lsl #2]");
+  COMPARE(ldrsw(x12, MemOperand(x13, w14, SXTW)),
+          "ldrsw x12, [x13, w14, sxtw]");
+  COMPARE(ldrsw(x15, MemOperand(x16, w17, SXTW, 2)),
+          "ldrsw x15, [x16, w17, sxtw #2]");
+  COMPARE(ldrsw(x18, MemOperand(x19, x20, SXTX)),
+          "ldrsw x18, [x19, x20, sxtx]");
+  COMPARE(ldrsw(x21, MemOperand(x22, x23, SXTX, 2)),
+          "ldrsw x21, [x22, x23, sxtx #2]");
+
   COMPARE(ldr(x0, MemOperand(sp, wzr, SXTW)), "ldr x0, [sp, wzr, sxtw]");
   COMPARE(str(x1, MemOperand(sp, xzr)), "str x1, [sp, xzr]");
 
@@ -2067,18 +2104,18 @@ TEST(prfm_operations) {
   SETUP();
 
   // Test every encodable prefetch operation.
-  const char* expected[] = {"prfm pldl1keep, ", "prfm pldl1strm, ",
-                            "prfm pldl2keep, ", "prfm pldl2strm, ",
-                            "prfm pldl3keep, ", "prfm pldl3strm, ",
-                            "prfm #0b00110, ",  "prfm #0b00111, ",
-                            "prfm plil1keep, ", "prfm plil1strm, ",
-                            "prfm plil2keep, ", "prfm plil2strm, ",
-                            "prfm plil3keep, ", "prfm plil3strm, ",
-                            "prfm #0b01110, ",  "prfm #0b01111, ",
-                            "prfm pstl1keep, ", "prfm pstl1strm, ",
-                            "prfm pstl2keep, ", "prfm pstl2strm, ",
-                            "prfm pstl3keep, ", "prfm pstl3strm, ",
-                            "prfm #0b10110, ",  "prfm #0b10111, "};
+  const char* expected[] = {"prfm pldl1keep, ",  "prfm pldl1strm, ",
+                            "prfm pldl2keep, ",  "prfm pldl2strm, ",
+                            "prfm pldl3keep, ",  "prfm pldl3strm, ",
+                            "prfm pldslckeep, ", "prfm pldslcstrm, ",
+                            "prfm plil1keep, ",  "prfm plil1strm, ",
+                            "prfm plil2keep, ",  "prfm plil2strm, ",
+                            "prfm plil3keep, ",  "prfm plil3strm, ",
+                            "prfm plislckeep, ", "prfm plislcstrm, ",
+                            "prfm pstl1keep, ",  "prfm pstl1strm, ",
+                            "prfm pstl2keep, ",  "prfm pstl2strm, ",
+                            "prfm pstl3keep, ",  "prfm pstl3strm, ",
+                            "prfm pstslckeep, ", "prfm pstslcstrm, "};
 
   for (int op = 0; op < (1 << ImmPrefetchOperation_width); op++) {
     // Prefetch operations of the form 0b11xxx are allocated to another
@@ -2099,17 +2136,17 @@ TEST(prfum_operations) {
 
   // Test every encodable prefetch operation.
   const char* expected[] = {
-      "prfum pldl1keep, ", "prfum pldl1strm, ", "prfum pldl2keep, ",
-      "prfum pldl2strm, ", "prfum pldl3keep, ", "prfum pldl3strm, ",
-      "prfum #0b00110, ",  "prfum #0b00111, ",  "prfum plil1keep, ",
-      "prfum plil1strm, ", "prfum plil2keep, ", "prfum plil2strm, ",
-      "prfum plil3keep, ", "prfum plil3strm, ", "prfum #0b01110, ",
-      "prfum #0b01111, ",  "prfum pstl1keep, ", "prfum pstl1strm, ",
-      "prfum pstl2keep, ", "prfum pstl2strm, ", "prfum pstl3keep, ",
-      "prfum pstl3strm, ", "prfum #0b10110, ",  "prfum #0b10111, ",
-      "prfum #0b11000, ",  "prfum #0b11001, ",  "prfum #0b11010, ",
-      "prfum #0b11011, ",  "prfum #0b11100, ",  "prfum #0b11101, ",
-      "prfum #0b11110, ",  "prfum #0b11111, ",
+      "prfum pldl1keep, ",  "prfum pldl1strm, ",  "prfum pldl2keep, ",
+      "prfum pldl2strm, ",  "prfum pldl3keep, ",  "prfum pldl3strm, ",
+      "prfum pldslckeep, ", "prfum pldslcstrm, ", "prfum plil1keep, ",
+      "prfum plil1strm, ",  "prfum plil2keep, ",  "prfum plil2strm, ",
+      "prfum plil3keep, ",  "prfum plil3strm, ",  "prfum plislckeep, ",
+      "prfum plislcstrm, ", "prfum pstl1keep, ",  "prfum pstl1strm, ",
+      "prfum pstl2keep, ",  "prfum pstl2strm, ",  "prfum pstl3keep, ",
+      "prfum pstl3strm, ",  "prfum pstslckeep, ", "prfum pstslcstrm, ",
+      "prfum #0b11000, ",   "prfum #0b11001, ",   "prfum #0b11010, ",
+      "prfum #0b11011, ",   "prfum #0b11100, ",   "prfum #0b11101, ",
+      "prfum #0b11110, ",   "prfum #0b11111, ",
   };
   const int expected_count = sizeof(expected) / sizeof(expected[0]);
   VIXL_STATIC_ASSERT((1 << ImmPrefetchOperation_width) == expected_count);
@@ -3026,10 +3063,10 @@ TEST(barriers) {
   COMPARE_MACRO(Dmb(OuterShareable, BarrierReads), "dmb oshld");
   COMPARE_MACRO(Dmb(OuterShareable, BarrierWrites), "dmb oshst");
 
-  COMPARE_MACRO(Dmb(FullSystem, BarrierOther), "dmb sy (0b1100)");
-  COMPARE_MACRO(Dmb(InnerShareable, BarrierOther), "dmb sy (0b1000)");
-  COMPARE_MACRO(Dmb(NonShareable, BarrierOther), "dmb sy (0b0100)");
-  COMPARE_MACRO(Dmb(OuterShareable, BarrierOther), "dmb sy (0b0000)");
+  COMPARE_MACRO(Dmb(FullSystem, BarrierOther), "dmb reserved (0b1100)");
+  COMPARE_MACRO(Dmb(InnerShareable, BarrierOther), "dmb reserved (0b1000)");
+  COMPARE_MACRO(Dmb(NonShareable, BarrierOther), "dmb reserved (0b0100)");
+  COMPARE_MACRO(Dmb(OuterShareable, BarrierOther), "dmb reserved (0b0000)");
 
   // DSB
   COMPARE_MACRO(Dsb(FullSystem, BarrierAll), "dsb sy");
@@ -3048,8 +3085,8 @@ TEST(barriers) {
   COMPARE_MACRO(Dsb(OuterShareable, BarrierReads), "dsb oshld");
   COMPARE_MACRO(Dsb(OuterShareable, BarrierWrites), "dsb oshst");
 
-  COMPARE_MACRO(Dsb(FullSystem, BarrierOther), "dsb sy (0b1100)");
-  COMPARE_MACRO(Dsb(InnerShareable, BarrierOther), "dsb sy (0b1000)");
+  COMPARE_MACRO(Dsb(FullSystem, BarrierOther), "dsb reserved (0b1100)");
+  COMPARE_MACRO(Dsb(InnerShareable, BarrierOther), "dsb reserved (0b1000)");
   COMPARE_MACRO(Dsb(NonShareable, BarrierOther), "pssbb");
   COMPARE_MACRO(Dsb(OuterShareable, BarrierOther), "ssbb");
 
