@@ -2172,8 +2172,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fcvtzu_64d_float2fix"_h,
         "fcvtzu_64h_float2fix"_h,
         "fcvtzu_64s_float2fix"_h}},
-      {"'Rd, 'IBZ-r, #'s1510+1",
-       {"bfc_bfm_32m_bitfield"_h, "bfc_bfm_64m_bitfield"_h}},
+      {"'Rd, #'n2116+32, #'s1510+1", {"bfc_bfm_32m_bitfield"_h}},
+      {"'Rd, #'n2116+64, #'s1510+1", {"bfc_bfm_64m_bitfield"_h}},
       {"'Rd, 'IMoveImm",
        {"movz_32_movewide"_h,
         "movz_64_movewide"_h,
@@ -2237,21 +2237,22 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "asr_sbfm_64m_bitfield"_h,
         "lsr_ubfm_32m_bitfield"_h,
         "lsr_ubfm_64m_bitfield"_h}},
-      {"'Rd, 'Rn, #'u2116, 'IBs-r+1",
+      {"'Rd, 'Rn, #'u2116, #'u1510+n2116+1",
        {"sbfx_sbfm_32m_bitfield"_h,
         "sbfx_sbfm_64m_bitfield"_h,
         "ubfx_ubfm_32m_bitfield"_h,
         "ubfx_ubfm_64m_bitfield"_h,
         "bfxil_bfm_32m_bitfield"_h,
         "bfxil_bfm_64m_bitfield"_h}},
-      {"'Rd, 'Rn, 'IBZ-r",
-       {"lsl_ubfm_32m_bitfield"_h, "lsl_ubfm_64m_bitfield"_h}},
-      {"'Rd, 'Rn, 'IBZ-r, #'s1510+1",
+      {"'Rd, 'Rn, #'n2116+32", {"lsl_ubfm_32m_bitfield"_h}},
+      {"'Rd, 'Rn, #'n2116+64", {"lsl_ubfm_64m_bitfield"_h}},
+      {"'Rd, 'Rn, #'n2116+32, #'s1510+1",
        {"sbfiz_sbfm_32m_bitfield"_h,
-        "sbfiz_sbfm_64m_bitfield"_h,
         "ubfiz_ubfm_32m_bitfield"_h,
+        "bfi_bfm_32m_bitfield"_h}},
+      {"'Rd, 'Rn, #'n2116+64, #'s1510+1",
+       {"sbfiz_sbfm_64m_bitfield"_h,
         "ubfiz_ubfm_64m_bitfield"_h,
-        "bfi_bfm_32m_bitfield"_h,
         "bfi_bfm_64m_bitfield"_h}},
       {"'Rd, 'Rn, 'Rm", {"crc32b_32c_dp_2src"_h,    "crc32cb_32c_dp_2src"_h,
                          "crc32ch_32c_dp_2src"_h,   "crc32cw_32c_dp_2src"_h,
@@ -2976,7 +2977,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "braa_64p_branch_reg"_h,
         "brab_64p_branch_reg"_h}},
       {"'Xns, 'Xms", {"cmpp_subps_64s_dp_2src"_h}},
-      {"'Xt, pc'(23?:+)'s2305*4 'LValue", {"ldr_64_loadlit"_h, "ldrsw_64_loadlit"_h}},
+      {"'Xt, pc'(23?:+)'s2305*4 'LValue",
+       {"ldr_64_loadlit"_h, "ldrsw_64_loadlit"_h}},
       {"'Xt, 'IY", {"mrs_rs_systemmove"_h}},
       {"'Xt, 'Xt2, ['Xns]", {"ldxp_lp64_ldstexcl"_h, "ldaxp_lp64_ldstexcl"_h}},
       {"'Xt, 'Xt2, ['Xns'(2115?, #'s2115*16)]", {"stgp_64_ldstpair_off"_h}},
@@ -4478,6 +4480,7 @@ int Disassembler::SubstituteField(const Instruction *instr,
     case 'u':
     case 's':
     case 'x':
+    case 'n':
       return SubstituteIntField(instr, format);
     case 't':
       return SubstituteSVESize(instr, format);
@@ -4825,9 +4828,6 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
                      ((nzcv & VFlag) == 0) ? 'v' : 'V');
       return 5;
     }
-    case 'B': {  // Bitfields.
-      return SubstituteBitfieldImmediateField(instr, format);
-    }
     case 's': {  // Is - Shift (immediate).
       switch (format[2]) {
         case 'R': {  // IsR - right shifts.
@@ -4961,31 +4961,6 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
     }
     default: {
       VIXL_UNIMPLEMENTED();
-      return 0;
-    }
-  }
-}
-
-int Disassembler::SubstituteBitfieldImmediateField(const Instruction *instr,
-                                                   const char *format) {
-  VIXL_ASSERT((format[0] == 'I') && (format[1] == 'B'));
-  unsigned r = instr->GetImmR();
-  unsigned s = instr->GetImmS();
-
-  switch (format[2]) {
-    case 's':  // IBs-r+1.
-      VIXL_ASSERT(format[3] == '-');
-      AppendToOutput("#%d", s - r + 1);
-      return 7;
-    case 'Z': {  // IBZ-r.
-      VIXL_ASSERT((format[3] == '-') && (format[4] == 'r'));
-      unsigned reg_size =
-          (instr->GetSixtyFourBits() == 1) ? kXRegSize : kWRegSize;
-      AppendToOutput("#%d", reg_size - r);
-      return 5;
-    }
-    default: {
-      VIXL_UNREACHABLE();
       return 0;
     }
   }
@@ -5158,9 +5133,36 @@ int BitPositionFromString(const char *c) {
   return pos;
 }
 
+std::pair<int32_t, int> ExtractIntTerm(const Instruction *instr,
+                                       const char *c) {
+  int32_t bits = 0;
+  int width = 0;
+  int off = 0;
+  do {
+    VIXL_ASSERT(strspn(&c[off + 1], "0123456789") == 4);
+    int msb = BitPositionFromString(&c[off + 1]);
+    int lsb = BitPositionFromString(&c[off + 3]);
+    int chunk_width = msb - lsb + 1;
+    VIXL_ASSERT((chunk_width > 0) && (chunk_width < 32));
+    bits = (bits << chunk_width) | instr->ExtractBits(msb, lsb);
+    width += chunk_width;
+    off += 5;  // Skip [usxn_] and the four character bit position.
+  } while (c[off] == '_');
+  VIXL_ASSERT(IsUintN(width, bits));
+
+  if (c[0] == 's') {
+    bits = ExtractSignedBitfield32(width - 1, 0, bits);
+  } else if (c[0] == 'n') {
+    bits = -bits;
+  }
+
+  return {bits, off};
+}
+
 int Disassembler::SubstituteIntField(const Instruction *instr,
                                      const char *format) {
-  VIXL_ASSERT((format[0] == 'u') || (format[0] == 's') || (format[0] == 'x'));
+  const char *c = format;
+  VIXL_ASSERT((*c == 'u') || (*c == 's') || (*c == 'x') || (*c == 'n'));
 
   // A generic signed or unsigned int field uses a placeholder of the form
   // 'sAABB and 'uAABB respectively where AA and BB are two digit bit positions
@@ -5173,45 +5175,42 @@ int Disassembler::SubstituteIntField(const Instruction *instr,
   // (if 's is used).
   //
   // For unsigned fields, 'u may be replaced with 'x to substitute the
-  // hexadecimal representation instead of a decimal.
-  int32_t bits = 0;
-  int width = 0;
-  const char *c = format;
-  do {
-    c++;  // Skip the 'u', 's', 'x' or '_'.
-    VIXL_ASSERT(strspn(c, "0123456789") == 4);
-    int msb = BitPositionFromString(&c[0]);
-    int lsb = BitPositionFromString(&c[2]);
-    c += 4;  // Skip the characters we just read.
-    int chunk_width = msb - lsb + 1;
-    VIXL_ASSERT((chunk_width > 0) && (chunk_width < 32));
-    bits = (bits << chunk_width) | (instr->ExtractBits(msb, lsb));
-    width += chunk_width;
-  } while (*c == '_');
-  VIXL_ASSERT(IsUintN(width, bits));
+  // hexadecimal representation instead of a decimal, or 'n to obtain the
+  // negative of the value encoded in the instruction.
+  auto [bits, advance] = ExtractIntTerm(instr, c);
+  c += advance;
 
-  if (format[0] == 's') {
-    bits = ExtractSignedBitfield32(width - 1, 0, bits);
-  }
-
-  if (*c == '+') {
-    // A "+n" trailing the format specifier indicates the extracted value should
-    // be incremented by n. This is for cases where the encoding is zero-based,
-    // but range of values is not, eg. values [1, 16] encoded as [0, 15]
-    char *new_c;
-    uint64_t value = strtoul(c + 1, &new_c, 10);
-    c = new_c;
-    VIXL_ASSERT(IsInt32(value));
-    bits = static_cast<int32_t>(bits + value);
-  } else if (*c == '*') {
-    // Similarly, a "*n" trailing the format specifier indicates the extracted
-    // value should be multiplied by n. This is for cases where the encoded
-    // immediate is scaled, for example by access size.
-    char *new_c;
-    uint64_t value = strtoul(c + 1, &new_c, 10);
-    c = new_c;
-    VIXL_ASSERT(IsInt32(value));
-    bits = static_cast<int32_t>(bits * value);
+  while ((*c == '+') || (*c == '*')) {
+    if (*c == '+') {
+      if ((c[1] == 'u') || (c[1] == 's') || (c[1] == 'n')) {
+        // A "+uAABB", or similar, trailing the format specifier indicates a
+        // second value should be extracted from the instruction and added to
+        // the value(s) extracted earlier.
+        auto [value, term_advance] = ExtractIntTerm(instr, c + 1);
+        bits = bits + value;
+        c += term_advance + 1;
+      } else {
+        // A "+k" trailing the format specifier indicates the extracted value
+        // should be incremented by k. This is for cases where the encoding is
+        // zero-based, but range of values is not, eg. values [1, 16] encoded as
+        // [0, 15]
+        char *new_c;
+        uint64_t value = strtoul(c + 1, &new_c, 10);
+        c = new_c;
+        VIXL_ASSERT(IsInt32(value));
+        bits = static_cast<int32_t>(bits + value);
+      }
+    } else {
+      // Similarly, a "*n" trailing the format specifier indicates the extracted
+      // value should be multiplied by n. This is for cases where the encoded
+      // immediate is scaled, for example by access size.
+      VIXL_ASSERT(*c == '*');
+      char *new_c;
+      uint64_t value = strtoul(c + 1, &new_c, 10);
+      c = new_c;
+      VIXL_ASSERT(IsInt32(value));
+      bits = static_cast<int32_t>(bits * value);
+    }
   }
 
   AppendToOutput(format[0] == 'x' ? "%x" : "%d", bits);

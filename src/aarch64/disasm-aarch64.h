@@ -158,8 +158,6 @@ class Disassembler : public DecoderVisitor {
                                        const char* format);
   int SubstituteImmediateField(const Instruction* instr, const char* format);
   int SubstituteLiteralField(const Instruction* instr, const char* format);
-  int SubstituteBitfieldImmediateField(const Instruction* instr,
-                                       const char* format);
   int SubstituteExtendField(const Instruction* instr, const char* format);
   int SubstituteConditionField(const Instruction* instr, const char* format);
   int SubstitutePCRelAddressField(const Instruction* instr, const char* format);
