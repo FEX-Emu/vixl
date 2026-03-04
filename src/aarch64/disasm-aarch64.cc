@@ -115,8 +115,8 @@ std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
        {"lsrv_64_dp_2src"_h, {{kAllCases, "lsr"}}},
        {"rorv_32_dp_2src"_h, {{kAllCases, "ror"}}},
        {"rorv_64_dp_2src"_h, {{kAllCases, "ror"}}},
-       {"b_only_condbranch"_h, {{kAllCases, "b.'CBrn"}}},
-       {"bc_only_condbranch"_h, {{kAllCases, "bc.'CBrn"}}},
+       {"b_only_condbranch"_h, {{kAllCases, "b.'{condb}"}}},
+       {"bc_only_condbranch"_h, {{kAllCases, "bc.'{condb}"}}},
        {"not_asimdmisc_r"_h, {{kAllCases, "mvn"}}},
        {"dup_z_i"_h, {{kAllCases, "mov"}}},
        {"fdup_z_i"_h, {{kAllCases, "fmov"}}},
@@ -1847,7 +1847,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fmul_d_floatdp2"_h,   "fmul_h_floatdp2"_h,   "fmul_s_floatdp2"_h,
         "fnmul_d_floatdp2"_h,  "fnmul_h_floatdp2"_h,  "fnmul_s_floatdp2"_h,
         "fsub_d_floatdp2"_h,   "fsub_h_floatdp2"_h,   "fsub_s_floatdp2"_h}},
-      {"'Fd, 'Fn, 'Fm, 'Cond",
+      {"'Fd, 'Fn, 'Fm, '{cond}",
        {"fcsel_d_floatsel"_h, "fcsel_h_floatsel"_h, "fcsel_s_floatsel"_h}},
       {"'Fd, 'Fn, 'Fm, 'Fa",
        {"fmadd_d_floatdp3"_h,
@@ -1906,7 +1906,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fcmpe_d_floatcmp"_h,
         "fcmpe_h_floatcmp"_h,
         "fcmpe_s_floatcmp"_h}},
-      {"'Fn, 'Fm, 'INzcv, 'Cond",
+      {"'Fn, 'Fm, #'{nzcv}, '{cond}",
        {"fccmp_d_floatccmp"_h,
         "fccmp_h_floatccmp"_h,
         "fccmp_s_floatccmp"_h,
@@ -1991,14 +1991,12 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "cmplo_p_p_zi"_h,
         "cmpls_p_p_zi"_h}},
       {"'Pd.'{ssz}, 'Pgl/z, 'Zn.'{ssz}, #0.0",
-       {
-           "fcmeq_p_p_z0"_h,
-           "fcmge_p_p_z0"_h,
-           "fcmgt_p_p_z0"_h,
-           "fcmle_p_p_z0"_h,
-           "fcmlt_p_p_z0"_h,
-           "fcmne_p_p_z0"_h,
-       }},
+       {"fcmeq_p_p_z0"_h,
+        "fcmge_p_p_z0"_h,
+        "fcmgt_p_p_z0"_h,
+        "fcmle_p_p_z0"_h,
+        "fcmlt_p_p_z0"_h,
+        "fcmne_p_p_z0"_h}},
       {"'Pd.'{ssz}, 'Pgl/z, 'Zn.'{ssz}, 'Zm.'t",
        {"cmpeq_p_p_zz"_h,
         "cmpge_p_p_zz"_h,
@@ -2121,7 +2119,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'R22n, 'R22m", {"ctermeq_rr"_h, "ctermne_rr"_h}},
       {"'Rd, #0x'x2005'(2221?, lsl #'u2221*16)",
        {"movk_32_movewide"_h, "movk_64_movewide"_h}},
-      {"'Rd, 'CInv",
+      {"'Rd, '{condinv}",
        {"cset_csinc_32_condsel"_h,
         "cset_csinc_64_condsel"_h,
         "csetm_csinv_32_condsel"_h,
@@ -2225,7 +2223,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "umax_64u_minmax_imm"_h,
         "umin_32u_minmax_imm"_h,
         "umin_64u_minmax_imm"_h}},
-      {"'Rd, 'Rn, 'CInv",
+      {"'Rd, 'Rn, '{condinv}",
        {"cinc_csinc_32_condsel"_h,
         "cinc_csinc_64_condsel"_h,
         "cinv_csinv_32_condsel"_h,
@@ -2274,7 +2272,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
                          "lsr_lsrv_32_dp_2src"_h,   "lsr_lsrv_64_dp_2src"_h,
                          "ror_rorv_32_dp_2src"_h,   "ror_rorv_64_dp_2src"_h}},
       {"'Rd, 'Rn, 'Rm, #'u1510", {"extr_32_extract"_h, "extr_64_extract"_h}},
-      {"'Rd, 'Rn, 'Rm, 'Cond",
+      {"'Rd, 'Rn, 'Rm, '{cond}",
        {"csel_32_condsel"_h,
         "csel_64_condsel"_h,
         "csinc_32_condsel"_h,
@@ -2342,13 +2340,13 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "subs_64s_addsub_imm"_h,
         "sub_32_addsub_imm"_h,
         "sub_64_addsub_imm"_h}},
-      {"'Rn, #'u2016, 'INzcv, 'Cond",
+      {"'Rn, #'u2016, #'{nzcv}, '{cond}",
        {"ccmn_32_condcmp_imm"_h,
         "ccmn_64_condcmp_imm"_h,
         "ccmp_32_condcmp_imm"_h,
         "ccmp_64_condcmp_imm"_h}},
       {"'Rn, 'ITri", {"tst_ands_32s_log_imm"_h, "tst_ands_64s_log_imm"_h}},
-      {"'Rn, 'Rm, 'INzcv, 'Cond",
+      {"'Rn, 'Rm, #'{nzcv}, '{cond}",
        {"ccmn_32_condcmp_reg"_h,
         "ccmn_64_condcmp_reg"_h,
         "ccmp_32_condcmp_reg"_h,
@@ -2406,7 +2404,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'St, ['Xns], #'s2012",
        {"ldr_s_ldst_immpost"_h, "str_s_ldst_immpost"_h}},
       {"'TImmCond",
-       {"b.'CBrn_b_only_condbranch"_h, "bc.'CBrn_bc_only_condbranch"_h}},
+       {"b.'{condb}_b_only_condbranch"_h, "bc.'{condb}_bc_only_condbranch"_h}},
       {"'TImmUncn", {"b_only_branch_imm"_h, "bl_only_branch_imm"_h}},
       {"'Vd.'{nf}, 'Vn.'{nf}, 'Vm.'{nf}",
        {"fabd_asimdsame_only"_h,    "facge_asimdsame_only"_h,
@@ -2970,7 +2968,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "eret_64e_branch_reg"_h,
         "eretaa_64e_branch_reg"_h,
         "eretab_64e_branch_reg"_h}},
-      {"'Xn, #'u2015, 'INzcv", {"rmif_only_rmif"_h}},
+      {"'Xn, #'u2015, #'{nzcv}", {"rmif_only_rmif"_h}},
       {"'Xn, 'Xds",
        {"blraa_64p_branch_reg"_h,
         "blrab_64p_branch_reg"_h,
@@ -3201,24 +3199,24 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "subhnt_z_zz"_h}},
       {"'Zd.'tl, 'Zd.'tl, 'ITriSvel",
        {"and_z_zi"_h, "eor_z_zi"_h, "orr_z_zi"_h}},
-      {"'Zd.'tszd, 'Zn.'tszs, 'ITriSver",
+      {"'Zd.'{sszshd}, 'Zn.'{sszshs}, 'ITriSver",
        {"sshllb_z_zi"_h, "sshllt_z_zi"_h, "ushllb_z_zi"_h, "ushllt_z_zi"_h}},
-      {"'Zd.'tszp, 'Pgl/m, 'Zd.'tszp, 'ITriSvep",
+      {"'Zd.'{sszshu}, 'Pgl/m, 'Zd.'{sszshu}, 'ITriSvep",
        {"lsl_z_p_zi"_h, "sqshl_z_p_zi"_h, "sqshlu_z_p_zi"_h, "uqshl_z_p_zi"_h}},
-      {"'Zd.'tszp, 'Pgl/m, 'Zd.'tszp, 'ITriSveq",
+      {"'Zd.'{sszshu}, 'Pgl/m, 'Zd.'{sszshu}, 'ITriSveq",
        {"asrd_z_p_zi"_h,
         "asr_z_p_zi"_h,
         "lsr_z_p_zi"_h,
         "srshr_z_p_zi"_h,
         "urshr_z_p_zi"_h}},
-      {"'Zd.'tszs, 'Zn.'tszd",
+      {"'Zd.'{sszshs}, 'Zn.'{sszshd}",
        {"sqxtnb_z_zz"_h,
         "sqxtnt_z_zz"_h,
         "sqxtunb_z_zz"_h,
         "sqxtunt_z_zz"_h,
         "uqxtnb_z_zz"_h,
         "uqxtnt_z_zz"_h}},
-      {"'Zd.'tszs, 'Zn.'tszd, 'ITriSves",
+      {"'Zd.'{sszshs}, 'Zn.'{sszshd}, 'ITriSves",
        {"rshrnb_z_zi"_h,
         "rshrnt_z_zi"_h,
         "shrnb_z_zi"_h,
@@ -3235,8 +3233,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "uqrshrnt_z_zi"_h,
         "uqshrnb_z_zi"_h,
         "uqshrnt_z_zi"_h}},
-      {"'Zd.'tszs, 'Zn.'tszs, 'ITriSver", {"lsl_z_zi"_h, "sli_z_zzi"_h}},
-      {"'Zd.'tszs, 'Zn.'tszs, 'ITriSves",
+      {"'Zd.'{sszshs}, 'Zn.'{sszshs}, 'ITriSver", {"lsl_z_zi"_h, "sli_z_zzi"_h}},
+      {"'Zd.'{sszshs}, 'Zn.'{sszshs}, 'ITriSves",
        {"asr_z_zi"_h,
         "lsr_z_zi"_h,
         "sri_z_zzi"_h,
@@ -3244,7 +3242,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ssra_z_zi"_h,
         "ursra_z_zi"_h,
         "usra_z_zi"_h}},
-      {"'Zd.'tszs, 'Zd.'tszs, 'Zn.'tszs, 'ITriSves", {"xar_z_zzi"_h}},
+      {"'Zd.'{sszshs}, 'Zd.'{sszshs}, 'Zn.'{sszshs}, 'ITriSves", {"xar_z_zzi"_h}},
       {"'Zd.b, 'Zd.b", {"aesimc_z_z"_h, "aesmc_z_z"_h}},
       {"'Zd.b, 'Zd.b, 'Zn.b", {"aesd_z_zz"_h, "aese_z_zz"_h}},
       {"'Zd.b, 'Zd.b, 'Zn.b, #'u2016_1210", {"ext_z_zi_des"_h}},
@@ -3636,7 +3634,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "st1_asisdlsop_sx1_r1s"_h,
         "ld1_asisdlso_s1_1s"_h,
         "st1_asisdlso_s1_1s"_h}},
-      {"{'Zt.'tlss}, 'Pgl/z, ['Xns'(1916?, #'s1916, mul vl)]",
+      {"{'Zt.'{sszld}}, 'Pgl/z, ['Xns'(1916?, #'s1916, mul vl)]",
        {"ld1b_z_p_bi_u16"_h,    "ld1b_z_p_bi_u32"_h,    "ld1b_z_p_bi_u64"_h,
         "ld1b_z_p_bi_u8"_h,     "ld1d_z_p_bi_u64"_h,    "ld1h_z_p_bi_u16"_h,
         "ld1h_z_p_bi_u32"_h,    "ld1h_z_p_bi_u64"_h,    "ld1sb_z_p_bi_s16"_h,
@@ -3648,7 +3646,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ldnf1sb_z_p_bi_s16"_h, "ldnf1sb_z_p_bi_s32"_h, "ldnf1sb_z_p_bi_s64"_h,
         "ldnf1sh_z_p_bi_s32"_h, "ldnf1sh_z_p_bi_s64"_h, "ldnf1sw_z_p_bi_s64"_h,
         "ldnf1w_z_p_bi_u32"_h,  "ldnf1w_z_p_bi_u64"_h}},
-      {"{'Zt.'tlss}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm)]",
+      {"{'Zt.'{sszld}}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm)]",
        {"ldff1b_z_p_br_u16"_h,
         "ldff1b_z_p_br_u32"_h,
         "ldff1b_z_p_br_u64"_h,
@@ -3656,27 +3654,27 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ldff1sb_z_p_br_s16"_h,
         "ldff1sb_z_p_br_s32"_h,
         "ldff1sb_z_p_br_s64"_h}},
-      {"{'Zt.'tlss}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm, lsl #1)]",
+      {"{'Zt.'{sszld}}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm, lsl #1)]",
        {"ldff1h_z_p_br_u16"_h,
         "ldff1h_z_p_br_u32"_h,
         "ldff1h_z_p_br_u64"_h,
         "ldff1sh_z_p_br_s32"_h,
         "ldff1sh_z_p_br_s64"_h}},
-      {"{'Zt.'tlss}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm, lsl #2)]",
+      {"{'Zt.'{sszld}}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm, lsl #2)]",
        {"ldff1w_z_p_br_u32"_h, "ldff1w_z_p_br_u64"_h, "ldff1sw_z_p_br_s64"_h}},
-      {"{'Zt.'tlss}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm, lsl #3)]",
+      {"{'Zt.'{sszld}}, 'Pgl/z, ['Xns'(2016=31?:, 'Xm, lsl #3)]",
        {"ldff1d_z_p_br_u64"_h}},
-      {"{'Zt.'tlss}, 'Pgl/z, ['Xns, 'Xm, lsl #'u2423]",
+      {"{'Zt.'{sszld}}, 'Pgl/z, ['Xns, 'Xm, lsl #'u2423]",
        {"ld1d_z_p_br_u64"_h,
         "ld1h_z_p_br_u16"_h,
         "ld1h_z_p_br_u32"_h,
         "ld1h_z_p_br_u64"_h,
         "ld1w_z_p_br_u32"_h,
         "ld1w_z_p_br_u64"_h}},
-      {"{'Zt.'tlss}, 'Pgl/z, ['Xns, 'Xm, lsl #1]",
+      {"{'Zt.'{sszld}}, 'Pgl/z, ['Xns, 'Xm, lsl #1]",
        {"ld1sh_z_p_br_s32"_h, "ld1sh_z_p_br_s64"_h}},
-      {"{'Zt.'tlss}, 'Pgl/z, ['Xns, 'Xm, lsl #2]", {"ld1sw_z_p_br_s64"_h}},
-      {"{'Zt.'tlss}, 'Pgl/z, ['Xns, 'Xm]",
+      {"{'Zt.'{sszld}}, 'Pgl/z, ['Xns, 'Xm, lsl #2]", {"ld1sw_z_p_br_s64"_h}},
+      {"{'Zt.'{sszld}}, 'Pgl/z, ['Xns, 'Xm]",
        {"ld1b_z_p_br_u16"_h,
         "ld1b_z_p_br_u32"_h,
         "ld1b_z_p_br_u64"_h,
@@ -3684,9 +3682,9 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ld1sb_z_p_br_s16"_h,
         "ld1sb_z_p_br_s32"_h,
         "ld1sb_z_p_br_s64"_h}},
-      {"{'Zt.'tls}, 'Pgl, ['Xns'(1916?, #'s1916, mul vl)]",
+      {"{'Zt.'{sszst}}, 'Pgl, ['Xns'(1916?, #'s1916, mul vl)]",
        {"st1b_z_p_bi"_h, "st1d_z_p_bi"_h, "st1h_z_p_bi"_h, "st1w_z_p_bi"_h}},
-      {"{'Zt.'tls}, 'Pgl, ['Xns, 'Xm'(2423?, lsl #'u2423)]",
+      {"{'Zt.'{sszst}}, 'Pgl, ['Xns, 'Xm'(2423?, lsl #'u2423)]",
        {"st1b_z_p_br"_h, "st1d_z_p_br"_h, "st1h_z_p_br"_h, "st1w_z_p_br"_h}},
       {"{'Zt.'{sszmem}, 'Zt2.'{sszmem}, 'Zt3.'{sszmem}, 'Zt4.'{sszmem}}, "
        "'Pgl'(30?:/z), ['Xns'(1916?, #'s1916*4, mul vl)]",
@@ -4218,9 +4216,9 @@ void Disassembler::VisitSVEBroadcastIndexElement(const Instruction *instr) {
         if ((CountSetBits(imm2) + CountSetBits(tsz)) == 1) {
           // If imm2:tsz has one set bit, the index is zero. This is
           // disassembled as a mov from a b/h/s/d/q scalar register.
-          form = "'Zd.'ti, 'ti'u0905";
+          form = "'Zd.'{sszdup}, '{sszdup}'u0905";
         } else {
-          form = "'Zd.'ti, 'Zn.'ti['IVInsSVEIndex]";
+          form = "'Zd.'{sszdup}, 'Zn.'{sszdup}['IVInsSVEIndex]";
         }
       }
       break;
@@ -4469,8 +4467,6 @@ int Disassembler::SubstituteField(const Instruction *instr,
       return SubstituteImmediateField(instr, format);
     case 'L':
       return SubstituteLiteralField(instr, format);
-    case 'C':
-      return SubstituteConditionField(instr, format);
     case 'E':
       return SubstituteExtendField(instr, format);
     case 'A':
@@ -4799,15 +4795,6 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
         return 4;
       }
     }
-    case 'N': {  // INzcv.
-      int nzcv = (instr->GetNzcv() << Flags_offset);
-      AppendToOutput("#%c%c%c%c",
-                     ((nzcv & NFlag) == 0) ? 'n' : 'N',
-                     ((nzcv & ZFlag) == 0) ? 'z' : 'Z',
-                     ((nzcv & CFlag) == 0) ? 'c' : 'C',
-                     ((nzcv & VFlag) == 0) ? 'v' : 'V');
-      return 5;
-    }
     case 's': {  // Is - Shift (immediate).
       switch (format[2]) {
         case 'R': {  // IsR - right shifts.
@@ -4982,41 +4969,6 @@ int Disassembler::SubstituteLiteralField(const Instruction *instr,
   }
 
   return 6;
-}
-
-int Disassembler::SubstituteConditionField(const Instruction *instr,
-                                           const char *format) {
-  VIXL_ASSERT(format[0] == 'C');
-  const char *condition_code[] = {"eq",
-                                  "ne",
-                                  "hs",
-                                  "lo",
-                                  "mi",
-                                  "pl",
-                                  "vs",
-                                  "vc",
-                                  "hi",
-                                  "ls",
-                                  "ge",
-                                  "lt",
-                                  "gt",
-                                  "le",
-                                  "al",
-                                  "nv"};
-  int cond;
-  switch (format[1]) {
-    case 'B':
-      cond = instr->GetConditionBranch();
-      break;
-    case 'I': {
-      cond = InvertCondition(static_cast<Condition>(instr->GetCondition()));
-      break;
-    }
-    default:
-      cond = instr->GetCondition();
-  }
-  AppendToOutput("%s", condition_code[cond]);
-  return 4;
 }
 
 int Disassembler::SubstitutePCRelAddressField(const Instruction *instr,
@@ -5220,8 +5172,28 @@ int Disassembler::SubstituteGeneric(const Instruction *instr,
     std::vector<int> bit_positions;
     std::vector<std::string> substitutions;
   };
+
+  // clang-format off
   static const std::map<std::string, SubstList> subst = {
       {"extend", {{15, 13}, {"uxtw", "lsl", "sxtw", "sxtx"}}},
+      {"cond",
+       {{15, 14, 13, 12},
+        {"eq", "ne", "hs", "lo", "mi", "pl", "vs", "vc",
+         "hi", "ls", "ge", "lt", "gt", "le", "al", "nv"}}},
+      {"condinv",
+       {{15, 14, 13, 12},
+        {"ne", "eq", "lo", "hs", "pl", "mi", "vc", "vs",
+         "ls", "hi", "lt", "ge", "le", "gt", "undefined", "undefined"}}},
+      {"condb",
+       {{3, 2, 1, 0},
+        {"eq", "ne", "hs", "lo", "mi", "pl", "vs", "vc",
+         "hi", "ls", "ge", "lt", "gt", "le", "al", "nv"}}},
+      {"nzcv",
+       {{3, 2, 1, 0},
+        {"nzcv", "nzcV", "nzCv", "nzCV",
+         "nZcv", "nZcV", "nZCv", "nZCV",
+         "Nzcv", "NzcV", "NzCv", "NzCV",
+         "NZcv", "NZcV", "NZCv", "NZCV"}}},
       {"prefop",
        {{4, 3, 2, 1, 0},
         {"pldl1keep",  "pldl1strm",  "pldl2keep",  "pldl2strm",  "pldl3keep",
@@ -5233,22 +5205,10 @@ int Disassembler::SubstituteGeneric(const Instruction *instr,
          "#0b11110",   "#0b11111"}}},
       {"prefsveop",
        {{3, 2, 1, 0},
-        {"pldl1keep",
-         "pldl1strm",
-         "pldl2keep",
-         "pldl2strm",
-         "pldl3keep",
-         "pldl3strm",
-         "#0b0110",
-         "#0b0111",
-         "pstl1keep",
-         "pstl1strm",
-         "pstl2keep",
-         "pstl2strm",
-         "pstl3keep",
-         "pstl3strm",
-         "#0b1110",
-         "#0b1111"}}},
+        {"pldl1keep", "pldl1strm",  "pldl2keep",  "pldl2strm",
+         "pldl3keep", "pldl3strm",  "#0b0110",    "#0b0111",
+         "pstl1keep", "pstl1strm",  "pstl2keep",  "pstl2strm",
+         "pstl3keep", "pstl3strm",  "#0b1110",    "#0b1111"}}},
       {"n", {{30, 23, 22}, {"8b", "4h", "2s", "1d", "16b", "8h", "4s", "2d"}}},
       {"nl", {{23, 22}, {"8h", "4s", "2d", ""}}},
       {"nf", {{22, 30}, {"2s", "4s", "1d", "2d"}}},
@@ -5266,22 +5226,33 @@ int Disassembler::SubstituteGeneric(const Instruction *instr,
        {{21, 20, 19}, {"", "8h", "4s", "4s", "2d", "2d", "2d", "2d"}}},
       {"nshiftscal",
        {{22, 21, 20, 19},
-        {"",
-         "b",
-         "h",
-         "h",
-         "s",
-         "s",
-         "s",
-         "s",
-         "d",
-         "d",
-         "d",
-         "d",
-         "d",
-         "d",
-         "d",
-         "d"}}},
+        {"",  "b", "h", "h", "s", "s", "s", "s",
+         "d", "d", "d", "d", "d", "d", "d", "d"}}},
+      {"sszshu",
+       {{23, 22, 9, 8},
+        {"",  "b", "h", "h", "s", "s", "s", "s",
+         "d", "d", "d", "d", "d", "d", "d", "d"}}},
+      {"sszshs",
+       {{23, 22, 20, 19},
+        {"",  "b", "h", "h", "s", "s", "s", "s",
+         "d", "d", "d", "d", "d", "d", "d", "d"}}},
+      {"sszshd",
+       {{23, 22, 20, 19},
+        {"",  "h", "s", "s", "d", "d", "d", "d",
+         "",  "",  "",  "",  "",  "",  "",  ""}}},
+      {"sszld",
+       {{24, 23, 22, 21},
+        {"b", "h", "s", "d", "d", "h", "s", "d",
+         "d", "s", "s", "d", "d", "s", "h", "d"}}},
+      {"sszst",
+       {{22, 21},
+        {"b", "h", "s", "d"}}},
+      {"sszdup",
+       {{20, 19, 18, 17, 16},
+        {"",  "b", "h", "b", "s", "b", "h", "b",
+         "d", "b", "h", "b", "s", "b", "h", "b",
+         "q", "b", "h", "b", "s", "b", "h", "b",
+         "d", "b", "h", "b", "s", "b", "h", "b"}}},
       {"ntri",
        {{19, 18, 17, 16, 30},
         {"",   "",   "8b", "16b", "4h", "8h", "8b", "16b",
@@ -5290,22 +5261,8 @@ int Disassembler::SubstituteGeneric(const Instruction *instr,
          "2s", "4s", "8b", "16b", "4h", "8h", "8b", "16b"}}},
       {"ntriscal",
        {{19, 18, 17, 16},
-        {"",
-         "b",
-         "h",
-         "b",
-         "s",
-         "b",
-         "h",
-         "b",
-         "d",
-         "b",
-         "h",
-         "b",
-         "s",
-         "b",
-         "h",
-         "b"}}},
+        {"",  "b", "h", "b", "s", "b", "h", "b",
+         "d", "b", "h", "b", "s", "b", "h", "b"}}},
       {"shift", {{23, 22}, {"lsl", "lsr", "asr", "ror"}}},
       {"ssz", {{23, 22}, {"b", "h", "s", "d"}}},
       {"sszmem", {{24, 23}, {"b", "h", "s", "d"}}},
@@ -5321,24 +5278,13 @@ int Disassembler::SubstituteGeneric(const Instruction *instr,
          "#0x1c", "mul4",  "mul3",  "all"}}},
       {"barrier",
        {{11, 10, 9, 8},
-        {"reserved (0b0000)",
-         "oshld",
-         "oshst",
-         "osh",
-         "reserved (0b0100)",
-         "nshld",
-         "nshst",
-         "nsh",
-         "reserved (0b1000)",
-         "ishld",
-         "ishst",
-         "ish",
-         "reserved (0b1100)",
-         "ld",
-         "st",
-         "sy"}}},
-
+        {"reserved (0b0000)", "oshld", "oshst", "osh",
+         "reserved (0b0100)", "nshld", "nshst", "nsh",
+         "reserved (0b1000)", "ishld", "ishst", "ish",
+         "reserved (0b1100)", "ld",    "st",    "sy"}}},
   };
+  // clang-format on
+
   VIXL_ASSERT(subst.count(key) == 1);
   auto x = subst.at(key);
   int index = 0;
@@ -5360,41 +5306,8 @@ int Disassembler::SubstituteSVESize(const Instruction *instr,
   switch (format[1]) {
     case 'l':
       placeholder_length++;
-      if (format[2] == 's') {
-        // 'tls: Loads and stores
-        size_in_bytes_log2 = instr->ExtractBits(22, 21);
-        placeholder_length++;
-        if (format[3] == 's') {
-          // Sign extension load.
-          unsigned msize = instr->ExtractBits(24, 23);
-          if (msize > size_in_bytes_log2) size_in_bytes_log2 ^= 0x3;
-          placeholder_length++;
-        }
-      } else {
-        // 'tl: Logical operations
-        size_in_bytes_log2 = instr->GetSVEBitwiseImmLaneSizeInBytesLog2();
-      }
-      break;
-    case 'i': {  // 'ti: indices.
-      std::pair<int, int> index_and_lane_size =
-          instr->GetSVEPermuteIndexAndLaneSizeLog2();
-      placeholder_length++;
-      size_in_bytes_log2 = index_and_lane_size.second;
-      break;
-    }
-    case 's':
-      if (format[2] == 'z') {
-        VIXL_ASSERT((format[3] == 'p') || (format[3] == 's') ||
-                    (format[3] == 'd'));
-        bool is_predicated = (format[3] == 'p');
-        std::pair<int, int> shift_and_lane_size =
-            instr->GetSVEImmShiftAndLaneSizeLog2(is_predicated);
-        size_in_bytes_log2 = shift_and_lane_size.second;
-        if (format[3] == 'd') {  // Double size lanes.
-          size_in_bytes_log2++;
-        }
-        placeholder_length += 3;  // skip "sz(p|s|d)"
-      }
+      // 'tl: Logical operations
+      size_in_bytes_log2 = instr->GetSVEBitwiseImmLaneSizeInBytesLog2();
       break;
     default:
       break;
