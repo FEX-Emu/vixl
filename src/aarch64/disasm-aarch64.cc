@@ -1792,7 +1792,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "usra_asisdshf_r"_h}},
       {"'Dd, 'Dn, 'IsL", {"shl_asisdshf_r"_h, "sli_asisdshf_r"_h}},
       {"'Dd, 'Hn", {"fcvt_dh_floatdp1"_h}},
-      {"'Dd, 'IFP", {"fmov_d_floatimm"_h}},
+      {"'Dd, #'f2013", {"fmov_d_floatimm"_h}},
       {"'Dd, 'IVMIImm", {"movi_asimdimm_d_ds"_h}},
       {"'Dd, 'Pgl, 'Zn.'t", {"saddv_r_p_z"_h, "uaddv_r_p_z"_h}},
       {"'Dd, 'Sn", {"fcvt_ds_floatdp1"_h}},
@@ -1879,7 +1879,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ucvtf_h64_float2int"_h,
         "ucvtf_s32_float2int"_h,
         "ucvtf_s64_float2int"_h}},
-      {"'Fd, 'Rn, 'IFPFBits",
+      {"'Fd, 'Rn, #'n1510+64",
        {"scvtf_d32_float2fix"_h,
         "scvtf_d64_float2fix"_h,
         "scvtf_h32_float2fix"_h,
@@ -1951,7 +1951,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fmls_asisdelem_rh_h"_h,
         "fmul_asisdelem_rh_h"_h,
         "fmulx_asisdelem_rh_h"_h}},
-      {"'Hd, 'IFP", {"fmov_h_floatimm"_h}},
+      {"'Hd, #'f2013", {"fmov_h_floatimm"_h}},
       {"'Hd, 'Sn", {"bfcvt_bs_floatdp1"_h, "fcvt_hs_floatdp1"_h}},
       {"'Hd, 'Vn.'?30:84h",
        {"fmaxnmv_asimdall_only_h"_h,
@@ -2159,7 +2159,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
                     "fjcvtzs_32d_float2int"_h, "fmov_32h_float2int"_h,
                     "fmov_32s_float2int"_h,    "fmov_64d_float2int"_h,
                     "fmov_64h_float2int"_h}},
-      {"'Rd, 'Fn, 'IFPFBits",
+      {"'Rd, 'Fn, #'n1510+64",
        {"fcvtzs_32d_float2fix"_h,
         "fcvtzs_32h_float2fix"_h,
         "fcvtzs_32s_float2fix"_h,
@@ -2379,7 +2379,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "cbz_64_compbranch"_h}},
       {"'Sd, 'Dn", {"fcvt_sd_floatdp1"_h, "fcvtxn_asisdmisc_n"_h}},
       {"'Sd, 'Hn", {"fcvt_sh_floatdp1"_h}},
-      {"'Sd, 'IFP", {"fmov_s_floatimm"_h}},
+      {"'Sd, #'f2013", {"fmov_s_floatimm"_h}},
       {"'Sd, 'Sn", {"sha1h_ss_cryptosha2"_h}},
       {"'Sd, 'Vn.4s",
        {"fmaxnmv_asimdall_only_sd"_h,
@@ -2791,14 +2791,14 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "orr_asimdimm_l_sl"_h}},
       {"'Vt.'?30:42s, #0x'x1816_0905, msl #'(12?16:8)",
        {"movi_asimdimm_m_sm"_h, "mvni_asimdimm_m_sm"_h}},
-      {"'Vt.'?30:42s, 'IFPNeon", {"fmov_asimdimm_s_s"_h}},
+      {"'Vt.'?30:42s, #'f1816_0905", {"fmov_asimdimm_s_s"_h}},
       {"'Vt.'?30:84h, #0x'x1816_0905'(1413?, lsl #'u1413*8)",
        {"bic_asimdimm_l_hl"_h,
         "movi_asimdimm_l_hl"_h,
         "mvni_asimdimm_l_hl"_h,
         "orr_asimdimm_l_hl"_h}},
-      {"'Vt.'?30:84h, 'IFPNeon", {"fmov_asimdimm_h_h"_h}},
-      {"'Vt.2d, 'IFPNeon", {"fmov_asimdimm_d2_d"_h}},
+      {"'Vt.'?30:84h, #'f1816_0905", {"fmov_asimdimm_h_h"_h}},
+      {"'Vt.2d, #'f1816_0905", {"fmov_asimdimm_d2_d"_h}},
       {"'Vt.2d, 'IVMIImm", {"movi_asimdimm_d2_d"_h}},
       {"'Wd, 'Pn.'t", {"uqdecp_r_p_r_uw"_h, "uqincp_r_p_r_uw"_h}},
       {"'Wd, 'Wn, 'Xm", {"crc32cx_64c_dp_2src"_h, "crc32x_64c_dp_2src"_h}},
@@ -3065,7 +3065,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Zd.'{ssz}, '(2322=3?'Xn:'Wn), #'s2016", {"index_z_ri"_h}},
       {"'Zd.'{ssz}, '(2322=3?'Xn:'Wn), '(2322=3?'Xm:'Wm)", {"index_z_rr"_h}},
       {"'Zd.'{ssz}, '(2322=3?'Xns:'Wns)", {"mov_dup_z_r"_h}},
-      {"'Zd.'{ssz}, 'IFPSve", {"fmov_fdup_z_i"_h}},
+      {"'Zd.'{ssz}, #'f1205", {"fmov_fdup_z_i"_h}},
       {"'Zd.'{ssz}, 'Pgl, 'Zd.'{ssz}, 'Zn.'t",
        {"clasta_z_p_zz"_h, "clastb_z_p_zz"_h, "splice_z_p_zz_des"_h}},
       {"'Zd.'{ssz}, 'Pgl, 'Zn.'t", {"compact_z_p_z"_h}},
@@ -3138,7 +3138,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Zd.'{ssz}, 'Pgl/z, 'Zn.'{ssz}, 'Zm.'t", {"histcnt_z_p_zz"_h}},
       {"'Zd.'{ssz}, 'Pm/'?14:mz, #'s1205'(13?, lsl #8)",
        {"mov_cpy_z_o_i"_h, "mov_cpy_z_p_i"_h}},
-      {"'Zd.'{ssz}, 'Pm/m, 'IFPSve", {"fmov_fcpy_z_p_i"_h}},
+      {"'Zd.'{ssz}, 'Pm/m, #'f1205", {"fmov_fcpy_z_p_i"_h}},
       {"'Zd.'{ssz}, 'Pn",
        {"decp_z_p_z"_h,
         "incp_z_p_z"_h,
@@ -4482,6 +4482,8 @@ int Disassembler::SubstituteField(const Instruction *instr,
     case 'x':
     case 'n':
       return SubstituteIntField(instr, format);
+    case 'f':
+      return SubstituteFPField(instr, format);
     case 't':
       return SubstituteSVESize(instr, format);
     case '?':
@@ -4569,6 +4571,13 @@ std::pair<unsigned, unsigned> Disassembler::GetRegNumForField(
   return std::make_pair(reg_num, field_len);
 }
 
+int BitPositionFromString(const char *c) {
+  VIXL_ASSERT(strspn(c, "0123456789") >= 2);
+  int pos = ((c[0] - '0') * 10) + (c[1] - '0');
+  VIXL_ASSERT(pos <= 31);
+  return pos;
+}
+
 int Disassembler::SubstituteRegisterField(const Instruction *instr,
                                           const char *format) {
   unsigned field_len = 1;  // Initially, count only the first character.
@@ -4587,8 +4596,7 @@ int Disassembler::SubstituteRegisterField(const Instruction *instr,
       // Core W or X registers where the type is determined by a specified bit
       // position, eg. 'R20d, 'R05n. This is like the 'Rd syntax, where bit 31
       // is implicitly used to select between W and X.
-      int bitpos = ((reg_field[0] - '0') * 10) + (reg_field[1] - '0');
-      VIXL_ASSERT(bitpos <= 31);
+      int bitpos = BitPositionFromString(reg_field);
       is_x = (instr->ExtractBit(bitpos) == 1);
       reg_field = &format[3];
       field_len += 2;
@@ -4739,34 +4747,6 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
       if (!instr->GetSixtyFourBits()) imm &= UINT64_C(0xffffffff);
       AppendToOutput("#0x%" PRIx64, imm);
       return 8;
-    }
-    case 'F': {  // IFP, IFPNeon, IFPSve or IFPFBits.
-      int imm8 = 0;
-      size_t len = strlen("IFP");
-      switch (format[3]) {
-        case 'F':
-          VIXL_ASSERT(strncmp(format, "IFPFBits", strlen("IFPFBits")) == 0);
-          AppendToOutput("#%" PRId32, 64 - instr->GetFPScale());
-          return static_cast<int>(strlen("IFPFBits"));
-        case 'N':
-          VIXL_ASSERT(strncmp(format, "IFPNeon", strlen("IFPNeon")) == 0);
-          imm8 = instr->GetImmNEONabcdefgh();
-          len += strlen("Neon");
-          break;
-        case 'S':
-          VIXL_ASSERT(strncmp(format, "IFPSve", strlen("IFPSve")) == 0);
-          imm8 = instr->ExtractBits(12, 5);
-          len += strlen("Sve");
-          break;
-        default:
-          VIXL_ASSERT(strncmp(format, "IFP", strlen("IFP")) == 0);
-          imm8 = instr->GetImmFP();
-          break;
-      }
-      AppendToOutput("#0x%" PRIx32 " (%.4f)",
-                     imm8,
-                     Instruction::Imm8ToFP32(imm8));
-      return static_cast<int>(len);
     }
     case 'T': {  // ITri - Immediate Triangular Encoded.
       if (format[4] == 'S') {
@@ -5126,13 +5106,6 @@ int Disassembler::SubstituteExtendField(const Instruction *instr,
   return 3;
 }
 
-int BitPositionFromString(const char *c) {
-  VIXL_ASSERT(strspn(c, "0123456789") >= 2);
-  int pos = ((c[0] - '0') * 10) + (c[1] - '0');
-  VIXL_ASSERT(pos <= 31);
-  return pos;
-}
-
 std::pair<int32_t, int> ExtractIntTerm(const Instruction *instr,
                                        const char *c) {
   int32_t bits = 0;
@@ -5216,6 +5189,22 @@ int Disassembler::SubstituteIntField(const Instruction *instr,
   AppendToOutput(format[0] == 'x' ? "%x" : "%d", bits);
 
   return static_cast<int>(c - format);
+}
+
+int Disassembler::SubstituteFPField(const Instruction *instr,
+                                    const char *format) {
+  VIXL_ASSERT(format[0] == 'f');
+  // A generic floating-point field uses a placeholder of the form 'fAABB where
+  // AA and BB are two-digit bit positions between 00 and 31, and AA >= BB. The
+  // placeholder is substituted with the 8-bit extracted integer and floating
+  // point value resulting from the conversion of those eight bits to FP format
+  // using Imm8ToFP32().
+  //
+  // In addition, split fields can be represented using 'fAABB_CCDD, where CCDD
+  // become the least-significant bits of the 8-bit value.
+  auto [bits, advance] = ExtractIntTerm(instr, format);
+  AppendToOutput("0x%" PRIx32 " (%.4f)", bits, Instruction::Imm8ToFP32(bits));
+  return advance;
 }
 
 int Disassembler::SubstituteGeneric(const Instruction *instr,

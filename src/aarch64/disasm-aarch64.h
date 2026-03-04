@@ -164,6 +164,7 @@ class Disassembler : public DecoderVisitor {
   int SubstituteBranchTargetField(const Instruction* instr, const char* format);
   int SubstituteLSRegOffsetField(const Instruction* instr, const char* format);
   int SubstituteIntField(const Instruction* instr, const char* format);
+  int SubstituteFPField(const Instruction* instr, const char* format);
   int SubstituteSVESize(const Instruction* instr, const char* format);
   int SubstituteTernary(const Instruction* instr, const char* format);
   int SubstituteConditionalBlock(const Instruction* instr, const char* format);
