@@ -28,7 +28,9 @@
 
 #include <bitset>
 #include <cstdlib>
+#include <regex>
 #include <sstream>
+#include <stack>
 
 namespace vixl {
 namespace aarch64 {
@@ -335,8 +337,15 @@ std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
   auto BitfieldSLessThanR = [](const Instruction *i) {
     return i->GetImmS() < i->GetImmR();
   };
+
   auto BitfieldRIsSPlus1 = [](const Instruction *i) {
     return i->GetImmR() == (i->GetImmS() + 1);
+  };
+
+  auto DupHasOneSetBit = [](const Instruction *i) {
+    return CountSetBits(i->ExtractBits(23, 22)) +
+               CountSetBits(i->ExtractBits(20, 16)) ==
+           1;
   };
 
   auto AllCases = [](const Instruction *i) {
@@ -544,7 +553,6 @@ std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
          {{RdRmAliased}, "unallocated"},
          {{RnRmAliased}, "unallocated"}}}};
 
-
   // Check simple aliases.
   std::string alias;
   MaskAliasMap::const_iterator ita = maskmap.find(form_hash_);
@@ -660,6 +668,7 @@ void Disassembler::PopulatePerInstructionUnallocatedMap(FormToUnallocMap *ftm) {
          "dup_asimdins_dr_r"_h,
          "ins_asimdins_iv_v"_h,
          "ins_asimdins_ir_r"_h}},
+       {0x001f0000'00000000, {"dup_z_zi"_h}},
        {0x001f0000'001f0000,
         {"prfb_i_p_br_s"_h,      "prfd_i_p_br_s"_h,      "prfh_i_p_br_s"_h,
          "prfw_i_p_br_s"_h,      "cpyen_cpy_memcms"_h,   "cpyern_cpy_memcms"_h,
@@ -1512,7 +1521,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ushl_asisdsame_only"_h,
         "sqrdmlah_asisdsame2_only"_h,
         "sqrdmlsh_asisdsame2_only"_h}},
-      {"'{nscal}'u0400, '{nscal}'u0905, 'Vf.'{nscal}['IVByElemIndex]",
+      {"'{nscal}'u0400, '{nscal}'u0905, 'Vf.'{nscal}['<u1111_2119 u2322 lsr>]",
        {"sqdmulh_asisdelem_r"_h,
         "sqrdmlah_asisdelem_r"_h,
         "sqrdmlsh_asisdelem_r"_h,
@@ -1529,23 +1538,26 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"sqdmlal_asisddiff_only"_h,
         "sqdmlsl_asisddiff_only"_h,
         "sqdmull_asisddiff_only"_h}},
-      {"'{nscall}'u0400, '{nscal}'u0905, 'Vf.'{nscal}['IVByElemIndex]",
+      {"'{nscall}'u0400, '{nscal}'u0905, 'Vf.'{nscal}['<u1111_2119 u2322 lsr>]",
        {"sqdmlal_asisdelem_l"_h,
         "sqdmlsl_asisdelem_l"_h,
         "sqdmull_asisdelem_l"_h}},
-      {"'{nshiftscal}'u0400, '{nshiftscal}'u0905, 'IsL",
+      {"'{nshiftscal}'u0400, '{nshiftscal}'u0905, #'<u2216 8 31 u2219 clz - "
+       "lsl ->",
        {"sqshlu_asisdshf_r"_h, "sqshl_asisdshf_r"_h, "uqshl_asisdshf_r"_h}},
-      {"'{nshiftscal}'u0400, '{nshiftscal}'u0905, 'IsR",
+      {"'{nshiftscal}'u0400, '{nshiftscal}'u0905, #'<16 31 u2219 clz - lsl "
+       "u2216 ->",
        {"fcvtzs_asisdshf_c"_h,
         "fcvtzu_asisdshf_c"_h,
         "scvtf_asisdshf_c"_h,
         "ucvtf_asisdshf_c"_h}},
-      {"'{ntriscal}'u0400, 'Vn.'{ntriscal}['IVInsIndex1]",
+      {"'{ntriscal}'u0400, 'Vn.'{ntriscal}['<u2016 dup ctz 1 + lsr>]",
        {"mov_dup_asisdone_only"_h}},
       {"'(07?j)'(06?c)", {"bti_hb_hints"_h}},
       {"'(0905=30?:'Xn)", {"ret_64r_branch_reg"_h}},
       {"'(1108=15?:#0x'x1108)", {"clrex_bn_barriers"_h}},
-      {"'(21?s:'?20:hb)'u0400, '(21?d:'?20:sh)'u0905, 'IsR",
+      {"'(21?s:'?20:hb)'u0400, '(21?d:'?20:sh)'u0905, #'<16 31 u2219 clz - lsl "
+       "u2216 ->",
        {"sqrshrn_asisdshf_n"_h,
         "sqrshrun_asisdshf_n"_h,
         "sqshrn_asisdshf_n"_h,
@@ -1741,7 +1753,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fmulx_asisdsame_only"_h,
         "frecps_asisdsame_only"_h,
         "frsqrts_asisdsame_only"_h}},
-      {"'?22:ds'u0400, '?22:ds'u0905, 'Vf.'?22:ds['IVByElemIndex]",
+      {"'?22:ds'u0400, '?22:ds'u0905, 'Vf.'?22:ds['<u1111_2119 u2322 lsr>]",
        {"fmla_asisdelem_r_sd"_h,
         "fmls_asisdelem_r_sd"_h,
         "fmul_asisdelem_r_sd"_h,
@@ -1780,7 +1792,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "cmtst_asisdsame_only"_h,
         "add_asisdsame_only"_h,
         "sub_asisdsame_only"_h}},
-      {"'Dd, 'Dn, 'IsR",
+      {"'Dd, 'Dn, #'<16 31 u2219 clz - lsl u2216 ->",
        {"sri_asisdshf_r"_h,
         "srshr_asisdshf_r"_h,
         "srsra_asisdshf_r"_h,
@@ -1790,26 +1802,27 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ursra_asisdshf_r"_h,
         "ushr_asisdshf_r"_h,
         "usra_asisdshf_r"_h}},
-      {"'Dd, 'Dn, 'IsL", {"shl_asisdshf_r"_h, "sli_asisdshf_r"_h}},
+      {"'Dd, 'Dn, #'<u2216 8 31 u2219 clz - lsl ->",
+       {"shl_asisdshf_r"_h, "sli_asisdshf_r"_h}},
       {"'Dd, 'Hn", {"fcvt_dh_floatdp1"_h}},
       {"'Dd, #'f2013", {"fmov_d_floatimm"_h}},
       {"'Dd, 'IVMIImm", {"movi_asimdimm_d_ds"_h}},
       {"'Dd, 'Pgl, 'Zn.'t", {"saddv_r_p_z"_h, "uaddv_r_p_z"_h}},
       {"'Dd, 'Sn", {"fcvt_ds_floatdp1"_h}},
       {"'Dd, 'Vn.2d", {"addp_asisdpair_only"_h}},
-      {"'Dt, 'Dt2, ['Xns'(2115?, #'s2115*8)]",
+      {"'Dt, 'Dt2, ['Xns'(2115?, #'<s2115 8 *>)]",
        {"ldnp_d_ldstnapair_offs"_h,
         "ldp_d_ldstpair_off"_h,
         "stnp_d_ldstnapair_offs"_h,
         "stp_d_ldstpair_off"_h}},
-      {"'Dt, 'Dt2, ['Xns, #'s2115*8]!",
+      {"'Dt, 'Dt2, ['Xns, #'<s2115 8 *>]!",
        {"ldp_d_ldstpair_pre"_h, "stp_d_ldstpair_pre"_h}},
-      {"'Dt, 'Dt2, ['Xns], #'s2115*8",
+      {"'Dt, 'Dt2, ['Xns], #'<s2115 8 *>",
        {"ldp_d_ldstpair_post"_h, "stp_d_ldstpair_post"_h}},
-      {"'Dt, pc'(23?:+)'s2305*4 'LValue", {"ldr_d_loadlit"_h}},
+      {"'Dt, pc'(23?:+)'<s2305 4 *> 'LValue", {"ldr_d_loadlit"_h}},
       {"'Dt, ['Xns'(2012?, #'s2012)]",
        {"ldur_d_ldst_unscaled"_h, "stur_d_ldst_unscaled"_h}},
-      {"'Dt, ['Xns'(2110?, #'u2110*8)]",
+      {"'Dt, ['Xns'(2110?, #'<u2110 8 *>)]",
        {"ldr_d_ldst_pos"_h, "str_d_ldst_pos"_h}},
       {"'Dt, ['Xns, #'s2012]!", {"ldr_d_ldst_immpre"_h, "str_d_ldst_immpre"_h}},
       {"'Dt, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #3)]",
@@ -1879,7 +1892,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ucvtf_h64_float2int"_h,
         "ucvtf_s32_float2int"_h,
         "ucvtf_s64_float2int"_h}},
-      {"'Fd, 'Rn, #'n1510+64",
+      {"'Fd, 'Rn, #'<64 u1510 ->",
        {"scvtf_d32_float2fix"_h,
         "scvtf_d64_float2fix"_h,
         "scvtf_h32_float2fix"_h,
@@ -1946,7 +1959,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fmulx_asisdsamefp16_only"_h,
         "frecps_asisdsamefp16_only"_h,
         "frsqrts_asisdsamefp16_only"_h}},
-      {"'Hd, 'Hn, 'Vf.h['IVByElemIndex]",
+      {"'Hd, 'Hn, 'Vf.h['<u1111_2119 u2322 lsr>]",
        {"fmla_asisdelem_rh_h"_h,
         "fmls_asisdelem_rh_h"_h,
         "fmul_asisdelem_rh_h"_h,
@@ -1966,7 +1979,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fminp_asisdpair_only_h"_h}},
       {"'Ht, ['Xns'(2012?, #'s2012)]",
        {"ldur_h_ldst_unscaled"_h, "stur_h_ldst_unscaled"_h}},
-      {"'Ht, ['Xns'(2110?, #'u2110*2)]",
+      {"'Ht, ['Xns'(2110?, #'<u2110 2 *>)]",
        {"ldr_h_ldst_pos"_h, "str_h_ldst_pos"_h}},
       {"'Ht, ['Xns, #'s2012]!", {"ldr_h_ldst_immpre"_h, "str_h_ldst_immpre"_h}},
       {"'Ht, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #1)]",
@@ -2088,26 +2101,26 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"sha1c_qsv_cryptosha3"_h,
         "sha1m_qsv_cryptosha3"_h,
         "sha1p_qsv_cryptosha3"_h}},
-      {"'Qt, pc'(23?:+)'s2305*4 'LValue", {"ldr_q_loadlit"_h}},
-      {"'Qt, 'Qt2, ['Xns'(2115?, #'s2115*16)]",
+      {"'Qt, pc'(23?:+)'<s2305 4 *> 'LValue", {"ldr_q_loadlit"_h}},
+      {"'Qt, 'Qt2, ['Xns'(2115?, #'<s2115 16 *>)]",
        {"ldnp_q_ldstnapair_offs"_h,
         "ldp_q_ldstpair_off"_h,
         "stnp_q_ldstnapair_offs"_h,
         "stp_q_ldstpair_off"_h}},
-      {"'Qt, 'Qt2, ['Xns, #'s2115*16]!",
+      {"'Qt, 'Qt2, ['Xns, #'<s2115 16 *>]!",
        {"ldp_q_ldstpair_pre"_h, "stp_q_ldstpair_pre"_h}},
-      {"'Qt, 'Qt2, ['Xns], #'s2115*16",
+      {"'Qt, 'Qt2, ['Xns], #'<s2115 16 *>",
        {"ldp_q_ldstpair_post"_h, "stp_q_ldstpair_post"_h}},
       {"'Qt, ['Xns'(2012?, #'s2012)]",
        {"ldur_q_ldst_unscaled"_h, "stur_q_ldst_unscaled"_h}},
-      {"'Qt, ['Xns'(2110?, #'u2110*16)]",
+      {"'Qt, ['Xns'(2110?, #'<u2110 16 *>)]",
        {"ldr_q_ldst_pos"_h, "str_q_ldst_pos"_h}},
       {"'Qt, ['Xns, #'s2012]!", {"ldr_q_ldst_immpre"_h, "str_q_ldst_immpre"_h}},
       {"'Qt, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #4)]",
        {"ldr_q_ldst_regoff"_h, "str_q_ldst_regoff"_h}},
       {"'Qt, ['Xns], #'s2012",
        {"ldr_q_ldst_immpost"_h, "str_q_ldst_immpost"_h}},
-      {"'R20d'(1916?, '{mulpat}, mul #'u1916+1'$)'(0905=31?:, '{mulpat})",
+      {"'R20d'(1916?, '{mulpat}, mul #'<u1916 1 +>'$)'(0905=31?:, '{mulpat})",
        {"sqdecb_r_rs_x"_h,  "sqdecd_r_rs_x"_h,  "sqdech_r_rs_x"_h,
         "sqdecw_r_rs_x"_h,  "sqincb_r_rs_x"_h,  "sqincd_r_rs_x"_h,
         "sqinch_r_rs_x"_h,  "sqincw_r_rs_x"_h,  "uqdecb_r_rs_uw"_h,
@@ -2117,7 +2130,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "uqincd_r_rs_uw"_h, "uqincd_r_rs_x"_h,  "uqinch_r_rs_uw"_h,
         "uqinch_r_rs_x"_h,  "uqincw_r_rs_uw"_h, "uqincw_r_rs_x"_h}},
       {"'R22n, 'R22m", {"ctermeq_rr"_h, "ctermne_rr"_h}},
-      {"'Rd, #0x'x2005'(2221?, lsl #'u2221*16)",
+      {"'Rd, #0x'x2005'(2221?, lsl #'<u2221 16 *>)",
        {"movk_32_movewide"_h, "movk_64_movewide"_h}},
       {"'Rd, '{condinv}",
        {"cset_csinc_32_condsel"_h,
@@ -2157,7 +2170,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
                     "fjcvtzs_32d_float2int"_h, "fmov_32h_float2int"_h,
                     "fmov_32s_float2int"_h,    "fmov_64d_float2int"_h,
                     "fmov_64h_float2int"_h}},
-      {"'Rd, 'Fn, #'n1510+64",
+      {"'Rd, 'Fn, #'<64 u1510 ->",
        {"fcvtzs_32d_float2fix"_h,
         "fcvtzs_32h_float2fix"_h,
         "fcvtzs_32s_float2fix"_h,
@@ -2170,16 +2183,18 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fcvtzu_64d_float2fix"_h,
         "fcvtzu_64h_float2fix"_h,
         "fcvtzu_64s_float2fix"_h}},
-      {"'Rd, #'n2116+32, #'s1510+1", {"bfc_bfm_32m_bitfield"_h}},
-      {"'Rd, #'n2116+64, #'s1510+1", {"bfc_bfm_64m_bitfield"_h}},
-      {"'Rd, 'IMoveImm",
+      {"'Rd, #'<32 u2116 ->, #'<s1510 1 +>", {"bfc_bfm_32m_bitfield"_h}},
+      {"'Rd, #'<64 u2116 ->, #'<s1510 1 +>", {"bfc_bfm_64m_bitfield"_h}},
+      {"'Rd, #0x'<u2005 u2221 16 * lsl hex>",
        {"movz_32_movewide"_h,
         "movz_64_movewide"_h,
         "movn_32_movewide"_h,
         "movn_64_movewide"_h,
         "mov_movz_32_movewide"_h,
         "mov_movz_64_movewide"_h}},
-      {"'Rd, 'IMoveNeg", {"mov_movn_32_movewide"_h, "mov_movn_64_movewide"_h}},
+      {"'Rd, #0x'<u2005 u2221 16 * lsl not 32 lsl 32 lsr hex>",
+       {"mov_movn_32_movewide"_h}},
+      {"'Rd, #0x'<u2005 u2221 16 * lsl not hex>", {"mov_movn_64_movewide"_h}},
       {"'Rd, 'Rm",
        {"ngc_sbc_32_addsub_carry"_h,
         "ngc_sbc_64_addsub_carry"_h,
@@ -2235,20 +2250,20 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "asr_sbfm_64m_bitfield"_h,
         "lsr_ubfm_32m_bitfield"_h,
         "lsr_ubfm_64m_bitfield"_h}},
-      {"'Rd, 'Rn, #'u2116, #'u1510+n2116+1",
+      {"'Rd, 'Rn, #'u2116, #'<1 u1510 u2116 - +>",
        {"sbfx_sbfm_32m_bitfield"_h,
         "sbfx_sbfm_64m_bitfield"_h,
         "ubfx_ubfm_32m_bitfield"_h,
         "ubfx_ubfm_64m_bitfield"_h,
         "bfxil_bfm_32m_bitfield"_h,
         "bfxil_bfm_64m_bitfield"_h}},
-      {"'Rd, 'Rn, #'n2116+32", {"lsl_ubfm_32m_bitfield"_h}},
-      {"'Rd, 'Rn, #'n2116+64", {"lsl_ubfm_64m_bitfield"_h}},
-      {"'Rd, 'Rn, #'n2116+32, #'s1510+1",
+      {"'Rd, 'Rn, #'<32 u2116 ->", {"lsl_ubfm_32m_bitfield"_h}},
+      {"'Rd, 'Rn, #'<64 u2116 ->", {"lsl_ubfm_64m_bitfield"_h}},
+      {"'Rd, 'Rn, #'<32 u2116 ->, #'<s1510 1 +>",
        {"sbfiz_sbfm_32m_bitfield"_h,
         "ubfiz_ubfm_32m_bitfield"_h,
         "bfi_bfm_32m_bitfield"_h}},
-      {"'Rd, 'Rn, #'n2116+64, #'s1510+1",
+      {"'Rd, 'Rn, #'<64 u2116 ->, #'<s1510 1 +>",
        {"sbfiz_sbfm_64m_bitfield"_h,
         "ubfiz_ubfm_64m_bitfield"_h,
         "bfi_bfm_64m_bitfield"_h}},
@@ -2331,7 +2346,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "subs_64s_addsub_ext"_h,
         "sub_32_addsub_ext"_h,
         "sub_64_addsub_ext"_h}},
-      {"'Rds, 'Rns, #0x'(22?'x2110*4096:'x2110) ('(22?'u2110*4096:'u2110))",
+      {"'Rds, 'Rns, #0x'(22?'<u2110 12 lsl hex>:'x2110) ('(22?'<u2110 12 "
+       "lsl>:'u2110))",
        {"adds_32s_addsub_imm"_h,
         "adds_64s_addsub_imm"_h,
         "add_32_addsub_imm"_h,
@@ -2363,7 +2379,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "cmn_adds_64s_addsub_ext"_h,
         "cmp_subs_32s_addsub_ext"_h,
         "cmp_subs_64s_addsub_ext"_h}},
-      {"'Rns, #0x'(22?'x2110*4096:'x2110) ('(22?'u2110*4096:'u2110))",
+      {"'Rns, #0x'(22?'<u2110 12 lsl hex>:'x2110) ('(22?'<u2110 12 "
+       "lsl>:'u2110))",
        {"cmn_adds_32s_addsub_imm"_h,
         "cmn_adds_64s_addsub_imm"_h,
         "cmp_subs_32s_addsub_imm"_h,
@@ -2384,19 +2401,19 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fminnmv_asimdall_only_sd"_h,
         "fmaxv_asimdall_only_sd"_h,
         "fminv_asimdall_only_sd"_h}},
-      {"'St, pc'(23?:+)'s2305*4 'LValue", {"ldr_s_loadlit"_h}},
-      {"'St, 'St2, ['Xns'(2115?, #'s2115*4)]",
+      {"'St, pc'(23?:+)'<s2305 4 *> 'LValue", {"ldr_s_loadlit"_h}},
+      {"'St, 'St2, ['Xns'(2115?, #'<s2115 4 *>)]",
        {"ldnp_s_ldstnapair_offs"_h,
         "ldp_s_ldstpair_off"_h,
         "stnp_s_ldstnapair_offs"_h,
         "stp_s_ldstpair_off"_h}},
-      {"'St, 'St2, ['Xns, #'s2115*4]!",
+      {"'St, 'St2, ['Xns, #'<s2115 4 *>]!",
        {"ldp_s_ldstpair_pre"_h, "stp_s_ldstpair_pre"_h}},
-      {"'St, 'St2, ['Xns], #'s2115*4",
+      {"'St, 'St2, ['Xns], #'<s2115 4 *>",
        {"ldp_s_ldstpair_post"_h, "stp_s_ldstpair_post"_h}},
       {"'St, ['Xns'(2012?, #'s2012)]",
        {"ldur_s_ldst_unscaled"_h, "stur_s_ldst_unscaled"_h}},
-      {"'St, ['Xns'(2110?, #'u2110*4)]",
+      {"'St, ['Xns'(2110?, #'<u2110 4 *>)]",
        {"ldr_s_ldst_pos"_h, "str_s_ldst_pos"_h}},
       {"'St, ['Xns, #'s2012]!", {"ldr_s_ldst_immpre"_h, "str_s_ldst_immpre"_h}},
       {"'St, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #2)]",
@@ -2419,7 +2436,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fmls_asimdsame_only"_h,    "fmulx_asimdsame_only"_h,
         "fmul_asimdsame_only"_h,    "frecps_asimdsame_only"_h,
         "frsqrts_asimdsame_only"_h, "fsub_asimdsame_only"_h}},
-      {"'Vd.'{nf}, 'Vn.'{nf}, 'Vf.'{nscal}['IVByElemIndex]",
+      {"'Vd.'{nf}, 'Vn.'{nf}, 'Vf.'{nscal}['<u1111_2119 u2322 lsr>]",
        {"fmla_asimdelem_r_sd"_h,
         "fmls_asimdelem_r_sd"_h,
         "fmulx_asimdelem_r_sd"_h,
@@ -2429,13 +2446,13 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "saddlp_asimdmisc_p"_h,
         "uadalp_asimdmisc_p"_h,
         "uaddlp_asimdmisc_p"_h}},
-      {"'Vd.'{nshift}, 'Vn.'{nshift}, 'IsL",
+      {"'Vd.'{nshift}, 'Vn.'{nshift}, #'<u2216 8 31 u2219 clz - lsl ->",
        {"sqshlu_asimdshf_r"_h,
         "sqshl_asimdshf_r"_h,
         "uqshl_asimdshf_r"_h,
         "shl_asimdshf_r"_h,
         "sli_asimdshf_r"_h}},
-      {"'Vd.'{nshift}, 'Vn.'{nshift}, 'IsR",
+      {"'Vd.'{nshift}, 'Vn.'{nshift}, #'<16 31 u2219 clz - lsl u2216 ->",
        {"sri_asimdshf_r"_h,
         "srshr_asimdshf_r"_h,
         "srsra_asimdshf_r"_h,
@@ -2449,7 +2466,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ucvtf_asimdshf_c"_h,
         "fcvtzs_asimdshf_c"_h,
         "fcvtzu_asimdshf_c"_h}},
-      {"'Vd.'{nshift}, 'Vn.'{nshiftln}, 'IsR",
+      {"'Vd.'{nshift}, 'Vn.'{nshiftln}, #'<16 31 u2219 clz - lsl u2216 ->",
        {"shrn_asimdshf_n"_h,
         "rshrn_asimdshf_n"_h,
         "sqshrn_asimdshf_n"_h,
@@ -2471,25 +2488,27 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "uxtl_ushll_asimdshf_l"_h,
         "sxtl2_sshll_asimdshf_l"_h,
         "uxtl2_ushll_asimdshf_l"_h}},
-      {"'Vd.'{nshiftln}, 'Vn.'{nshift}, 'IsL",
+      {"'Vd.'{nshiftln}, 'Vn.'{nshift}, #'<u2216 8 31 u2219 clz - lsl ->",
        {"sshll_asimdshf_l"_h,
         "ushll_asimdshf_l"_h,
         "sshll2_sshll_asimdshf_l"_h,
         "ushll2_ushll_asimdshf_l"_h}},
       {"'Vd.'{ntri}, '(1916=8?'Xn:'Wn)", {"dup_asimdins_dr_r"_h}},
-      {"'Vd.'{ntri}, 'Vn.'{ntriscal}['IVInsIndex1]", {"dup_asimdins_dv_v"_h}},
-      {"'Vd.'{ntriscal}['IVInsIndex1], '(1916=8?'Xn:'Wn)",
+      {"'Vd.'{ntri}, 'Vn.'{ntriscal}['<u2016 dup ctz 1 + lsr>]",
+       {"dup_asimdins_dv_v"_h}},
+      {"'Vd.'{ntriscal}['<u2016 dup ctz 1 + lsr>], '(1916=8?'Xn:'Wn)",
        {"mov_ins_asimdins_ir_r"_h}},
-      {"'Vd.'{ntriscal}['IVInsIndex1], 'Vn.'{ntriscal}['IVInsIndex2]",
+      {"'Vd.'{ntriscal}['<u2016 dup ctz 1 + lsr>], 'Vn.'{ntriscal}['<u1411 "
+       "u2016 ctz lsr>]",
        {"mov_ins_asimdins_iv_v"_h}},
-      {"'Vd.'(22?1q:8h), 'Vn.'(22?'u3030+1d:'u3027+7b), "
-       "'Vm.'(22?'u3030+1d:'u3027+7b)",
+      {"'Vd.'(22?1q:8h), 'Vn.'(22?'<u3030 1 +>d:'<u3027 7 +>b), "
+       "'Vm.'(22?'<u3030 1 +>d:'<u3027 7 +>b)",
        {"pmull_asimddiff_l"_h, "pmull2_pmull_asimddiff_l"_h}},
       {"'Vd.'(22?2d:4s), 'Vn.'(22?2s:4h)", {"fcvtl_asimdmisc_l"_h}},
       {"'Vd.'(22?2d:4s), 'Vn.'(22?4s:8h)", {"fcvtl2_fcvtl_asimdmisc_l"_h}},
       {"'Vd.'(22?2s:4h), 'Vn.'(22?2d:4s)", {"fcvtn_asimdmisc_n"_h}},
       {"'Vd.'(22?4s:8h), 'Vn.'(22?2d:4s)", {"fcvtn2_fcvtn_asimdmisc_n"_h}},
-      {"'Vd.'(22?4s:2d), 'Vn.'{n}, 'Vf.'{nscal}['IVByElemIndex]",
+      {"'Vd.'(22?4s:2d), 'Vn.'{n}, 'Vf.'{nscal}['<u1111_2119 u2322 lsr>]",
        {"smlal_asimdelem_l"_h,
         "smlsl_asimdelem_l"_h,
         "smull_asimdelem_l"_h,
@@ -2561,7 +2580,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "sudot_asimdelem_d"_h,
         "udot_asimdelem_d"_h,
         "usdot_asimdelem_d"_h}},
-      {"'Vd.'?30:42s, 'Vn.'?30:42h, 'Ve.h['IVByElemIndexFHM]",
+      {"'Vd.'?30:42s, 'Vn.'?30:42h, 'Ve.h['u1111_2120]",
        {"fmlal2_asimdelem_lh"_h,
         "fmlal_asimdelem_lh"_h,
         "fmlsl2_asimdelem_lh"_h,
@@ -2602,7 +2621,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fcmgt_asimdmiscfp16_fz"_h,
         "fcmle_asimdmiscfp16_fz"_h,
         "fcmlt_asimdmiscfp16_fz"_h}},
-      {"'Vd.'?30:84h, 'Vn.'?30:84h, 'Ve.h['IVByElemIndex]",
+      {"'Vd.'?30:84h, 'Vn.'?30:84h, 'Ve.h['<u1111_2120>]",
        {"fmla_asimdelem_rh_h"_h,
         "fmls_asimdelem_rh_h"_h,
         "fmulx_asimdelem_rh_h"_h,
@@ -2620,7 +2639,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fmls_asimdsamefp16_only"_h,    "fmulx_asimdsamefp16_only"_h,
         "fmul_asimdsamefp16_only"_h,    "frecps_asimdsamefp16_only"_h,
         "frsqrts_asimdsamefp16_only"_h, "fsub_asimdsamefp16_only"_h}},
-      {"'Vd.'?30:84h, 'Vn.'?30:84h, 'Vm.h['IVByElemIndexRot], #'u1413*90",
+      {"'Vd.'?30:84h, 'Vn.'?30:84h, 'Vm.h['<u1111_2120 u2322 lsr>], #'<u1413 "
+       "90 *>",
        {"fcmla_asimdelem_c_h"_h}},
       {"'Vd.'{n}, 'Vn.'{n}",
        {"abs_asimdmisc_r"_h,    "cls_asimdmisc_r"_h,    "clz_asimdmisc_r"_h,
@@ -2638,7 +2658,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "cmgt_asimdmisc_z"_h,
         "cmle_asimdmisc_z"_h,
         "cmlt_asimdmisc_z"_h}},
-      {"'Vd.'{n}, 'Vn.'{n}, 'Vf.'{nscal}['IVByElemIndex]",
+      {"'Vd.'{n}, 'Vn.'{n}, 'Vf.'{nscal}['<u1111_2119 u2322 lsr>]",
        {"mla_asimdelem_r"_h,
         "mls_asimdelem_r"_h,
         "mul_asimdelem_r"_h,
@@ -2673,7 +2693,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "uzp1_asimdperm_only"_h,      "uzp2_asimdperm_only"_h,
         "zip1_asimdperm_only"_h,      "zip2_asimdperm_only"_h,
         "sqrdmlah_asimdsame2_only"_h, "sqrdmlsh_asimdsame2_only"_h}},
-      {"'Vd.'{n}, 'Vn.'{n}, 'Vm.'{n}, #'u1211*90", {"fcmla_asimdsame2_c"_h}},
+      {"'Vd.'{n}, 'Vn.'{n}, 'Vm.'{n}, #'<u1211 90 *>",
+       {"fcmla_asimdsame2_c"_h}},
       {"'Vd.'{n}, 'Vn.'{n}, 'Vm.'{n}, #'(12?270:90)", {"fcadd_asimdsame2_c"_h}},
       {"'Vd.'{n}, 'Vn.'{nl}",
        {"xtn_asimdmisc_n"_h,
@@ -2693,7 +2714,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "raddhn2_raddhn_asimddiff_n"_h,
         "rsubhn2_rsubhn_asimddiff_n"_h,
         "subhn2_subhn_asimddiff_n"_h}},
-      {"'Vd.'{nl}, 'Vn.'{n}, #'(2322?'u2322*16:8)",
+      {"'Vd.'{nl}, 'Vn.'{n}, #'(2322?'<u2322 16 *>:8)",
        {"shll_asimdmisc_s"_h, "shll2_shll_asimdmisc_s"_h}},
       {"'Vd.'{nl}, 'Vn.'{n}, 'Vm.'{n}",
        {"sabal_asimddiff_l"_h,
@@ -2770,7 +2791,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "sm3tt1b_vvv4_crypto3_imm2"_h,
         "sm3tt2a_vvv4_crypto3_imm2"_h,
         "sm3tt2b_vvv_crypto3_imm2"_h}},
-      {"'Vd.4s, 'Vn.4s, 'Vm.s['IVByElemIndexRot], #'u1413*90",
+      {"'Vd.4s, 'Vn.4s, 'Vm.s['<u1111_2120 u2322 lsr>], #'<u1413 90 *>",
        {"fcmla_asimdelem_c_s"_h}},
       {"'Vd.D[1], 'Rn", {"fmov_v64i_float2int"_h}},
       {"'Vdv, 'Pgl, 'Zn.'t",
@@ -2782,7 +2803,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "umaxv_r_p_z"_h,
         "uminv_r_p_z"_h}},
       {"'Vt.'(30?16:8)b, #0x'x1816_0905", {"movi_asimdimm_n_b"_h}},
-      {"'Vt.'?30:42s, #0x'x1816_0905'(1413?, lsl #'u1413*8)",
+      {"'Vt.'?30:42s, #0x'x1816_0905'(1413?, lsl #'<u1413 8 *>)",
        {"bic_asimdimm_l_sl"_h,
         "movi_asimdimm_l_sl"_h,
         "mvni_asimdimm_l_sl"_h,
@@ -2790,7 +2811,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Vt.'?30:42s, #0x'x1816_0905, msl #'(12?16:8)",
        {"movi_asimdimm_m_sm"_h, "mvni_asimdimm_m_sm"_h}},
       {"'Vt.'?30:42s, #'f1816_0905", {"fmov_asimdimm_s_s"_h}},
-      {"'Vt.'?30:84h, #0x'x1816_0905'(1413?, lsl #'u1413*8)",
+      {"'Vt.'?30:84h, #0x'x1816_0905'(1413?, lsl #'<u1413 8 *>)",
        {"bic_asimdimm_l_hl"_h,
         "movi_asimdimm_l_hl"_h,
         "mvni_asimdimm_l_hl"_h,
@@ -2801,16 +2822,16 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Wd, 'Pn.'t", {"uqdecp_r_p_r_uw"_h, "uqincp_r_p_r_uw"_h}},
       {"'Wd, 'Wn, 'Xm", {"crc32cx_64c_dp_2src"_h, "crc32x_64c_dp_2src"_h}},
       {"'Wn", {"setf16_only_setf"_h, "setf8_only_setf"_h}},
-      {"'Wt, pc'(23?:+)'s2305*4 'LValue", {"ldr_32_loadlit"_h}},
+      {"'Wt, pc'(23?:+)'<s2305 4 *> 'LValue", {"ldr_32_loadlit"_h}},
       {"'Wt, 'Wt2, ['Xns]", {"ldxp_lp32_ldstexcl"_h, "ldaxp_lp32_ldstexcl"_h}},
-      {"'Wt, 'Wt2, ['Xns'(2115?, #'s2115*4)]",
+      {"'Wt, 'Wt2, ['Xns'(2115?, #'<s2115 4 *>)]",
        {"ldnp_32_ldstnapair_offs"_h,
         "ldp_32_ldstpair_off"_h,
         "stnp_32_ldstnapair_offs"_h,
         "stp_32_ldstpair_off"_h}},
-      {"'Wt, 'Wt2, ['Xns, #'s2115*4]!",
+      {"'Wt, 'Wt2, ['Xns, #'<s2115 4 *>]!",
        {"ldp_32_ldstpair_pre"_h, "stp_32_ldstpair_pre"_h}},
-      {"'Wt, 'Wt2, ['Xns], #'s2115*4",
+      {"'Wt, 'Wt2, ['Xns], #'<s2115 4 *>",
        {"ldp_32_ldstpair_post"_h, "stp_32_ldstpair_post"_h}},
       {"'Wt, ['Xns'(2012?, #'s2012)]",
        {"ldapur_32_ldapstl_unscaled"_h,
@@ -2831,9 +2852,9 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "sturh_32_ldst_unscaled"_h}},
       {"'Wt, ['Xns'(2110?, #'u2110)]",
        {"ldrb_32_ldst_pos"_h, "ldrsb_32_ldst_pos"_h, "strb_32_ldst_pos"_h}},
-      {"'Wt, ['Xns'(2110?, #'u2110*2)]",
+      {"'Wt, ['Xns'(2110?, #'<u2110 2 *>)]",
        {"ldrh_32_ldst_pos"_h, "ldrsh_32_ldst_pos"_h, "strh_32_ldst_pos"_h}},
-      {"'Wt, ['Xns'(2110?, #'u2110*4)]",
+      {"'Wt, ['Xns'(2110?, #'<u2110 4 *>)]",
        {"ldr_32_ldst_pos"_h, "str_32_ldst_pos"_h}},
       {"'Wt, ['Xns, #'s2012]!",
        {"ldr_32_ldst_immpre"_h,
@@ -2876,7 +2897,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "pacizb_64z_dp_1src"_h,
         "xpacd_64z_dp_1src"_h,
         "xpaci_64z_dp_1src"_h}},
-      {"'Xd'(1916?, '{mulpat}, mul #'u1916+1'$)'(0905=31?:, '{mulpat})",
+      {"'Xd'(1916?, '{mulpat}, mul #'<u1916 1 +>'$)'(0905=31?:, '{mulpat})",
        {"decb_r_rs"_h,
         "decd_r_rs"_h,
         "dech_r_rs"_h,
@@ -2900,13 +2921,14 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "uqdecp_r_p_r_x"_h,
         "uqincp_r_p_r_x"_h}},
       {"'Xd, 'Pn.'{ssz}, 'Wd", {"sqdecp_r_p_r_sx"_h, "sqincp_r_p_r_sx"_h}},
-      {"'Xd, 'Vn.'{ntriscal}['IVInsIndex1]",
+      {"'Xd, 'Vn.'{ntriscal}['<u2016 dup ctz 1 + lsr>]",
        {"mov_umov_asimdins_x_x"_h, "smov_asimdins_x_x"_h}},
-      {"'Wd, 'Vn.'{ntriscal}['IVInsIndex1]",
+      {"'Wd, 'Vn.'{ntriscal}['<u2016 dup ctz 1 + lsr>]",
        {"mov_umov_asimdins_w_w"_h,
         "umov_asimdins_w_w"_h,
         "smov_asimdins_w_w"_h}},
-      {"'Xd, 'Wd'(1916?, '{mulpat}, mul #'u1916+1'$)'(0905=31?:, '{mulpat})",
+      {"'Xd, 'Wd'(1916?, '{mulpat}, mul #'<u1916 1 +>'$)'(0905=31?:, "
+       "'{mulpat})",
        {"sqdecb_r_rs_sx"_h,
         "sqdecd_r_rs_sx"_h,
         "sqdech_r_rs_sx"_h,
@@ -2940,19 +2962,19 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Xd, p'u1310, 'Pn.'t", {"cntp_r_p_p"_h}},
       {"'Xds, 'Xms, #'s1005", {"addpl_r_ri"_h, "addvl_r_ri"_h}},
       {"'Xds, 'Xns'(2016=31?:, 'Xm)", {"irg_64i_dp_2src"_h}},
-      {"'Xds, 'Xns, #'u2116*16, #'u1310",
+      {"'Xds, 'Xns, #'<u2116 16 *>, #'u1310",
        {"addg_64_addsub_immtags"_h, "subg_64_addsub_immtags"_h}},
-      {"'Xds, ['Xns'(2012?, #'s2012*16)]",
+      {"'Xds, ['Xns'(2012?, #'<s2012 16 *>)]",
        {"st2g_64soffset_ldsttags"_h,
         "stg_64soffset_ldsttags"_h,
         "stz2g_64soffset_ldsttags"_h,
         "stzg_64soffset_ldsttags"_h}},
-      {"'Xds, ['Xns, #'s2012*16]!",
+      {"'Xds, ['Xns, #'<s2012 16 *>]!",
        {"st2g_64spre_ldsttags"_h,
         "stg_64spre_ldsttags"_h,
         "stz2g_64spre_ldsttags"_h,
         "stzg_64spre_ldsttags"_h}},
-      {"'Xds, ['Xns], #'s2012*16",
+      {"'Xds, ['Xns], #'<s2012 16 *>",
        {"st2g_64spost_ldsttags"_h,
         "stg_64spost_ldsttags"_h,
         "stz2g_64spost_ldsttags"_h,
@@ -2975,24 +2997,24 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "braa_64p_branch_reg"_h,
         "brab_64p_branch_reg"_h}},
       {"'Xns, 'Xms", {"cmpp_subps_64s_dp_2src"_h}},
-      {"'Xt, pc'(23?:+)'s2305*4 'LValue",
+      {"'Xt, pc'(23?:+)'<s2305 4 *> 'LValue",
        {"ldr_64_loadlit"_h, "ldrsw_64_loadlit"_h}},
       {"'Xt, 'IY", {"mrs_rs_systemmove"_h}},
       {"'Xt, 'Xt2, ['Xns]", {"ldxp_lp64_ldstexcl"_h, "ldaxp_lp64_ldstexcl"_h}},
-      {"'Xt, 'Xt2, ['Xns'(2115?, #'s2115*16)]", {"stgp_64_ldstpair_off"_h}},
-      {"'Xt, 'Xt2, ['Xns'(2115?, #'s2115*4)]", {"ldpsw_64_ldstpair_off"_h}},
-      {"'Xt, 'Xt2, ['Xns'(2115?, #'s2115*8)]",
+      {"'Xt, 'Xt2, ['Xns'(2115?, #'<s2115 16 *>)]", {"stgp_64_ldstpair_off"_h}},
+      {"'Xt, 'Xt2, ['Xns'(2115?, #'<s2115 4 *>)]", {"ldpsw_64_ldstpair_off"_h}},
+      {"'Xt, 'Xt2, ['Xns'(2115?, #'<s2115 8 *>)]",
        {"ldnp_64_ldstnapair_offs"_h,
         "ldp_64_ldstpair_off"_h,
         "stnp_64_ldstnapair_offs"_h,
         "stp_64_ldstpair_off"_h}},
-      {"'Xt, 'Xt2, ['Xns, #'s2115*16]!", {"stgp_64_ldstpair_pre"_h}},
-      {"'Xt, 'Xt2, ['Xns, #'s2115*4]!", {"ldpsw_64_ldstpair_pre"_h}},
-      {"'Xt, 'Xt2, ['Xns, #'s2115*8]!",
+      {"'Xt, 'Xt2, ['Xns, #'<s2115 16 *>]!", {"stgp_64_ldstpair_pre"_h}},
+      {"'Xt, 'Xt2, ['Xns, #'<s2115 4 *>]!", {"ldpsw_64_ldstpair_pre"_h}},
+      {"'Xt, 'Xt2, ['Xns, #'<s2115 8 *>]!",
        {"ldp_64_ldstpair_pre"_h, "stp_64_ldstpair_pre"_h}},
-      {"'Xt, 'Xt2, ['Xns], #'s2115*16", {"stgp_64_ldstpair_post"_h}},
-      {"'Xt, 'Xt2, ['Xns], #'s2115*4", {"ldpsw_64_ldstpair_post"_h}},
-      {"'Xt, 'Xt2, ['Xns], #'s2115*8",
+      {"'Xt, 'Xt2, ['Xns], #'<s2115 16 *>", {"stgp_64_ldstpair_post"_h}},
+      {"'Xt, 'Xt2, ['Xns], #'<s2115 4 *>", {"ldpsw_64_ldstpair_post"_h}},
+      {"'Xt, 'Xt2, ['Xns], #'<s2115 8 *>",
        {"ldp_64_ldstpair_post"_h, "stp_64_ldstpair_post"_h}},
       {"'Xt, ['Xns'(2012?, #'s2012)]",
        {"ldapur_64_ldapstl_unscaled"_h,
@@ -3005,15 +3027,15 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ldursw_64_ldst_unscaled"_h,
         "stlur_64_ldapstl_unscaled"_h,
         "stur_64_ldst_unscaled"_h}},
-      {"'Xt, ['Xns'(2012?, #'s2012*16)]", {"ldg_64loffset_ldsttags"_h}},
-      {"'Xt, ['Xns'(2212=512?:, #'s2222_2012*8)]!",
+      {"'Xt, ['Xns'(2012?, #'<s2012 16 *>)]", {"ldg_64loffset_ldsttags"_h}},
+      {"'Xt, ['Xns'(2212=512?:, #'<s2222_2012 8 *>)]!",
        {"ldraa_64w_ldst_pac"_h, "ldrab_64w_ldst_pac"_h}},
-      {"'Xt, ['Xns'(2212=512?:, #'s2222_2012*8)]",
+      {"'Xt, ['Xns'(2212=512?:, #'<s2222_2012 8 *>)]",
        {"ldraa_64_ldst_pac"_h, "ldrab_64_ldst_pac"_h}},
       {"'Xt, ['Xns'(2110?, #'u2110)]", {"ldrsb_64_ldst_pos"_h}},
-      {"'Xt, ['Xns'(2110?, #'u2110*2)]", {"ldrsh_64_ldst_pos"_h}},
-      {"'Xt, ['Xns'(2110?, #'u2110*4)]", {"ldrsw_64_ldst_pos"_h}},
-      {"'Xt, ['Xns'(2110?, #'u2110*8)]",
+      {"'Xt, ['Xns'(2110?, #'<u2110 2 *>)]", {"ldrsh_64_ldst_pos"_h}},
+      {"'Xt, ['Xns'(2110?, #'<u2110 4 *>)]", {"ldrsw_64_ldst_pos"_h}},
+      {"'Xt, ['Xns'(2110?, #'<u2110 8 *>)]",
        {"ldr_64_ldst_pos"_h, "str_64_ldst_pos"_h}},
       {"'Xt, ['Xns, #'s2012]!",
        {"ldr_64_ldst_immpre"_h,
@@ -3037,7 +3059,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Zd, 'Zn", {"movprfx_z_z"_h}},
       {"'Zd.'?22:ds, 'Zn.'?22:ds, 'Zm.'?22:ds",
        {"adclb_z_zzz"_h, "adclt_z_zzz"_h, "sbclb_z_zzz"_h, "sbclt_z_zzz"_h}},
-      {"'Zd.'t'(1916?, '{mulpat}, mul #'u1916+1'$)'(0905=31?:, '{mulpat})",
+      {"'Zd.'t'(1916?, '{mulpat}, mul #'<u1916 1 +>'$)'(0905=31?:, '{mulpat})",
        {"decd_z_zs"_h,
         "dech_z_zs"_h,
         "decw_z_zs"_h,
@@ -3106,7 +3128,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fmul_z_p_zz"_h,    "fscale_z_p_zz"_h,  "fsubr_z_p_zz"_h,
         "fsub_z_p_zz"_h,    "sdiv_z_p_zz"_h,    "sdivr_z_p_zz"_h,
         "udiv_z_p_zz"_h,    "udivr_z_p_zz"_h}},
-      {"'Zd.'{ssz}, 'Pgl/m, 'Zd.'{ssz}, 'Zn.'{ssz}, #'u1615*90",
+      {"'Zd.'{ssz}, 'Pgl/m, 'Zd.'{ssz}, 'Zn.'{ssz}, #'<u1615 90 *>",
        {"fcadd_z_p_zz"_h}},
       {"'Zd.'{ssz}, 'Pgl/m, 'Zm.'{ssz}, 'Zn.'t",
        {"mad_z_p_zzz"_h, "msb_z_p_zzz"_h}},
@@ -3130,7 +3152,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fnmla_z_p_zzz"_h,
         "fnmls_z_p_zzz"_h,
         "fnmsb_z_p_zzz"_h}},
-      {"'Zd.'{ssz}, 'Pgl/m, 'Zn.'{ssz}, 'Zm.'{ssz}, #'u1413*90",
+      {"'Zd.'{ssz}, 'Pgl/m, 'Zn.'{ssz}, 'Zm.'{ssz}, #'<u1413 90 *>",
        {"fcmla_z_p_zzz"_h}},
       {"'Zd.'{ssz}, 'Pgl/m, 'Zn.'{sszh}", {"sadalp_z_p_z"_h, "uadalp_z_p_z"_h}},
       {"'Zd.'{ssz}, 'Pgl/z, 'Zn.'{ssz}, 'Zm.'t", {"histcnt_z_p_zz"_h}},
@@ -3174,19 +3196,23 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "uqadd_z_zz"_h,     "uqsub_z_zz"_h,     "fadd_z_zz"_h,
         "fmul_z_zz"_h,      "frecps_z_zz"_h,    "frsqrts_z_zz"_h,
         "fsub_z_zz"_h,      "ftsmul_z_zz"_h,    "ftssel_z_zz"_h}},
-      {"'Zd.'{ssz}, 'Zn.'{ssz}, 'Zm.'{ssz}, #'u1110*90",
+      {"'Zd.'{ssz}, 'Zn.'{ssz}, 'Zm.'{ssz}, #'<u1110 90 *>",
        {"cmla_z_zzz"_h, "sqrdcmlah_z_zzz"_h}},
       {"'Zd.'{ssz}, 'Zn.'{ssz}, 'Zm.d",
        {"asr_z_zw"_h, "lsl_z_zw"_h, "lsr_z_zw"_h}},
       {"'Zd.'{ssz}, 'Zn.'{sszq}, 'Zm.'{sszq}",
        {"sdot_z_zzz"_h, "udot_z_zzz"_h}},
-      {"'Zd.'{ssz}, 'Zn.'{sszq}, 'Zm.'{sszq}, #'u1110*90", {"cdot_z_zzz"_h}},
+      {"'Zd.'{ssz}, 'Zn.'{sszq}, 'Zm.'{sszq}, #'<u1110 90 *>",
+       {"cdot_z_zzz"_h}},
       {"'Zd.'{ssz}, ['Zn.'{ssz}, 'Zm.'t'(1110?, lsl #'u1110)]",
        {"adr_z_az_sd_same_scaled"_h}},
       {"'Zd.'{ssz}, {'Zn.'{ssz}, 'Zn2.'t}, 'Zm.'t", {"tbl_z_zz_2"_h}},
       {"'Zd.'{ssz}, {'Zn.'t}, 'Zm.'t", {"tbl_z_zz_1"_h}},
       {"'Zd.'{ssz}, p'u1310, 'Zn.'{ssz}, 'Zm.'t", {"sel_z_p_zz"_h}},
       {"'Zd.'{ssz}, p'u1310/m, 'Zn.'t", {"mov_sel_z_p_zz"_h}},
+      {"'Zd.'{sszdup}, '{sszdup}'u0905", {"mov_1_dup_z_zi"_h}},
+      {"'Zd.'{sszdup}, 'Zn.'{sszdup}['<u2322_2016 dup ctz 1 + lsr>]",
+       {"mov_dup_z_zi"_h}},
       {"'Zd.'{flogbsz}, 'Pgl/m, 'Zn.'{flogbsz}", {"flogb_z_p_z"_h}},
       {"'Zd.'{sszh}, 'Zn.'{ssz}, 'Zm.'t",
        {"addhnb_z_zz"_h,
@@ -3199,11 +3225,14 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "subhnt_z_zz"_h}},
       {"'Zd.'tl, 'Zd.'tl, 'ITriSvel",
        {"and_z_zi"_h, "eor_z_zi"_h, "orr_z_zi"_h}},
-      {"'Zd.'{sszshd}, 'Zn.'{sszshs}, 'ITriSver",
+      {"'Zd.'{sszshd}, 'Zn.'{sszshs}, #'<u2322_2016 1 34 u2322_2019 clz - lsl "
+       "->",
        {"sshllb_z_zi"_h, "sshllt_z_zi"_h, "ushllb_z_zi"_h, "ushllt_z_zi"_h}},
-      {"'Zd.'{sszshu}, 'Pgl/m, 'Zd.'{sszshu}, 'ITriSvep",
+      {"'Zd.'{sszshu}, 'Pgl/m, 'Zd.'{sszshu}, #'<u2322_0905 1 34 u2322_0908 "
+       "clz - lsl ->",
        {"lsl_z_p_zi"_h, "sqshl_z_p_zi"_h, "sqshlu_z_p_zi"_h, "uqshl_z_p_zi"_h}},
-      {"'Zd.'{sszshu}, 'Pgl/m, 'Zd.'{sszshu}, 'ITriSveq",
+      {"'Zd.'{sszshu}, 'Pgl/m, 'Zd.'{sszshu}, #'<1 35 u2322_0908 clz - lsl "
+       "u2322_0905 ->",
        {"asrd_z_p_zi"_h,
         "asr_z_p_zi"_h,
         "lsr_z_p_zi"_h,
@@ -3216,7 +3245,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "sqxtunt_z_zz"_h,
         "uqxtnb_z_zz"_h,
         "uqxtnt_z_zz"_h}},
-      {"'Zd.'{sszshs}, 'Zn.'{sszshd}, 'ITriSves",
+      {"'Zd.'{sszshs}, 'Zn.'{sszshd}, #'<1 35 u2322_2019 clz - lsl u2322_2016 "
+       "->",
        {"rshrnb_z_zi"_h,
         "rshrnt_z_zi"_h,
         "shrnb_z_zi"_h,
@@ -3233,8 +3263,11 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "uqrshrnt_z_zi"_h,
         "uqshrnb_z_zi"_h,
         "uqshrnt_z_zi"_h}},
-      {"'Zd.'{sszshs}, 'Zn.'{sszshs}, 'ITriSver", {"lsl_z_zi"_h, "sli_z_zzi"_h}},
-      {"'Zd.'{sszshs}, 'Zn.'{sszshs}, 'ITriSves",
+      {"'Zd.'{sszshs}, 'Zn.'{sszshs}, #'<u2322_2016 1 34 u2322_2019 clz - lsl "
+       "->",
+       {"lsl_z_zi"_h, "sli_z_zzi"_h}},
+      {"'Zd.'{sszshs}, 'Zn.'{sszshs}, #'<1 35 u2322_2019 clz - lsl u2322_2016 "
+       "->",
        {"asr_z_zi"_h,
         "lsr_z_zi"_h,
         "sri_z_zzi"_h,
@@ -3242,7 +3275,9 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ssra_z_zi"_h,
         "ursra_z_zi"_h,
         "usra_z_zi"_h}},
-      {"'Zd.'{sszshs}, 'Zd.'{sszshs}, 'Zn.'{sszshs}, 'ITriSves", {"xar_z_zzi"_h}},
+      {"'Zd.'{sszshs}, 'Zd.'{sszshs}, 'Zn.'{sszshs}, #'<1 35 u2322_2019 clz - "
+       "lsl u2322_2016 ->",
+       {"xar_z_zzi"_h}},
       {"'Zd.b, 'Zd.b", {"aesimc_z_z"_h, "aesmc_z_z"_h}},
       {"'Zd.b, 'Zd.b, 'Zn.b", {"aesd_z_zz"_h, "aese_z_zz"_h}},
       {"'Zd.b, 'Zd.b, 'Zn.b, #'u2016_1210", {"ext_z_zi_des"_h}},
@@ -3285,7 +3320,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "sqrdmlsh_z_zzzi_d"_h}},
       {"'Zd.d, 'Zn.h, z'u1916.h['u2020]",
        {"sdot_z_zzzi_d"_h, "udot_z_zzzi_d"_h}},
-      {"'Zd.d, 'Zn.h, z'u1916.h['u2020], #'u1110*90", {"cdot_z_zzzi_d"_h}},
+      {"'Zd.d, 'Zn.h, z'u1916.h['u2020], #'<u1110 90 *>", {"cdot_z_zzzi_d"_h}},
       {"'Zd.d, 'Zn.s, z'u1916.s['u2020_1111]",
        {"smlalb_z_zzzi_d"_h,
         "smlalt_z_zzzi_d"_h,
@@ -3323,7 +3358,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "bfcvtnt_z_p_z_s2bf"_h,
         "scvtf_z_p_z_w2fp16"_h,
         "ucvtf_z_p_z_w2fp16"_h}},
-      {"'Zd.h, 'Zn.h, z'u1816.h['u2019], #'u1110*90",
+      {"'Zd.h, 'Zn.h, z'u1816.h['u2019], #'<u1110 90 *>",
        {"cmla_z_zzzi_h"_h, "fcmla_z_zzzi_h"_h, "sqrdcmlah_z_zzzi_h"_h}},
       {"'Zd.h, 'Zn.h, z'u1816.h['u2222_2019]",
        {"fmla_z_zzzi_h"_h,
@@ -3366,7 +3401,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "sudot_z_zzzi_s"_h,
         "udot_z_zzzi_s"_h,
         "usdot_z_zzzi_s"_h}},
-      {"'Zd.s, 'Zn.b, z'u1816.b['u2019], #'u1110*90", {"cdot_z_zzzi_s"_h}},
+      {"'Zd.s, 'Zn.b, z'u1816.b['u2019], #'<u1110 90 *>", {"cdot_z_zzzi_s"_h}},
       {"'Zd.s, 'Zn.h, 'Zm.h",
        {"fmlalb_z_zzz"_h,
         "fmlalt_z_zzz"_h,
@@ -3398,11 +3433,11 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "sqrdmulh_z_zzi_s"_h,
         "sqrdmlah_z_zzzi_s"_h,
         "sqrdmlsh_z_zzzi_s"_h}},
-      {"'Zd.s, 'Zn.s, z'u1916.s['u2020], #'u1110*90",
+      {"'Zd.s, 'Zn.s, z'u1916.s['u2020], #'<u1110 90 *>",
        {"cmla_z_zzzi_s"_h, "fcmla_z_zzzi_s"_h, "sqrdcmlah_z_zzzi_s"_h}},
-      {"'{prefop}, pc'(23?:+)'s2305*4 'LValue", {"prfm_p_loadlit"_h}},
+      {"'{prefop}, pc'(23?:+)'<s2305 4 *> 'LValue", {"prfm_p_loadlit"_h}},
       {"'{prefop}, ['Xns'(2012?, #'s2012)]", {"prfum_p_ldst_unscaled"_h}},
-      {"'{prefop}, ['Xns'(2110?, #'u2110*8)]", {"prfm_p_ldst_pos"_h}},
+      {"'{prefop}, ['Xns'(2110?, #'<u2110 8 *>)]", {"prfm_p_ldst_pos"_h}},
       {"'{prefop}, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #3)]",
        {"prfm_p_ldst_regoff"_h}},
       {"'{prefsveop}, 'Pgl, ['Xns'(2116?, #'s2116, mul vl)]",
@@ -3687,7 +3722,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"{'Zt.'{sszst}}, 'Pgl, ['Xns, 'Xm'(2423?, lsl #'u2423)]",
        {"st1b_z_p_br"_h, "st1d_z_p_br"_h, "st1h_z_p_br"_h, "st1w_z_p_br"_h}},
       {"{'Zt.'{sszmem}, 'Zt2.'{sszmem}, 'Zt3.'{sszmem}, 'Zt4.'{sszmem}}, "
-       "'Pgl'(30?:/z), ['Xns'(1916?, #'s1916*4, mul vl)]",
+       "'Pgl'(30?:/z), ['Xns'(1916?, #'<s1916 4 *>, mul vl)]",
        {"st4b_z_p_bi_contiguous"_h,
         "st4d_z_p_bi_contiguous"_h,
         "st4h_z_p_bi_contiguous"_h,
@@ -3707,7 +3742,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ld4h_z_p_br_contiguous"_h,
         "ld4w_z_p_br_contiguous"_h}},
       {"{'Zt.'{sszmem}, 'Zt2.'{sszmem}, 'Zt3.'{sszmem}}, 'Pgl'(30?:/z), "
-       "['Xns'(1916?, #'s1916*3, mul vl)]",
+       "['Xns'(1916?, #'<s1916 3 *>, mul vl)]",
        {"st3b_z_p_bi_contiguous"_h,
         "st3d_z_p_bi_contiguous"_h,
         "st3h_z_p_bi_contiguous"_h,
@@ -3727,7 +3762,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ld3h_z_p_br_contiguous"_h,
         "ld3w_z_p_br_contiguous"_h}},
       {"{'Zt.'{sszmem}, 'Zt2.'{sszmem}}, 'Pgl'(30?:/z), ['Xns'(1916?, "
-       "#'s1916*2, mul vl)]",
+       "#'<s1916 2 *>, mul vl)]",
        {"st2b_z_p_bi_contiguous"_h,
         "st2d_z_p_bi_contiguous"_h,
         "st2h_z_p_bi_contiguous"_h,
@@ -3746,12 +3781,12 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ld2d_z_p_br_contiguous"_h,
         "ld2h_z_p_br_contiguous"_h,
         "ld2w_z_p_br_contiguous"_h}},
-      {"{'Zt.'{sszmem}}, 'Pgl/z, ['Xns'(1916?, #'s1916*16)]",
+      {"{'Zt.'{sszmem}}, 'Pgl/z, ['Xns'(1916?, #'<s1916 16 *>)]",
        {"ld1rqb_z_p_bi_u8"_h,
         "ld1rqd_z_p_bi_u64"_h,
         "ld1rqh_z_p_bi_u16"_h,
         "ld1rqw_z_p_bi_u32"_h}},
-      {"{'Zt.'{sszmem}}, 'Pgl/z, ['Xns'(1916?, #'s1916*32)]",
+      {"{'Zt.'{sszmem}}, 'Pgl/z, ['Xns'(1916?, #'<s1916 32 *>)]",
        {"ld1rob_z_p_bi_u8"_h,
         "ld1rod_z_p_bi_u64"_h,
         "ld1roh_z_p_bi_u16"_h,
@@ -3804,16 +3839,17 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "st1h_z_p_bz_d_64_unscaled"_h,
         "st1w_z_p_bz_d_64_unscaled"_h}},
       {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'u2016)]", {"st1b_z_p_ai_d"_h}},
-      {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'u2016*2)]", {"st1h_z_p_ai_d"_h}},
-      {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'u2016*4)]", {"st1w_z_p_ai_d"_h}},
-      {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'u2016*8)]", {"st1d_z_p_ai_d"_h}},
+      {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'<u2016 2 *>)]", {"st1h_z_p_ai_d"_h}},
+      {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'<u2016 4 *>)]", {"st1w_z_p_ai_d"_h}},
+      {"{'Zt.d}, 'Pgl, ['Zn.d'(2016?, #'<u2016 8 *>)]", {"st1d_z_p_ai_d"_h}},
       {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'u2116)]",
        {"ld1rb_z_p_bi_u64"_h, "ld1rsb_z_p_bi_s64"_h}},
-      {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'u2116*2)]",
+      {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'<u2116 2 *>)]",
        {"ld1rh_z_p_bi_u64"_h, "ld1rsh_z_p_bi_s64"_h}},
-      {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'u2116*4)]",
+      {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'<u2116 4 *>)]",
        {"ld1rw_z_p_bi_u64"_h, "ld1rsw_z_p_bi_s64"_h}},
-      {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'u2116*8)]", {"ld1rd_z_p_bi_u64"_h}},
+      {"{'Zt.d}, 'Pgl/z, ['Xns'(2116?, #'<u2116 8 *>)]",
+       {"ld1rd_z_p_bi_u64"_h}},
       {"{'Zt.d}, 'Pgl/z, ['Xns, 'Rm, lsl #3]", {"ldnt1d_z_p_br_contiguous"_h}},
       {"{'Zt.d}, 'Pgl/z, ['Xns, 'Zm.d, '?22:suxtw #'u2423]",
        {"ld1d_z_p_bz_d_x32_scaled"_h,
@@ -3872,25 +3908,26 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ld1sb_z_p_ai_d"_h,
         "ldff1b_z_p_ai_d"_h,
         "ldff1sb_z_p_ai_d"_h}},
-      {"{'Zt.d}, 'Pgl/z, ['Zn.d'(2016?, #'u2016*2)]",
+      {"{'Zt.d}, 'Pgl/z, ['Zn.d'(2016?, #'<u2016 2 *>)]",
        {"ld1h_z_p_ai_d"_h,
         "ld1sh_z_p_ai_d"_h,
         "ldff1h_z_p_ai_d"_h,
         "ldff1sh_z_p_ai_d"_h}},
-      {"{'Zt.d}, 'Pgl/z, ['Zn.d'(2016?, #'u2016*4)]",
+      {"{'Zt.d}, 'Pgl/z, ['Zn.d'(2016?, #'<u2016 4 *>)]",
        {"ld1sw_z_p_ai_d"_h,
         "ld1w_z_p_ai_d"_h,
         "ldff1sw_z_p_ai_d"_h,
         "ldff1w_z_p_ai_d"_h}},
-      {"{'Zt.d}, 'Pgl/z, ['Zn.d'(2016?, #'u2016*8)]",
+      {"{'Zt.d}, 'Pgl/z, ['Zn.d'(2016?, #'<u2016 8 *>)]",
        {"ld1d_z_p_ai_d"_h, "ldff1d_z_p_ai_d"_h}},
       {"{'Zt.h}, 'Pgl'(30?:/z), ['Xns, 'Rm, lsl #1]",
        {"ldnt1h_z_p_br_contiguous"_h, "stnt1h_z_p_br_contiguous"_h}},
       {"{'Zt.h}, 'Pgl'(20?:/z), ['Xns'(1916?, #'s1916, mul vl)]",
        {"ldnt1h_z_p_bi_contiguous"_h, "stnt1h_z_p_bi_contiguous"_h}},
-      {"{'Zt.h}, 'Pgl/z, ['Xns'(2116?, #'u2116*2)]",
+      {"{'Zt.h}, 'Pgl/z, ['Xns'(2116?, #'<u2116 2 *>)]",
        {"ld1rb_z_p_bi_u16"_h, "ld1rsb_z_p_bi_s16"_h}},
-      {"{'Zt.h}, 'Pgl/z, ['Xns'(2116?, #'u2116*4)]", {"ld1rh_z_p_bi_u16"_h}},
+      {"{'Zt.h}, 'Pgl/z, ['Xns'(2116?, #'<u2116 4 *>)]",
+       {"ld1rh_z_p_bi_u16"_h}},
       {"{'Zt.s}, 'Pgl'(29?:/z), ['Zn.s'(2016=31?:, 'Xm)]",
        {"stnt1b_z_p_ar_s_x32_unscaled"_h,
         "stnt1h_z_p_ar_s_x32_unscaled"_h,
@@ -3909,9 +3946,9 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "st1w_z_p_bz_s_x32_unscaled"_h}},
       {"{'Zt.s}, 'Pgl/z, ['Xns'(2116?, #'u2116)]",
        {"ld1rb_z_p_bi_u32"_h, "ld1rsb_z_p_bi_s32"_h}},
-      {"{'Zt.s}, 'Pgl/z, ['Xns'(2116?, #'u2116*2)]",
+      {"{'Zt.s}, 'Pgl/z, ['Xns'(2116?, #'<u2116 2 *>)]",
        {"ld1rh_z_p_bi_u32"_h, "ld1rsh_z_p_bi_s32"_h}},
-      {"{'Zt.s}, 'Pgl/z, ['Xns'(2116?, #'u2116*4)]",
+      {"{'Zt.s}, 'Pgl/z, ['Xns'(2116?, #'<u2116 4 *>)]",
        {"ld1rw_z_p_bi_u32"_h, "ld1rsw_z_p_bi_s32"_h}},
       {"{'Zt.s}, 'Pgl'(20?:/z), ['Xns'(1916?, #'s1916, mul vl)]",
        {"ldnt1w_z_p_bi_contiguous"_h, "stnt1w_z_p_bi_contiguous"_h}},
@@ -3940,15 +3977,15 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ldff1b_z_p_ai_s"_h,
         "ldff1sb_z_p_ai_s"_h}},
       {"{'Zt.s}, 'Pgl, ['Zn.s'(2016?, #'u2016)]", {"st1b_z_p_ai_s"_h}},
-      {"{'Zt.s}, 'Pgl/z, ['Zn.s'(2016?, #'u2016*2)]",
+      {"{'Zt.s}, 'Pgl/z, ['Zn.s'(2016?, #'<u2016 2 *>)]",
        {"ld1h_z_p_ai_s"_h,
         "ld1sh_z_p_ai_s"_h,
         "ldff1h_z_p_ai_s"_h,
         "ldff1sh_z_p_ai_s"_h}},
-      {"{'Zt.s}, 'Pgl, ['Zn.s'(2016?, #'u2016*2)]", {"st1h_z_p_ai_s"_h}},
-      {"{'Zt.s}, 'Pgl/z, ['Zn.s'(2016?, #'u2016*4)]",
+      {"{'Zt.s}, 'Pgl, ['Zn.s'(2016?, #'<u2016 2 *>)]", {"st1h_z_p_ai_s"_h}},
+      {"{'Zt.s}, 'Pgl/z, ['Zn.s'(2016?, #'<u2016 4 *>)]",
        {"ld1w_z_p_ai_s"_h, "ldff1w_z_p_ai_s"_h}},
-      {"{'Zt.s}, 'Pgl, ['Zn.s'(2016?, #'u2016*4)]", {"st1w_z_p_ai_s"_h}},
+      {"{'Zt.s}, 'Pgl, ['Zn.s'(2016?, #'<u2016 4 *>)]", {"st1w_z_p_ai_s"_h}},
       {"'Zd.'{ssz}, 'Pgl/m, 'Zd.'{ssz}, 'Zn.d",
        {"asr_z_p_zw"_h, "lsl_z_p_zw"_h, "lsr_z_p_zw"_h}},
       {"'Zd.'{ssz}, 'Zn.'{ssz}, 'Zm.'{sszh}",
@@ -4199,34 +4236,6 @@ void Disassembler::VisitSVEBroadcastBitmaskImm(const Instruction *instr) {
     const char *form = "'Zd.'tl, 'ITriSvel";
     Format(instr, mnemonic, form);
   }
-}
-
-void Disassembler::VisitSVEBroadcastIndexElement(const Instruction *instr) {
-  const char *mnemonic = "unimplemented";
-  const char *form = "(SVEBroadcastIndexElement)";
-
-  switch (instr->Mask(SVEBroadcastIndexElementMask)) {
-    case DUP_z_zi: {
-      // The tsz field must not be zero.
-      int tsz = instr->ExtractBits(20, 16);
-      if (tsz != 0) {
-        // The preferred disassembly for dup is "mov".
-        mnemonic = "mov";
-        int imm2 = instr->ExtractBits(23, 22);
-        if ((CountSetBits(imm2) + CountSetBits(tsz)) == 1) {
-          // If imm2:tsz has one set bit, the index is zero. This is
-          // disassembled as a mov from a b/h/s/d/q scalar register.
-          form = "'Zd.'{sszdup}, '{sszdup}'u0905";
-        } else {
-          form = "'Zd.'{sszdup}, 'Zn.'{sszdup}['IVInsSVEIndex]";
-        }
-      }
-      break;
-    }
-    default:
-      break;
-  }
-  Format(instr, mnemonic, form);
 }
 
 void Disassembler::VisitReserved(const Instruction *instr) {
@@ -4488,6 +4497,8 @@ int Disassembler::SubstituteField(const Instruction *instr,
       return SubstituteConditionalBlock(instr, format);
     case '{':
       return SubstituteGeneric(instr, format);
+    case '<':
+      return SubstituteExpression(instr, format);
     case '$':
       return SubstituteEnd(instr, format);
     default: {
@@ -4735,15 +4746,6 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
   VIXL_ASSERT(format[0] == 'I');
 
   switch (format[1]) {
-    case 'M': {  // IMoveImm or IMoveNeg.
-      VIXL_ASSERT((format[5] == 'I') || (format[5] == 'N'));
-      uint64_t imm = static_cast<uint64_t>(instr->GetImmMoveWide())
-                     << (16 * instr->GetShiftMoveWide());
-      if (format[5] == 'N') imm = ~imm;
-      if (!instr->GetSixtyFourBits()) imm &= UINT64_C(0xffffffff);
-      AppendToOutput("#0x%" PRIx64, imm);
-      return 8;
-    }
     case 'T': {  // ITri - Immediate Triangular Encoded.
       if (format[4] == 'S') {
         VIXL_ASSERT((format[5] == 'v') && (format[6] == 'e'));
@@ -4752,40 +4754,6 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
             // SVE logical immediate encoding.
             AppendToOutput("#0x%" PRIx64, instr->GetSVEImmLogical());
             return 8;
-          case 'p': {
-            // SVE predicated shift immediate encoding, lsl.
-            std::pair<int, int> shift_and_lane_size =
-                instr->GetSVEImmShiftAndLaneSizeLog2(
-                    /* is_predicated = */ true);
-            int lane_bits = 8 << shift_and_lane_size.second;
-            AppendToOutput("#%" PRId32, lane_bits - shift_and_lane_size.first);
-            return 8;
-          }
-          case 'q': {
-            // SVE predicated shift immediate encoding, asr and lsr.
-            std::pair<int, int> shift_and_lane_size =
-                instr->GetSVEImmShiftAndLaneSizeLog2(
-                    /* is_predicated = */ true);
-            AppendToOutput("#%" PRId32, shift_and_lane_size.first);
-            return 8;
-          }
-          case 'r': {
-            // SVE unpredicated shift immediate encoding, left shifts.
-            std::pair<int, int> shift_and_lane_size =
-                instr->GetSVEImmShiftAndLaneSizeLog2(
-                    /* is_predicated = */ false);
-            int lane_bits = 8 << shift_and_lane_size.second;
-            AppendToOutput("#%" PRId32, lane_bits - shift_and_lane_size.first);
-            return 8;
-          }
-          case 's': {
-            // SVE unpredicated shift immediate encoding, right shifts.
-            std::pair<int, int> shift_and_lane_size =
-                instr->GetSVEImmShiftAndLaneSizeLog2(
-                    /* is_predicated = */ false);
-            AppendToOutput("#%" PRId32, shift_and_lane_size.first);
-            return 8;
-          }
           default:
             VIXL_UNREACHABLE();
             return 0;
@@ -4795,87 +4763,8 @@ int Disassembler::SubstituteImmediateField(const Instruction *instr,
         return 4;
       }
     }
-    case 's': {  // Is - Shift (immediate).
-      switch (format[2]) {
-        case 'R': {  // IsR - right shifts.
-          int shift = 16 << HighestSetBitPosition(instr->GetImmNEONImmh());
-          shift -= instr->GetImmNEONImmhImmb();
-          AppendToOutput("#%d", shift);
-          return 3;
-        }
-        case 'L': {  // IsL - left shifts.
-          int shift = instr->GetImmNEONImmhImmb();
-          shift -= 8 << HighestSetBitPosition(instr->GetImmNEONImmh());
-          AppendToOutput("#%d", shift);
-          return 3;
-        }
-        default: {
-          VIXL_UNIMPLEMENTED();
-          return 0;
-        }
-      }
-    }
     case 'V': {  // Immediate Vector.
       switch (format[2]) {
-        case 'B': {  // IVByElemIndex.
-          int ret = static_cast<int>(strlen("IVByElemIndex"));
-          uint32_t vm_index = instr->GetNEONH() << 2;
-          vm_index |= instr->GetNEONL() << 1;
-          vm_index |= instr->GetNEONM();
-
-          static const char *format_rot = "IVByElemIndexRot";
-          static const char *format_fhm = "IVByElemIndexFHM";
-          if (strncmp(format, format_rot, strlen(format_rot)) == 0) {
-            // FCMLA uses 'H' bit index when SIZE is 2, else H:L
-            VIXL_ASSERT((instr->GetNEONSize() == 1) ||
-                        (instr->GetNEONSize() == 2));
-            vm_index >>= instr->GetNEONSize();
-            ret = static_cast<int>(strlen(format_rot));
-          } else if (strncmp(format, format_fhm, strlen(format_fhm)) == 0) {
-            // Nothing to do - FMLAL and FMLSL use H:L:M.
-            ret = static_cast<int>(strlen(format_fhm));
-          } else {
-            if (instr->GetNEONSize() == 2) {
-              // S-sized elements use H:L.
-              vm_index >>= 1;
-            } else if (instr->GetNEONSize() == 3) {
-              // D-sized elements use H.
-              vm_index >>= 2;
-            }
-          }
-          AppendToOutput("%d", vm_index);
-          return ret;
-        }
-        case 'I': {  // INS element.
-          if (strncmp(format, "IVInsIndex", strlen("IVInsIndex")) == 0) {
-            unsigned rd_index, rn_index;
-            unsigned imm5 = instr->GetImmNEON5();
-            unsigned imm4 = instr->GetImmNEON4();
-            int tz = CountTrailingZeros(imm5, 32);
-            if (tz <= 3) {  // Defined for tz = 0 to 3 only.
-              rd_index = imm5 >> (tz + 1);
-              rn_index = imm4 >> tz;
-              if (strncmp(format, "IVInsIndex1", strlen("IVInsIndex1")) == 0) {
-                AppendToOutput("%d", rd_index);
-                return static_cast<int>(strlen("IVInsIndex1"));
-              } else if (strncmp(format,
-                                 "IVInsIndex2",
-                                 strlen("IVInsIndex2")) == 0) {
-                AppendToOutput("%d", rn_index);
-                return static_cast<int>(strlen("IVInsIndex2"));
-              }
-            }
-            return 0;
-          } else if (strncmp(format,
-                             "IVInsSVEIndex",
-                             strlen("IVInsSVEIndex")) == 0) {
-            std::pair<int, int> index_and_lane_size =
-                instr->GetSVEPermuteIndexAndLaneSizeLog2();
-            AppendToOutput("%d", index_and_lane_size.first);
-            return static_cast<int>(strlen("IVInsSVEIndex"));
-          }
-          VIXL_FALLTHROUGH();
-        }
         case 'M': {  // Modified Immediate cases.
           if (strncmp(format, "IVMIImm", strlen("IVMIImm")) == 0) {
             uint64_t imm8 = instr->GetImmNEONabcdefgh();
@@ -5061,24 +4950,31 @@ int Disassembler::SubstituteExtendField(const Instruction *instr,
 std::pair<int32_t, int> ExtractIntTerm(const Instruction *instr,
                                        const char *c) {
   int32_t bits = 0;
-  int width = 0;
   int off = 0;
-  do {
-    VIXL_ASSERT(strspn(&c[off + 1], "0123456789") == 4);
-    int msb = BitPositionFromString(&c[off + 1]);
-    int lsb = BitPositionFromString(&c[off + 3]);
-    int chunk_width = msb - lsb + 1;
-    VIXL_ASSERT((chunk_width > 0) && (chunk_width < 32));
-    bits = (bits << chunk_width) | instr->ExtractBits(msb, lsb);
-    width += chunk_width;
-    off += 5;  // Skip [usxn_] and the four character bit position.
-  } while (c[off] == '_');
-  VIXL_ASSERT(IsUintN(width, bits));
+  if (std::isdigit(*c)) {
+    char *new_c;
+    uint64_t value = strtoul(c, &new_c, 10);
+    off = static_cast<int>(new_c - c);
+    VIXL_ASSERT(IsInt32(value));
+    bits = static_cast<int32_t>(value);
+  } else {
+    VIXL_ASSERT(strchr("suxf", *c) != nullptr);
+    int width = 0;
+    do {
+      VIXL_ASSERT(strspn(&c[off + 1], "0123456789") == 4);
+      int msb = BitPositionFromString(&c[off + 1]);
+      int lsb = BitPositionFromString(&c[off + 3]);
+      int chunk_width = msb - lsb + 1;
+      VIXL_ASSERT((chunk_width > 0) && (chunk_width < 32));
+      bits = (bits << chunk_width) | instr->ExtractBits(msb, lsb);
+      width += chunk_width;
+      off += 5;  // Skip [usx_] and the four character bit position.
+    } while (c[off] == '_');
+    VIXL_ASSERT(IsUintN(width, bits));
 
-  if (c[0] == 's') {
-    bits = ExtractSignedBitfield32(width - 1, 0, bits);
-  } else if (c[0] == 'n') {
-    bits = -bits;
+    if (c[0] == 's') {
+      bits = ExtractSignedBitfield32(width - 1, 0, bits);
+    }
   }
 
   return {bits, off};
@@ -5086,8 +4982,7 @@ std::pair<int32_t, int> ExtractIntTerm(const Instruction *instr,
 
 int Disassembler::SubstituteIntField(const Instruction *instr,
                                      const char *format) {
-  const char *c = format;
-  VIXL_ASSERT((*c == 'u') || (*c == 's') || (*c == 'x') || (*c == 'n'));
+  VIXL_ASSERT((*format == 'u') || (*format == 's') || (*format == 'x'));
 
   // A generic signed or unsigned int field uses a placeholder of the form
   // 'sAABB and 'uAABB respectively where AA and BB are two digit bit positions
@@ -5100,47 +4995,10 @@ int Disassembler::SubstituteIntField(const Instruction *instr,
   // (if 's is used).
   //
   // For unsigned fields, 'u may be replaced with 'x to substitute the
-  // hexadecimal representation instead of a decimal, or 'n to obtain the
-  // negative of the value encoded in the instruction.
-  auto [bits, advance] = ExtractIntTerm(instr, c);
-  c += advance;
-
-  while ((*c == '+') || (*c == '*')) {
-    if (*c == '+') {
-      if ((c[1] == 'u') || (c[1] == 's') || (c[1] == 'n')) {
-        // A "+uAABB", or similar, trailing the format specifier indicates a
-        // second value should be extracted from the instruction and added to
-        // the value(s) extracted earlier.
-        auto [value, term_advance] = ExtractIntTerm(instr, c + 1);
-        bits = bits + value;
-        c += term_advance + 1;
-      } else {
-        // A "+k" trailing the format specifier indicates the extracted value
-        // should be incremented by k. This is for cases where the encoding is
-        // zero-based, but range of values is not, eg. values [1, 16] encoded as
-        // [0, 15]
-        char *new_c;
-        uint64_t value = strtoul(c + 1, &new_c, 10);
-        c = new_c;
-        VIXL_ASSERT(IsInt32(value));
-        bits = static_cast<int32_t>(bits + value);
-      }
-    } else {
-      // Similarly, a "*n" trailing the format specifier indicates the extracted
-      // value should be multiplied by n. This is for cases where the encoded
-      // immediate is scaled, for example by access size.
-      VIXL_ASSERT(*c == '*');
-      char *new_c;
-      uint64_t value = strtoul(c + 1, &new_c, 10);
-      c = new_c;
-      VIXL_ASSERT(IsInt32(value));
-      bits = static_cast<int32_t>(bits * value);
-    }
-  }
-
+  // hexadecimal representation instead of a decimal.
+  auto [bits, advance] = ExtractIntTerm(instr, format);
   AppendToOutput(format[0] == 'x' ? "%x" : "%d", bits);
-
-  return static_cast<int>(c - format);
+  return advance;
 }
 
 int Disassembler::SubstituteFPField(const Instruction *instr,
@@ -5161,7 +5019,6 @@ int Disassembler::SubstituteFPField(const Instruction *instr,
 
 int Disassembler::SubstituteGeneric(const Instruction *instr,
                                     const char *format) {
-  USE(instr);
   VIXL_ASSERT(format[0] == '{');
   const char *close = strchr(format, '}');
   VIXL_ASSERT(close != nullptr);
@@ -5317,6 +5174,102 @@ int Disassembler::SubstituteSVESize(const Instruction *instr,
   AppendToOutput("%c", sizes[size_in_bytes_log2]);
 
   return placeholder_length;
+}
+
+using ExprStack = std::stack<uint64_t>;
+
+bool HandleUnaryExpression(ExprStack *s, const std::string &op) {
+  if (s->size() == 0) {
+    return false;
+  }
+
+  uint64_t r = s->top();
+  s->pop();
+
+  if (op == "clz") {
+    s->push(CountLeadingZeros(r, 32));
+  } else if (op == "ctz") {
+    s->push(CountTrailingZeros(r, 32));
+  } else if (op == "not") {
+    s->push(~r);
+  } else if (op == "dup") {
+    s->push(r);
+    s->push(r);
+  } else {
+    s->push(r);
+    return false;
+  }
+  return true;
+}
+
+bool HandleBinaryExpression(ExprStack *s, const std::string &op) {
+  if (s->size() < 2) {
+    return false;
+  }
+
+  uint64_t r = s->top();
+  s->pop();
+  uint64_t b = s->top();
+
+  if (op == "+") {
+    r = b + r;
+  } else if (op == "-") {
+    r = b - r;
+  } else if (op == "*") {
+    r = b * r;
+  } else if (op == "lsl") {
+    r = b << r;
+  } else if (op == "lsr") {
+    r = b >> r;
+  } else {
+    s->push(r);
+    return false;
+  }
+
+  s->pop();
+  s->push(r);
+  return true;
+}
+
+int Disassembler::SubstituteExpression(const Instruction *instr,
+                                       const char *format) {
+  USE(instr);
+  VIXL_ASSERT(format[0] == '<');
+  const char *close = strchr(format, '>');
+  VIXL_ASSERT(close != nullptr);
+  int exprlen = static_cast<int>(close - format - 1);
+  std::string expr(format, 1, exprlen);
+
+  ExprStack s;
+  std::regex re(" ");
+  std::sregex_token_iterator it(expr.begin(), expr.end(), re, -1);
+  std::sregex_token_iterator end;
+
+  const char *placeholder = "%ld";
+  for (; it != end; it++) {
+    std::string t = it->str();
+    if (std::isdigit(t[0]) || (t[0] == 's') || (t[0] == 'u')) {
+      auto [value, advance] = ExtractIntTerm(instr, t.c_str());
+      VIXL_ASSERT(t.length() == static_cast<size_t>(advance));
+      s.push(value);
+    } else if (HandleBinaryExpression(&s, t)) {
+      // Handled a binary operation - nothing else to do.
+    } else if (HandleUnaryExpression(&s, t)) {
+      // Handled a unary operation - nothing else to do.
+    } else if (t == "hex") {
+      // Print value on the stack as hexadecimal. This must be the result of the
+      // computation and therefore the only value on the stack.
+      VIXL_ASSERT(s.size() == 1);
+      placeholder = "%lx";
+    } else {
+      printf("Unknown token: %s\n", t.c_str());
+      VIXL_ABORT();
+    }
+  }
+  VIXL_ASSERT(s.size() == 1);
+  AppendToOutput(placeholder, s.top());
+
+  return exprlen + 2;  // +2 for <>
 }
 
 int Disassembler::SubstituteEnd(const Instruction *instr, const char *format) {

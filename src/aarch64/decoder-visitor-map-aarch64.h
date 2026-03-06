@@ -35,7 +35,6 @@
 
 #define DEFAULT_FORM_TO_VISITOR_MAP(VISITORCLASS)                             \
   {"dupm_z_i"_h, &VISITORCLASS::VisitSVEBroadcastBitmaskImm},                 \
-      {"dup_z_zi"_h, &VISITORCLASS::VisitSVEBroadcastIndexElement},           \
       {"udf_only_perm_undef"_h, &VISITORCLASS::VisitReserved},                \
       {"bti_hb_hints"_h, &VISITORCLASS::VisitSystem},                         \
       {"clrex_bn_barriers"_h, &VISITORCLASS::VisitSystem},                    \
@@ -2854,6 +2853,7 @@
       {"stlrb_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
       {"stlrh_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
       {"stlr_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
+      {"dup_z_zi"_h, &VISITORCLASS::VisitSVEBroadcastIndexElement},            \
       {"adcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \

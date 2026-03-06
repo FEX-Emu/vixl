@@ -38,7 +38,6 @@
 // List macro containing all visitors needed by the decoder class.
 #define VISITOR_LIST_THAT_RETURN(V) \
   V(SVEBroadcastBitmaskImm)         \
-  V(SVEBroadcastIndexElement)       \
   V(System)                         \
   V(Unallocated)                    \
   V(Unimplemented)
@@ -265,6 +264,7 @@
   V(SVESaturatingIncDecVectorByElementCount)                     \
   V(SVESaturatingIncDecRegisterByElementCount)                   \
   V(LoadStoreExclusive)                                          \
+  V(SVEBroadcastIndexElement)                                    \
   V(AddSubWithCarry)
 
 #define VISITOR_LIST_THAT_DONT_RETURN(V) V(Reserved)

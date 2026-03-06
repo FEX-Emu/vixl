@@ -168,6 +168,7 @@ class Disassembler : public DecoderVisitor {
   int SubstituteTernary(const Instruction* instr, const char* format);
   int SubstituteConditionalBlock(const Instruction* instr, const char* format);
   int SubstituteGeneric(const Instruction* instr, const char* format);
+  int SubstituteExpression(const Instruction* instr, const char* format);
   int SubstituteEnd(const Instruction* instr, const char* format);
 
   std::pair<unsigned, unsigned> GetRegNumForField(const Instruction* instr,

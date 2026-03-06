@@ -5708,7 +5708,7 @@ TEST(sve_permute_vector_unpredicated) {
   COMPARE_MACRO(Mov(z31.VnQ(), q31), "mov z31.q, q31");
 
   // Test dup with reserved tsz field.
-  COMPARE_PREFIX(dci(0x05202000), "unimplemented");
+  COMPARE_PREFIX(dci(0x05202000), "unallocated (Unallocated");
 
   COMPARE(insr(z15.VnB(), w13), "insr z15.b, w13");
   COMPARE(insr(z16.VnH(), w14), "insr z16.h, w14");
