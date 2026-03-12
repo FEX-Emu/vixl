@@ -93,6 +93,18 @@ std::string Disassembler::GetMnemonicAlias(const Instruction *instr) {
        {"adds_64s_addsub_ext"_h, {{kRdIsZROrSP, "cmn"}}},
        {"subs_32s_addsub_ext"_h, {{kRdIsZROrSP, "cmp"}}},
        {"subs_64s_addsub_ext"_h, {{kRdIsZROrSP, "cmp"}}},
+       {"adds_32s_addsub_ext"_h, {{kRnIsZROrSP, "add_lsl"}}},
+       {"adds_64s_addsub_ext"_h, {{kRnIsZROrSP, "add_lsl"}}},
+       {"subs_32s_addsub_ext"_h, {{kRnIsZROrSP, "sub_lsl"}}},
+       {"subs_64s_addsub_ext"_h, {{kRnIsZROrSP, "sub_lsl"}}},
+       {"add_32_addsub_ext"_h,
+        {{kRdIsZROrSP, "add_lsl"}, {kRnIsZROrSP, "add_lsl"}}},
+       {"add_64_addsub_ext"_h,
+        {{kRdIsZROrSP, "add_lsl"}, {kRnIsZROrSP, "add_lsl"}}},
+       {"sub_32_addsub_ext"_h,
+        {{kRdIsZROrSP, "sub_lsl"}, {kRnIsZROrSP, "sub_lsl"}}},
+       {"sub_64_addsub_ext"_h,
+        {{kRdIsZROrSP, "sub_lsl"}, {kRnIsZROrSP, "sub_lsl"}}},
        {"ands_32_log_shift"_h, {{kRdIsZROrSP, "tst"}}},
        {"ands_64_log_shift"_h, {{kRdIsZROrSP, "tst"}}},
        {"orr_32_log_shift"_h, {{kRnIsZROrSP | kLogImmIsZeroLSL, "mov"}}},
@@ -1769,7 +1781,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Bt, ['Xns'(2110?, #'u2110)]",
        {"ldr_b_ldst_pos"_h, "str_b_ldst_pos"_h}},
       {"'Bt, ['Xns, #'s2012]!", {"ldr_b_ldst_immpre"_h, "str_b_ldst_immpre"_h}},
-      {"'Bt, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #0)]",
+      {"'Bt, ['Xns, 'R13m'(1512=6?]'$), '{extmem}'(12? #0)]",
        {"ldr_b_ldst_regoff"_h,
         "ldr_bl_ldst_regoff"_h,
         "str_b_ldst_regoff"_h,
@@ -1825,7 +1837,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Dt, ['Xns'(2110?, #'<u2110 8 *>)]",
        {"ldr_d_ldst_pos"_h, "str_d_ldst_pos"_h}},
       {"'Dt, ['Xns, #'s2012]!", {"ldr_d_ldst_immpre"_h, "str_d_ldst_immpre"_h}},
-      {"'Dt, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #3)]",
+      {"'Dt, ['Xns, 'R13m'(1512=6?]'$), '{extmem}'(12? #3)]",
        {"ldr_d_ldst_regoff"_h, "str_d_ldst_regoff"_h}},
       {"'Dt, ['Xns], #'s2012",
        {"ldr_d_ldst_immpost"_h, "str_d_ldst_immpost"_h}},
@@ -1982,7 +1994,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Ht, ['Xns'(2110?, #'<u2110 2 *>)]",
        {"ldr_h_ldst_pos"_h, "str_h_ldst_pos"_h}},
       {"'Ht, ['Xns, #'s2012]!", {"ldr_h_ldst_immpre"_h, "str_h_ldst_immpre"_h}},
-      {"'Ht, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #1)]",
+      {"'Ht, ['Xns, 'R13m'(1512=6?]'$), '{extmem}'(12? #1)]",
        {"ldr_h_ldst_regoff"_h, "str_h_ldst_regoff"_h}},
       {"'Ht, ['Xns], #'s2012",
        {"ldr_h_ldst_immpost"_h, "str_h_ldst_immpost"_h}},
@@ -2116,7 +2128,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'Qt, ['Xns'(2110?, #'<u2110 16 *>)]",
        {"ldr_q_ldst_pos"_h, "str_q_ldst_pos"_h}},
       {"'Qt, ['Xns, #'s2012]!", {"ldr_q_ldst_immpre"_h, "str_q_ldst_immpre"_h}},
-      {"'Qt, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #4)]",
+      {"'Qt, ['Xns, 'R13m'(1512=6?]'$), '{extmem}'(12? #4)]",
        {"ldr_q_ldst_regoff"_h, "str_q_ldst_regoff"_h}},
       {"'Qt, ['Xns], #'s2012",
        {"ldr_q_ldst_immpost"_h, "str_q_ldst_immpost"_h}},
@@ -2337,15 +2349,30 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "orr_32_log_imm"_h,
         "orr_64_log_imm"_h}},
       {"'Rds, 'Rns", {"mov_add_32_addsub_imm"_h, "mov_add_64_addsub_imm"_h}},
-      {"'Rds, 'Rns, '(1413=3?x:w)'(2016=31?zr:'u2016)'Ext",
+      {"'Rds, 'Rns, '(1413=3?x:w)'(2016=31?zr:'u2016), '{ext}'(1210? #'u1210)",
        {"adds_32s_addsub_ext"_h,
-        "adds_64s_addsub_ext"_h,
         "add_32_addsub_ext"_h,
-        "add_64_addsub_ext"_h,
         "subs_32s_addsub_ext"_h,
-        "subs_64s_addsub_ext"_h,
         "sub_32_addsub_ext"_h,
+        "adds_32s_addsub_ext"_h,
+        "adds_64s_addsub_ext"_h,
+        "add_64_addsub_ext"_h,
+        "subs_64s_addsub_ext"_h,
         "sub_64_addsub_ext"_h}},
+      {"'Rds, 'Rns, "
+       "'(1413=3?x:w)'(2016=31?zr:'u2016)'(1510=16?:, '{ext32})'(1210? "
+       "#'u1210)",
+       {"adds_lsl_adds_32s_addsub_ext"_h,
+        "add_lsl_add_32_addsub_ext"_h,
+        "subs_lsl_subs_32s_addsub_ext"_h,
+        "sub_lsl_sub_32_addsub_ext"_h}},
+      {"'Rds, 'Rns, "
+       "'(1413=3?x:w)'(2016=31?zr:'u2016)'(1510=24?:, '{ext64})'(1210? "
+       "#'u1210)",
+       {"adds_lsl_adds_64s_addsub_ext"_h,
+        "add_lsl_add_64_addsub_ext"_h,
+        "subs_lsl_subs_64s_addsub_ext"_h,
+        "sub_lsl_sub_64_addsub_ext"_h}},
       {"'Rds, 'Rns, #0x'(22?'<u2110 12 lsl hex>:'x2110) ('(22?'<u2110 12 "
        "lsl>:'u2110))",
        {"adds_32s_addsub_imm"_h,
@@ -2374,11 +2401,12 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "cmp_subs_64_addsub_shift"_h,
         "tst_ands_32_log_shift"_h,
         "tst_ands_64_log_shift"_h}},
-      {"'Rns, '(1413=3?x:w)'(2016=31?zr:'u2016)'Ext",
-       {"cmn_adds_32s_addsub_ext"_h,
-        "cmn_adds_64s_addsub_ext"_h,
-        "cmp_subs_32s_addsub_ext"_h,
-        "cmp_subs_64s_addsub_ext"_h}},
+      {"'Rns, '(1413=3?x:w)'(2016=31?zr:'u2016)'(1510=16?'$:, '{ext32})'(1210? "
+       "#'u1210)",
+       {"cmn_adds_32s_addsub_ext"_h, "cmp_subs_32s_addsub_ext"_h}},
+      {"'Rns, '(1413=3?x:w)'(2016=31?zr:'u2016)'(1510=16?'$:, '{ext64})'(1210? "
+       "#'u1210)",
+       {"cmn_adds_64s_addsub_ext"_h, "cmp_subs_64s_addsub_ext"_h}},
       {"'Rns, #0x'(22?'<u2110 12 lsl hex>:'x2110) ('(22?'<u2110 12 "
        "lsl>:'u2110))",
        {"cmn_adds_32s_addsub_imm"_h,
@@ -2416,7 +2444,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'St, ['Xns'(2110?, #'<u2110 4 *>)]",
        {"ldr_s_ldst_pos"_h, "str_s_ldst_pos"_h}},
       {"'St, ['Xns, #'s2012]!", {"ldr_s_ldst_immpre"_h, "str_s_ldst_immpre"_h}},
-      {"'St, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #2)]",
+      {"'St, ['Xns, 'R13m'(1512=6?]'$), '{extmem}'(12? #2)]",
        {"ldr_s_ldst_regoff"_h, "str_s_ldst_regoff"_h}},
       {"'St, ['Xns], #'s2012",
        {"ldr_s_ldst_immpost"_h, "str_s_ldst_immpost"_h}},
@@ -2865,7 +2893,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "str_32_ldst_immpre"_h,
         "strb_32_ldst_immpre"_h,
         "strh_32_ldst_immpre"_h}},
-      {"'Wt, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #'u3130)]",
+      {"'Wt, ['Xns, 'R13m'(1512=6?]'$), '{extmem}'(12? #'u3130)]",
        {"ldrb_32b_ldst_regoff"_h,
         "ldrb_32bl_ldst_regoff"_h,
         "ldrsb_32b_ldst_regoff"_h,
@@ -3043,7 +3071,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ldrsh_64_ldst_immpre"_h,
         "ldrsw_64_ldst_immpre"_h,
         "str_64_ldst_immpre"_h}},
-      {"'Xt, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #'u3130)]",
+      {"'Xt, ['Xns, 'R13m'(1512=6?]'$), '{extmem}'(12? #'u3130)]",
        {"ldrsb_64b_ldst_regoff"_h,
         "ldrsb_64bl_ldst_regoff"_h,
         "ldrsh_64_ldst_regoff"_h,
@@ -3438,7 +3466,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'{prefop}, pc'(23?:+)'<s2305 4 *> 'LValue", {"prfm_p_loadlit"_h}},
       {"'{prefop}, ['Xns'(2012?, #'s2012)]", {"prfum_p_ldst_unscaled"_h}},
       {"'{prefop}, ['Xns'(2110?, #'<u2110 8 *>)]", {"prfm_p_ldst_pos"_h}},
-      {"'{prefop}, ['Xns, 'R13m'(1512=6?]'$), '{extend}'(12? #3)]",
+      {"'{prefop}, ['Xns, 'R13m'(1512=6?]'$), '{extmem}'(12? #3)]",
        {"prfm_p_ldst_regoff"_h}},
       {"'{prefsveop}, 'Pgl, ['Xns'(2116?, #'s2116, mul vl)]",
        {"prfb_i_p_bi_s"_h,
@@ -4476,8 +4504,6 @@ int Disassembler::SubstituteField(const Instruction *instr,
       return SubstituteImmediateField(instr, format);
     case 'L':
       return SubstituteLiteralField(instr, format);
-    case 'E':
-      return SubstituteExtendField(instr, format);
     case 'A':
       return SubstitutePCRelAddressField(instr, format);
     case 'T':
@@ -4921,32 +4947,6 @@ int Disassembler::SubstituteBranchTargetField(const Instruction *instr,
   return 8;
 }
 
-int Disassembler::SubstituteExtendField(const Instruction *instr,
-                                        const char *format) {
-  VIXL_ASSERT(strncmp(format, "Ext", 3) == 0);
-  VIXL_ASSERT(instr->GetExtendMode() <= 7);
-  USE(format);
-
-  const char *extend_mode[] =
-      {"uxtb", "uxth", "uxtw", "uxtx", "sxtb", "sxth", "sxtw", "sxtx"};
-
-  // If rd or rn is SP, uxtw on 32-bit registers and uxtx on 64-bit
-  // registers becomes lsl.
-  if (((instr->GetRd() == kZeroRegCode) || (instr->GetRn() == kZeroRegCode)) &&
-      (((instr->GetExtendMode() == UXTW) && (instr->GetSixtyFourBits() == 0)) ||
-       (instr->GetExtendMode() == UXTX))) {
-    if (instr->GetImmExtendShift() > 0) {
-      AppendToOutput(", lsl #%" PRId32, instr->GetImmExtendShift());
-    }
-  } else {
-    AppendToOutput(", %s", extend_mode[instr->GetExtendMode()]);
-    if (instr->GetImmExtendShift() > 0) {
-      AppendToOutput(" #%" PRId32, instr->GetImmExtendShift());
-    }
-  }
-  return 3;
-}
-
 std::pair<int32_t, int> ExtractIntTerm(const Instruction *instr,
                                        const char *c) {
   int32_t bits = 0;
@@ -5032,7 +5032,13 @@ int Disassembler::SubstituteGeneric(const Instruction *instr,
 
   // clang-format off
   static const std::map<std::string, SubstList> subst = {
-      {"extend", {{15, 13}, {"uxtw", "lsl", "sxtw", "sxtx"}}},
+      {"ext", {{15, 14, 13},
+      {"uxtb", "uxth", "uxtw", "uxtx", "sxtb", "sxth", "sxtw", "sxtx"}}},
+      {"ext32", {{15, 14, 13},
+      {"uxtb", "uxth", "lsl", "uxtx", "sxtb", "sxth", "sxtw", "sxtx"}}},
+      {"ext64", {{15, 14, 13},
+      {"uxtb", "uxth", "uxtw", "lsl", "sxtb", "sxth", "sxtw", "sxtx"}}},
+      {"extmem", {{15, 13}, {"uxtw", "lsl", "sxtw", "sxtx"}}},
       {"cond",
        {{15, 14, 13, 12},
         {"eq", "ne", "hs", "lo", "mi", "pl", "vs", "vc",
