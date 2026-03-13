@@ -36,20 +36,6 @@
 #define DEFAULT_FORM_TO_VISITOR_MAP(VISITORCLASS)                             \
   {"dupm_z_i"_h, &VISITORCLASS::VisitSVEBroadcastBitmaskImm},                 \
       {"udf_only_perm_undef"_h, &VISITORCLASS::VisitReserved},                \
-      {"bti_hb_hints"_h, &VISITORCLASS::VisitSystem},                         \
-      {"clrex_bn_barriers"_h, &VISITORCLASS::VisitSystem},                    \
-      {"dmb_bo_barriers"_h, &VISITORCLASS::VisitSystem},                      \
-      {"dsb_bo_barriers"_h, &VISITORCLASS::VisitSystem},                      \
-      {"hint_hm_hints"_h, &VISITORCLASS::VisitSystem},                        \
-      {"chkfeat_hf_hints"_h, &VISITORCLASS::VisitSystem},                     \
-      {"mrs_rs_systemmove"_h, &VISITORCLASS::VisitSystem},                    \
-      {"msr_sr_systemmove"_h, &VISITORCLASS::VisitSystem},                    \
-      {"psb_hc_hints"_h, &VISITORCLASS::VisitSystem},                         \
-      {"sb_only_barriers"_h, &VISITORCLASS::VisitSystem},                     \
-      {"sysl_rc_systeminstrs"_h, &VISITORCLASS::VisitSystem},                 \
-      {"sys_cr_systeminstrs"_h, &VISITORCLASS::VisitSystem},                  \
-      {"tcommit_only_barriers"_h, &VISITORCLASS::VisitSystem},                \
-      {"tsb_hc_hints"_h, &VISITORCLASS::VisitSystem},                         \
       {"bfdot_asimdelem_e"_h, &VISITORCLASS::VisitUnimplemented},             \
       {"bfdot_asimdsame2_d"_h, &VISITORCLASS::VisitUnimplemented},            \
       {"bfmlal_asimdelem_f"_h, &VISITORCLASS::VisitUnimplemented},            \
@@ -77,6 +63,7 @@
       {"sttr_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
       {"stzgm_64bulk_ldsttags"_h, &VISITORCLASS::VisitUnimplemented},         \
       {"tcancel_ex_exception"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"tcommit_only_barriers"_h, &VISITORCLASS::VisitUnimplemented},         \
       {"tstart_br_systemresult"_h, &VISITORCLASS::VisitUnimplemented},        \
       {"ttest_br_systemresult"_h, &VISITORCLASS::VisitUnimplemented},         \
       {"wfet_only_systeminstrswithreg"_h, &VISITORCLASS::VisitUnimplemented}, \
@@ -2854,6 +2841,20 @@
       {"stlrh_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},       \
       {"stlr_sl32_ldstexcl"_h, &VISITORCLASS::VisitLoadStoreExclusive},        \
       {"dup_z_zi"_h, &VISITORCLASS::VisitSVEBroadcastIndexElement},            \
+      {"bti_hb_hints"_h, &VISITORCLASS::VisitSystem},                          \
+      {"clrex_bn_barriers"_h, &VISITORCLASS::VisitSystem},                     \
+      {"dmb_bo_barriers"_h, &VISITORCLASS::VisitSystem},                       \
+      {"dsb_bo_barriers"_h, &VISITORCLASS::VisitSystem},                       \
+      {"hint_hm_hints"_h, &VISITORCLASS::VisitSystem},                         \
+      {"chkfeat_hf_hints"_h, &VISITORCLASS::VisitSystem},                      \
+      {"sysl_rc_systeminstrs"_h, &VISITORCLASS::VisitSystem},                  \
+      {"sys_cr_systeminstrs"_h, &VISITORCLASS::VisitSystem},                   \
+      {"tcommit_only_barriers"_h, &VISITORCLASS::VisitSystem},                 \
+      {"tsb_hc_hints"_h, &VISITORCLASS::VisitSystem},                          \
+      {"psb_hc_hints"_h, &VISITORCLASS::VisitSystem},                          \
+      {"sb_only_barriers"_h, &VISITORCLASS::VisitSystem},                      \
+      {"mrs_rs_systemmove"_h, &VISITORCLASS::VisitSystem},                     \
+      {"msr_sr_systemmove"_h, &VISITORCLASS::VisitSystem},                     \
       {"adcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \
