@@ -44,23 +44,10 @@
       {"dsb_bon_barriers"_h, &VISITORCLASS::VisitUnimplemented},              \
       {"ld64b_64l_memop"_h, &VISITORCLASS::VisitUnimplemented},               \
       {"ldgm_64bulk_ldsttags"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"ldtrb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"ldtrh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"ldtrsb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},         \
-      {"ldtrsb_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},         \
-      {"ldtrsh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},         \
-      {"ldtrsh_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},         \
-      {"ldtrsw_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},         \
-      {"ldtr_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
-      {"ldtr_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
       {"st64b_64l_memop"_h, &VISITORCLASS::VisitUnimplemented},               \
       {"st64bv_64_memop"_h, &VISITORCLASS::VisitUnimplemented},               \
       {"st64bv0_64_memop"_h, &VISITORCLASS::VisitUnimplemented},              \
       {"stgm_64bulk_ldsttags"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"sttrb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"sttrh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
-      {"sttr_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
-      {"sttr_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
       {"stzgm_64bulk_ldsttags"_h, &VISITORCLASS::VisitUnimplemented},         \
       {"tcancel_ex_exception"_h, &VISITORCLASS::VisitUnimplemented},          \
       {"tcommit_only_barriers"_h, &VISITORCLASS::VisitUnimplemented},         \
@@ -2855,6 +2842,19 @@
       {"sb_only_barriers"_h, &VISITORCLASS::VisitSystem},                      \
       {"mrs_rs_systemmove"_h, &VISITORCLASS::VisitSystem},                     \
       {"msr_sr_systemmove"_h, &VISITORCLASS::VisitSystem},                     \
+      {"ldtrb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
+      {"ldtrh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
+      {"ldtrsb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"ldtrsb_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"ldtrsh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"ldtrsh_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"ldtrsw_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},          \
+      {"ldtr_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},            \
+      {"ldtr_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},            \
+      {"sttrb_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
+      {"sttrh_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},           \
+      {"sttr_32_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},            \
+      {"sttr_64_ldst_unpriv"_h, &VISITORCLASS::VisitUnimplemented},            \
       {"adcs_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adcs_64_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},         \
       {"adc_32_addsub_carry"_h, &VISITORCLASS::VisitAddSubWithCarry},          \

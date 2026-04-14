@@ -2048,6 +2048,24 @@ TEST(load_store_pair_nontemp) {
   CLEANUP();
 }
 
+TEST(load_store_tr) {
+  SETUP();
+
+  // Not supported by the assembler; use dci().
+  COMPARE(dci(0x380008c3), "sttrb w3, [x6]");
+  COMPARE(dci(0x780008c3), "sttrh w3, [x6]");
+  COMPARE(dci(0xb80008c3), "sttr w3, [x6]");
+  COMPARE(dci(0xf8400823), "ldtr x3, [x1]");
+  COMPARE(dci(0x38c00bfd), "ldtrsb w29, [sp]");
+  COMPARE(dci(0x38800931), "ldtrsb x17, [x9]");
+  COMPARE(dci(0x78c0084c), "ldtrsh w12, [x2]");
+  COMPARE(dci(0x78800bf8), "ldtrsh x24, [sp]");
+  COMPARE(dci(0xb8800be5), "ldtrsw x5, [sp]");
+  COMPARE(dci(0xf80008c3), "sttr x3, [x6]");
+  COMPARE(dci(0xb8400823), "ldtr w3, [x1]");
+
+  CLEANUP();
+}
 
 TEST(load_literal_macro) {
   SETUP();
