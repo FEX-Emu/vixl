@@ -2714,6 +2714,10 @@ TEST(system_pstate) {
   COMPARE(axflag(), "axflag");
   COMPARE(xaflag(), "xaflag");
 
+  // Not supported by the assembler; use dci().
+  COMPARE(dci(0xd50342df), "msr daifset, #2");
+  COMPARE(dci(0xd5034fff), "msr daifclr, #15");
+
   CLEANUP();
 }
 

@@ -3257,6 +3257,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"ldr_z_bi"_h, "str_z_bi"_h}},
       {"ivau, 'Xt", {"ic_sys_cr_systeminstrs"_h}},
       {"'{dcop}, 'Xt", {"dc_sys_cr_systeminstrs"_h}},
+      {"'{pstatefield}, #'u1108", {"msr_si_pstate"_h}},
       {"csync", {"psb_c_hints"_h, "tsb_hc_hints"_h}},
       {"x16", {"chkfeat_hf_hints"_h}}};
 
@@ -4169,8 +4170,13 @@ int Disassembler::SubstituteGenericHash(const Instruction *instr,
       {0b011'1110'011, "cigvac"},
       {0b011'1110'101, "cigdvac"},
      }, "undefined"}
+   },
+   {"pstatefield", {{18, 17, 16, 7, 6, 5}, {
+      {0b011'110, "daifset"},
+      {0b011'111, "daifclr"},
+     }, "undefined"}
    }
-   };
+  };
   // clang-format on
 
   VIXL_ASSERT(subst.count(key) == 1);
