@@ -1578,10 +1578,10 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
        {"sqdmlal_asisdelem_l"_h,
         "sqdmlsl_asisdelem_l"_h,
         "sqdmull_asisdelem_l"_h}},
-      {"'[nshiftscal]'u0400, '[nshiftscal]'u0905, #'<u2216 8 31 u2219 clz - "
+      {"'[nshiftscal]'u0400, '[nshiftscal]'u0905, #'<u2216 8 31 u2219 clz32 - "
        "lsl ->",
        {"sqshlu_asisdshf_r"_h, "sqshl_asisdshf_r"_h, "uqshl_asisdshf_r"_h}},
-      {"'[nshiftscal]'u0400, '[nshiftscal]'u0905, #'<16 31 u2219 clz - lsl "
+      {"'[nshiftscal]'u0400, '[nshiftscal]'u0905, #'<16 31 u2219 clz32 - lsl "
        "u2216 ->",
        {"fcvtzs_asisdshf_c"_h,
         "fcvtzu_asisdshf_c"_h,
@@ -1593,8 +1593,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"'(07?j)'(06?c)", {"bti_hb_hints"_h}},
       {"'(0905=30?:'Xn)", {"ret_64r_branch_reg"_h}},
       {"'(1108=15?:#0x'x1108)", {"clrex_bn_barriers"_h}},
-      {"'(21?s:'?20:hb)'u0400, '(21?d:'?20:sh)'u0905, #'<16 31 u2219 clz - lsl "
-       "u2216 ->",
+      {"'(21?s:'?20:hb)'u0400, '(21?d:'?20:sh)'u0905, #'<16 31 u2219 clz32 - "
+       "lsl u2216 ->",
        {"sqrshrn_asisdshf_n"_h,
         "sqrshrun_asisdshf_n"_h,
         "sqshrn_asisdshf_n"_h,
@@ -1830,7 +1830,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "cmtst_asisdsame_only"_h,
         "add_asisdsame_only"_h,
         "sub_asisdsame_only"_h}},
-      {"'Dd, 'Dn, #'<16 31 u2219 clz - lsl u2216 ->",
+      {"'Dd, 'Dn, #'<16 31 u2219 clz32 - lsl u2216 ->",
        {"sri_asisdshf_r"_h,
         "srshr_asisdshf_r"_h,
         "srsra_asisdshf_r"_h,
@@ -1840,7 +1840,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ursra_asisdshf_r"_h,
         "ushr_asisdshf_r"_h,
         "usra_asisdshf_r"_h}},
-      {"'Dd, 'Dn, #'<u2216 8 31 u2219 clz - lsl ->",
+      {"'Dd, 'Dn, #'<u2216 8 31 u2219 clz32 - lsl ->",
        {"shl_asisdshf_r"_h, "sli_asisdshf_r"_h}},
       {"'Dd, 'Hn", {"fcvt_dh_floatdp1"_h}},
       {"'Dd, #'f2013", {"fmov_d_floatimm"_h}},
@@ -2503,13 +2503,13 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "saddlp_asimdmisc_p"_h,
         "uadalp_asimdmisc_p"_h,
         "uaddlp_asimdmisc_p"_h}},
-      {"'Vd.'[nshift], 'Vn.'[nshift], #'<u2216 8 31 u2219 clz - lsl ->",
+      {"'Vd.'[nshift], 'Vn.'[nshift], #'<u2216 8 31 u2219 clz32 - lsl ->",
        {"sqshlu_asimdshf_r"_h,
         "sqshl_asimdshf_r"_h,
         "uqshl_asimdshf_r"_h,
         "shl_asimdshf_r"_h,
         "sli_asimdshf_r"_h}},
-      {"'Vd.'[nshift], 'Vn.'[nshift], #'<16 31 u2219 clz - lsl u2216 ->",
+      {"'Vd.'[nshift], 'Vn.'[nshift], #'<16 31 u2219 clz32 - lsl u2216 ->",
        {"sri_asimdshf_r"_h,
         "srshr_asimdshf_r"_h,
         "srsra_asimdshf_r"_h,
@@ -2523,7 +2523,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ucvtf_asimdshf_c"_h,
         "fcvtzs_asimdshf_c"_h,
         "fcvtzu_asimdshf_c"_h}},
-      {"'Vd.'[nshift], 'Vn.'[nshiftln], #'<16 31 u2219 clz - lsl u2216 ->",
+      {"'Vd.'[nshift], 'Vn.'[nshiftln], #'<16 31 u2219 clz32 - lsl u2216 ->",
        {"shrn_asimdshf_n"_h,
         "rshrn_asimdshf_n"_h,
         "sqshrn_asimdshf_n"_h,
@@ -2545,7 +2545,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "uxtl_ushll_asimdshf_l"_h,
         "sxtl2_sshll_asimdshf_l"_h,
         "uxtl2_ushll_asimdshf_l"_h}},
-      {"'Vd.'[nshiftln], 'Vn.'[nshift], #'<u2216 8 31 u2219 clz - lsl ->",
+      {"'Vd.'[nshiftln], 'Vn.'[nshift], #'<u2216 8 31 u2219 clz32 - lsl ->",
        {"sshll_asimdshf_l"_h,
         "ushll_asimdshf_l"_h,
         "sshll2_sshll_asimdshf_l"_h,
@@ -3288,13 +3288,13 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "subhnt_z_zz"_h}},
       {"'Zd.'(17?d:'[sszlog]), 'Zd.'(17?d:'[sszlog]), 'ITriSvel",
        {"and_z_zi"_h, "eor_z_zi"_h, "orr_z_zi"_h}},
-      {"'Zd.'[sszshd], 'Zn.'[sszshs], #'<u2322_2016 1 34 u2322_2019 clz - lsl "
-       "->",
+      {"'Zd.'[sszshd], 'Zn.'[sszshs], #'<u2322_2016 1 34 u2322_2019 clz32 - "
+       "lsl ->",
        {"sshllb_z_zi"_h, "sshllt_z_zi"_h, "ushllb_z_zi"_h, "ushllt_z_zi"_h}},
       {"'Zd.'[sszshu], 'Pgl/m, 'Zd.'[sszshu], #'<u2322_0905 1 34 u2322_0908 "
-       "clz - lsl ->",
+       "clz32 - lsl ->",
        {"lsl_z_p_zi"_h, "sqshl_z_p_zi"_h, "sqshlu_z_p_zi"_h, "uqshl_z_p_zi"_h}},
-      {"'Zd.'[sszshu], 'Pgl/m, 'Zd.'[sszshu], #'<1 35 u2322_0908 clz - lsl "
+      {"'Zd.'[sszshu], 'Pgl/m, 'Zd.'[sszshu], #'<1 35 u2322_0908 clz32 - lsl "
        "u2322_0905 ->",
        {"asrd_z_p_zi"_h,
         "asr_z_p_zi"_h,
@@ -3308,8 +3308,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "sqxtunt_z_zz"_h,
         "uqxtnb_z_zz"_h,
         "uqxtnt_z_zz"_h}},
-      {"'Zd.'[sszshs], 'Zn.'[sszshd], #'<1 35 u2322_2019 clz - lsl u2322_2016 "
-       "->",
+      {"'Zd.'[sszshs], 'Zn.'[sszshd], #'<1 35 u2322_2019 clz32 - lsl "
+       "u2322_2016 ->",
        {"rshrnb_z_zi"_h,
         "rshrnt_z_zi"_h,
         "shrnb_z_zi"_h,
@@ -3326,11 +3326,11 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "uqrshrnt_z_zi"_h,
         "uqshrnb_z_zi"_h,
         "uqshrnt_z_zi"_h}},
-      {"'Zd.'[sszshs], 'Zn.'[sszshs], #'<u2322_2016 1 34 u2322_2019 clz - lsl "
-       "->",
+      {"'Zd.'[sszshs], 'Zn.'[sszshs], #'<u2322_2016 1 34 u2322_2019 clz32 - "
+       "lsl ->",
        {"lsl_z_zi"_h, "sli_z_zzi"_h}},
-      {"'Zd.'[sszshs], 'Zn.'[sszshs], #'<1 35 u2322_2019 clz - lsl u2322_2016 "
-       "->",
+      {"'Zd.'[sszshs], 'Zn.'[sszshs], #'<1 35 u2322_2019 clz32 - lsl "
+       "u2322_2016 ->",
        {"asr_z_zi"_h,
         "lsr_z_zi"_h,
         "sri_z_zzi"_h,
@@ -3338,8 +3338,8 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "ssra_z_zi"_h,
         "ursra_z_zi"_h,
         "usra_z_zi"_h}},
-      {"'Zd.'[sszshs], 'Zd.'[sszshs], 'Zn.'[sszshs], #'<1 35 u2322_2019 clz - "
-       "lsl u2322_2016 ->",
+      {"'Zd.'[sszshs], 'Zd.'[sszshs], 'Zn.'[sszshs], #'<1 35 u2322_2019 clz32 "
+       "- lsl u2322_2016 ->",
        {"xar_z_zzi"_h}},
       {"'Zd.b, 'Zd.b", {"aesimc_z_z"_h, "aesmc_z_z"_h}},
       {"'Zd.b, 'Zd.b, 'Zn.b", {"aesd_z_zz"_h, "aese_z_zz"_h}},
@@ -5175,7 +5175,7 @@ bool HandleUnaryExpression(ExprStack *s, const std::string &op) {
   uint64_t r = s->top();
   s->pop();
 
-  if (op == "clz") {
+  if (op == "clz32") {
     s->push(CountLeadingZeros(r, 32));
   } else if (op == "ctz") {
     s->push(CountTrailingZeros(r, 32));
