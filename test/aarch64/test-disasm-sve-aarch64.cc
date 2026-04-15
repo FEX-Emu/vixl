@@ -234,23 +234,23 @@ TEST(sve_bitwise_imm) {
   // Mov alias for dupm.
   COMPARE(mov(z0.VnH(), 0xf00f), "mov z0.h, #0xf00f");
   COMPARE_MACRO(Mov(z11.VnS(), 0xe0000003), "mov z11.s, #0xe0000003");
-  COMPARE_MACRO(Mov(z22.VnD(), 0x8000), "dupm z22.d, #0x8000");
+  COMPARE_MACRO(Mov(z22.VnD(), 0x8000), "mov z22.d, #0x8000");
 
   // Test dupm versus mov disassembly.
-  COMPARE(dupm(z0.VnH(), 0xfe), "dupm z0.h, #0xfe");
-  COMPARE(dupm(z0.VnH(), 0xff), "dupm z0.h, #0xff");
+  COMPARE(dupm(z0.VnH(), 0xfe), "mov z0.h, #0xfe");
+  COMPARE(dupm(z0.VnH(), 0xff), "mov z0.h, #0xff");
   COMPARE(dupm(z0.VnH(), 0x1fe), "mov z0.h, #0x1fe");
   COMPARE(dupm(z0.VnH(), 0xfe00), "dupm z0.h, #0xfe00");
   COMPARE(dupm(z0.VnH(), 0xfe01), "mov z0.h, #0xfe01");
-  COMPARE(dupm(z0.VnS(), 0xfe00), "dupm z0.s, #0xfe00");
+  COMPARE(dupm(z0.VnS(), 0xfe00), "mov z0.s, #0xfe00");
   COMPARE(dupm(z0.VnS(), 0xfe000001), "mov z0.s, #0xfe000001");
   COMPARE(dupm(z0.VnS(), 0xffffff00), "dupm z0.s, #0xffffff00");
-  COMPARE(dupm(z0.VnS(), 0xffffff01), "dupm z0.s, #0xffffff01");
+  COMPARE(dupm(z0.VnS(), 0xffffff01), "mov z0.s, #0xffffff01");
   COMPARE(dupm(z0.VnS(), 0xfffffe01), "mov z0.s, #0xfffffe01");
   COMPARE(dupm(z0.VnS(), 0xfff), "mov z0.s, #0xfff");
   COMPARE(dupm(z0.VnD(), 0xffffffffffffff00), "dupm z0.d, #0xffffffffffffff00");
   COMPARE(dupm(z0.VnD(), 0x7fffffffffffff80), "mov z0.d, #0x7fffffffffffff80");
-  COMPARE(dupm(z0.VnD(), 0x8000), "dupm z0.d, #0x8000");
+  COMPARE(dupm(z0.VnD(), 0xffffffffffff8000), "dupm z0.d, #0xffffffffffff8000");
   COMPARE(dupm(z0.VnD(), 0x10000), "mov z0.d, #0x10000");
 
   CLEANUP();

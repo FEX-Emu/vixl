@@ -3925,6 +3925,8 @@ void Disassembler::VisitSVEBitwiseShiftByWideElements_Predicated(
   }
 }
 
+// Check if this move can be achieved with a mov (dup) instruction. Returns true
+// if "mov" is the preferred disassembly, false for "dupm".
 static bool SVEMoveMaskPreferred(uint64_t value, int lane_bytes_log2) {
   VIXL_ASSERT(IsUintN(8 << lane_bytes_log2, value));
 
@@ -3946,54 +3948,40 @@ static bool SVEMoveMaskPreferred(uint64_t value, int lane_bytes_log2) {
   }
 
   if ((value & 0xff) == 0) {
-    // Check for 16-bit patterns. Set least-significant 16 bits, to make tests
-    // easier; we already checked least-significant byte is zero above.
-    uint64_t generic_value = value | 0xffff;
-
-    // Check 0x00000000_0000pq00 or 0xffffffff_ffffpq00.
-    if ((generic_value == 0xffff) || (generic_value == UINT64_MAX)) {
+    // mov z.d, #signed_16bit_imm
+    if (value == SignExtend(value, 16)) {
       return false;
     }
 
-    // Check 0x0000pq00_0000pq00 or 0xffffpq00_ffffpq00.
-    if (AllWordsMatch(value)) {
-      generic_value &= 0xffffffff;
-      if ((generic_value == 0xffff) || (generic_value == UINT32_MAX)) {
-        return false;
-      }
+    // mov z.s, #signed_16bit_imm
+    uint32_t value32 = static_cast<uint32_t>(value);
+    if (AllWordsMatch(value) && (value32 == SignExtend(value32, 16))) {
+      return false;
     }
 
-    // Check 0xpq00pq00_pq00pq00.
+    // mov z.h, #signed_16bit_imm
     if (AllHalfwordsMatch(value)) {
       return false;
     }
   } else {
-    // Check for 8-bit patterns. Set least-significant byte, to make tests
-    // easier.
-    uint64_t generic_value = value | 0xff;
-
-    // Check 0x00000000_000000pq or 0xffffffff_ffffffpq.
-    if ((generic_value == 0xff) || (generic_value == UINT64_MAX)) {
+    // mov z.d, #signed_8bit_imm
+    if (value == SignExtend(value, 8)) {
       return false;
     }
 
-    // Check 0x000000pq_000000pq or 0xffffffpq_ffffffpq.
-    if (AllWordsMatch(value)) {
-      generic_value &= 0xffffffff;
-      if ((generic_value == 0xff) || (generic_value == UINT32_MAX)) {
-        return false;
-      }
+    // mov z.s, #signed_8bit_imm
+    uint32_t value32 = static_cast<uint32_t>(value);
+    if (AllWordsMatch(value) && (value32 == SignExtend(value32, 8))) {
+      return false;
     }
 
-    // Check 0x00pq00pq_00pq00pq or 0xffpqffpq_ffpqffpq.
-    if (AllHalfwordsMatch(value)) {
-      generic_value &= 0xffff;
-      if ((generic_value == 0xff) || (generic_value == UINT16_MAX)) {
-        return false;
-      }
+    // mov z.h, #signed_8bit_imm
+    uint16_t value16 = static_cast<uint16_t>(value);
+    if (AllHalfwordsMatch(value) && (value16 == SignExtend(value16, 8))) {
+      return false;
     }
 
-    // Check 0xpqpqpqpq_pqpqpqpq.
+    // mov z.b, #signed_8bit_imm
     if (AllBytesMatch(value)) {
       return false;
     }
