@@ -30,6 +30,8 @@
 #include <list>
 #include <map>
 #include <string>
+#include <unordered_map>
+#include <unordered_set>
 
 #include "../globals-vixl.h"
 
@@ -317,7 +319,10 @@ class CompiledDecodeNode;
 // handles the instruction.
 class Decoder {
  public:
-  Decoder() { ConstructDecodeGraph(); }
+  Decoder() {
+    ConstructDecodeGraph();
+    PopulatePerInstructionUnallocatedMap(&form_to_unalloc_);
+  }
 
   // Top-level wrappers around the actual decoding function.
   void Decode(const Instruction* instr);
@@ -398,6 +403,13 @@ class Decoder {
 
   // Map of node names to DecodeNodes.
   std::map<std::string, DecodeNode> decode_nodes_;
+
+  // Map from instruction form strings to a mask/value of encodings for that
+  // form.
+  using FormToUnallocMap = std::unordered_multimap<uint32_t, uint64_t>;
+  FormToUnallocMap form_to_unalloc_;
+
+  static void PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm);
 };
 
 typedef void (Decoder::*DecodeFnPtr)(const Instruction*);

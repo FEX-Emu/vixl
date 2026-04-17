@@ -29,7 +29,6 @@
 
 #include <functional>
 #include <unordered_map>
-#include <unordered_set>
 #include <utility>
 
 #include "../globals-vixl.h"
@@ -128,10 +127,6 @@ class Disassembler : public DecoderVisitor {
   using FormToStringMap = std::unordered_map<uint32_t, const char*>;
   static void PopulateFormToStringMap(FormToStringMap* fts);
 
-  using FormToUnallocMap = std::unordered_multimap<uint32_t, uint64_t>;
-  static void PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm);
-
-  FormToUnallocMap form_to_unalloc_;
   FormToStringMap form_to_string_;
   std::string mnemonic_;
   uint32_t form_hash_;

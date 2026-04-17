@@ -2305,6 +2305,12 @@ void Simulator::PrintTakenBranch(const Instruction* target) {
 
 void Simulator::Visit(Metadata* metadata, const Instruction* instr) {
   VIXL_ASSERT(metadata->count("form") > 0);
+  // Check for unallocated encodings.
+  if (metadata->count("unallocated") > 0) {
+    VisitUnallocated(instr);
+    return;
+  }
+
   std::string form = (*metadata)["form"];
   form_hash_ = Hash(form.c_str());
   const FormToVisitorFnMap* fv = Simulator::GetFormToVisitorFnMap();
@@ -6059,14 +6065,6 @@ void Simulator::VisitBitfield(const Instruction* instr) {
   int R = instr->GetImmR();
   int S = instr->GetImmS();
 
-  if (instr->GetSixtyFourBits() != instr->GetBitN()) {
-    VisitUnallocated(instr);
-  }
-
-  if ((instr->GetSixtyFourBits() == 0) && ((S > 31) || (R > 31))) {
-    VisitUnallocated(instr);
-  }
-
   int diff = S - R;
   uint64_t mask;
   if (diff >= 0) {
@@ -8314,20 +8312,12 @@ void Simulator::VisitNEON3Different(const Instruction* instr) {
 
   switch (instr->Mask(NEON3DifferentMask)) {
     case NEON_PMULL:
-      if ((size == 1) || (size == 2)) {  // S/D reserved.
-        VisitUnallocated(instr);
-      } else {
-        if (size == 3) vf_l = kFormat1Q;
-        pmull(vf_l, rd, rn, rm);
-      }
+      if (size == 3) vf_l = kFormat1Q;
+      pmull(vf_l, rd, rn, rm);
       break;
     case NEON_PMULL2:
-      if ((size == 1) || (size == 2)) {  // S/D reserved.
-        VisitUnallocated(instr);
-      } else {
-        if (size == 3) vf_l = kFormat1Q;
-        pmull2(vf_l, rd, rn, rm);
-      }
+      if (size == 3) vf_l = kFormat1Q;
+      pmull2(vf_l, rd, rn, rm);
       break;
     case NEON_UADDL:
       uaddl(vf_l, rd, rn, rm);
@@ -9323,9 +9313,6 @@ void Simulator::VisitNEONModifiedImmediate(const Instruction* instr) {
         } else if (q == 1) {
           vform = kFormat2D;
           imm = DoubleToRawbits(instr->GetImmNEONFP64());
-        } else {
-          VIXL_ASSERT((q == 0) && (op_bit == 1) && (cmode == 0xf));
-          VisitUnallocated(instr);
         }
       }
       break;
@@ -9822,23 +9809,11 @@ void Simulator::VisitNEONScalarByIndexedElement(const Instruction* instr) {
   }
 
   switch (form_hash_) {
-    case "sqdmull_asisdelem_l"_h:
-    case "sqdmlal_asisdelem_l"_h:
-    case "sqdmlsl_asisdelem_l"_h:
-      if ((vf == kFormatB) || (vf == kFormatH)) {
-        VisitUnallocated(instr);
-        return;
-      }
-      break;
     case "sqdmulh_asisdelem_r"_h:
     case "sqrdmulh_asisdelem_r"_h:
     case "sqrdmlah_asisdelem_r"_h:
     case "sqrdmlsh_asisdelem_r"_h:
       vf = nfd.GetVectorFormat(nfd.ScalarFormatMap());
-      if ((vf == kFormatB) || (vf == kFormatD)) {
-        VisitUnallocated(instr);
-        return;
-      }
       break;
     case "fmul_asisdelem_r_sd"_h:
     case "fmla_asisdelem_r_sd"_h:
