@@ -383,6 +383,14 @@ TEST(fcvt_scvtf_ucvtf) {
   COMPARE(fcvtmu(w8, h9), "fcvtmu w8, h9");
   COMPARE(fcvtmu(x10, h11), "fcvtmu x10, h11");
 
+  // Check unallocated [su]cvtf encodings.
+  COMPARE(dci(0x1e030000), "unallocated (Unallocated)");
+  COMPARE(dci(0x1e430000), "unallocated (Unallocated)");
+  COMPARE(dci(0x1ec30000), "unallocated (Unallocated)");
+  COMPARE(dci(0x3e030000), "unallocated (Unallocated)");
+  COMPARE(dci(0x3e430000), "unallocated (Unallocated)");
+  COMPARE(dci(0x3ec30000), "unallocated (Unallocated)");
+
   CLEANUP();
 }
 
