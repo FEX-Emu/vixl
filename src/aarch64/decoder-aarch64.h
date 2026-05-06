@@ -489,7 +489,7 @@ class CompiledDecodeNode {
   bool IsLeafNode() const {
     VIXL_ASSERT(((instruction_name_ == "node") && (bit_extract_fn_ != NULL)) ||
                 ((instruction_name_ != "node") && (bit_extract_fn_ == NULL)));
-    return instruction_name_ != "node";
+    return bit_extract_fn_ == NULL;
   }
 
   // Get a pointer to the next node required in the decode process, based on the
