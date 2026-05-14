@@ -457,20 +457,18 @@ class CompiledDecodeNode {
   CompiledDecodeNode(BitExtractFn bit_extract_fn, size_t decode_table_size)
       : bit_extract_fn_(bit_extract_fn),
         instruction_name_("node"),
-        decode_table_size_(decode_table_size),
-        decoder_(NULL) {
+        decode_table_size_(decode_table_size) {
     decode_table_ = new CompiledDecodeNode*[decode_table_size_];
     memset(decode_table_, 0, decode_table_size_ * sizeof(decode_table_[0]));
   }
 
   // Constructor for wrappers around visitor functions. These require no
   // decoding, so no bit extraction function or decode table is assigned.
-  explicit CompiledDecodeNode(std::string iname, Decoder* decoder)
+  explicit CompiledDecodeNode(std::string iname)
       : bit_extract_fn_(NULL),
         instruction_name_(iname),
         decode_table_(NULL),
-        decode_table_size_(0),
-        decoder_(decoder) {}
+        decode_table_size_(0) {}
 
   ~CompiledDecodeNode() VIXL_NEGATIVE_TESTING_ALLOW_EXCEPTION {
     // Free the decode table, if this is a compiled, non-leaf node.
@@ -483,7 +481,7 @@ class CompiledDecodeNode {
   // Decode the instruction by either sampling the bits using the bit extract
   // function to find the next node, or, if we're at a leaf, calling the visitor
   // function.
-  void Decode(const Instruction* instr) const;
+  void Decode(const Instruction* instr, Decoder* decoder) const;
 
   // A leaf node is a wrapper for a visitor function.
   bool IsLeafNode() const {
@@ -519,10 +517,6 @@ class CompiledDecodeNode {
   // Mapping table from instruction bits to next decode stage.
   CompiledDecodeNode** decode_table_;
   const size_t decode_table_size_;
-
-  // Pointer to the decoder containing this node, used to call its visitor
-  // function for leaf nodes. Set to NULL for non-leaf nodes.
-  Decoder* decoder_;
 };
 
 class DecodeNode {
@@ -535,21 +529,19 @@ class DecodeNode {
 
   // Constructor for DecodeNode wrappers around visitor functions. These are
   // marked as "compiled", as there is no decoding left to do.
-  explicit DecodeNode(const std::string& iname, Decoder* decoder)
+  explicit DecodeNode(const std::string& iname)
       : name_(iname),
         sampled_bits_(DecodeNode::kEmptySampledBits),
         instruction_name_(iname),
         pattern_table_(DecodeNode::kEmptyPatternTable),
-        decoder_(decoder),
         compiled_node_(NULL) {}
 
   // Constructor for DecodeNodes that map bit patterns to other DecodeNodes.
-  explicit DecodeNode(const DecodeMapping& map, Decoder* decoder = NULL)
+  explicit DecodeNode(const DecodeMapping& map)
       : name_(map.name),
         sampled_bits_(map.sampled_bits),
         instruction_name_("node"),
         pattern_table_(map.mapping),
-        decoder_(decoder),
         compiled_node_(NULL) {
     // With the current two bits per symbol encoding scheme, the maximum pattern
     // length is (32 - 2) / 2 = 15 bits.
@@ -589,7 +581,7 @@ class DecodeNode {
   // Create a CompiledDecodeNode wrapping a visitor function. No decoding is
   // required for this node; the visitor function is called instead.
   void CreateVisitorNode() {
-    compiled_node_ = new CompiledDecodeNode(instruction_name_, decoder_);
+    compiled_node_ = new CompiledDecodeNode(instruction_name_);
   }
 
   // Find and compile the DecodeNode named "name", and set it as the node for
@@ -697,10 +689,6 @@ class DecodeNode {
   // Source mapping from bit pattern to name of next decode stage.
   const std::vector<DecodePattern>& pattern_table_;
   static const std::vector<DecodePattern> kEmptyPatternTable;
-
-  // Pointer to the decoder containing this node, used to call its visitor
-  // function for leaf nodes.
-  Decoder* decoder_;
 
   // Pointer to the compiled version of this node. Is this node hasn't been
   // compiled yet, this pointer is NULL.

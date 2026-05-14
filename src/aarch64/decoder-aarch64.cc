@@ -42,11 +42,11 @@ void Decoder::Decode(const Instruction* instr) {
     VIXL_ASSERT((*it)->IsConstVisitor());
   }
   VIXL_ASSERT(compiled_decoder_root_ != NULL);
-  compiled_decoder_root_->Decode(instr);
+  compiled_decoder_root_->Decode(instr, this);
 }
 
 void Decoder::Decode(Instruction* instr) {
-  compiled_decoder_root_->Decode(const_cast<const Instruction*>(instr));
+  compiled_decoder_root_->Decode(const_cast<const Instruction*>(instr), this);
 }
 
 void Decoder::AddDecodeNode(const DecodeNode& node) {
@@ -66,7 +66,7 @@ DecodeNode* Decoder::GetDecodeNode(std::string name) {
 void Decoder::ConstructDecodeGraph() {
   // Add all of the decoding nodes to the Decoder.
   for (unsigned i = 0; i < ArrayLength(kDecodeMapping); i++) {
-    AddDecodeNode(DecodeNode(kDecodeMapping[i], this));
+    AddDecodeNode(DecodeNode(kDecodeMapping[i]));
 
     // Add a node for each instruction form named, identified by having no '_'
     // prefix on the node name.
@@ -74,14 +74,14 @@ void Decoder::ConstructDecodeGraph() {
     for (unsigned j = 0; j < map.mapping.size(); j++) {
       if ((map.mapping[j].handler != NULL) &&
           (map.mapping[j].handler[0] != '_')) {
-        AddDecodeNode(DecodeNode(map.mapping[j].handler, this));
+        AddDecodeNode(DecodeNode(map.mapping[j].handler));
       }
     }
   }
 
   // Add an "unallocated" node, used when an instruction encoding is not
   // recognised by the decoding graph.
-  AddDecodeNode(DecodeNode("unallocated", this));
+  AddDecodeNode(DecodeNode("unallocated"));
 
   // Compile the graph from the root.
   compiled_decoder_root_ = GetDecodeNode("Root")->Compile(this);
@@ -1351,18 +1351,19 @@ CompiledDecodeNode* DecodeNode::Compile(Decoder* decoder) {
   return compiled_node_;
 }
 
-void CompiledDecodeNode::Decode(const Instruction* instr) const {
+void CompiledDecodeNode::Decode(const Instruction* instr,
+                                Decoder* decoder) const {
   if (IsLeafNode()) {
     // If this node is a leaf, call the registered visitor function.
-    VIXL_ASSERT(decoder_ != NULL);
-    decoder_->VisitNamedInstruction(instr, instruction_name_);
+    VIXL_ASSERT(decoder != NULL);
+    decoder->VisitNamedInstruction(instr, instruction_name_);
   } else {
     // Otherwise, using the sampled bit extractor for this node, look up the
     // next node in the decode tree, and call its Decode method.
     VIXL_ASSERT(bit_extract_fn_ != NULL);
     VIXL_ASSERT((instr->*bit_extract_fn_)() < decode_table_size_);
     VIXL_ASSERT(decode_table_[(instr->*bit_extract_fn_)()] != NULL);
-    decode_table_[(instr->*bit_extract_fn_)()]->Decode(instr);
+    decode_table_[(instr->*bit_extract_fn_)()]->Decode(instr, decoder);
   }
 }
 
