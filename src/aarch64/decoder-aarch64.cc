@@ -142,6 +142,7 @@ void Decoder::VisitNamedInstruction(const Instruction* instr,
 
   // If an encoding is unallocated for this form, add the information to the
   // metadata.
+  VIXL_ASSERT(form_to_unalloc_.size() > 0);
   auto range = form_to_unalloc_.equal_range(form_hash);
   for (auto itu = range.first; itu != range.second; ++itu) {
     uint32_t mask = itu->second >> 32;

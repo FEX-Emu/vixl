@@ -29,6 +29,7 @@
 
 #include <list>
 #include <map>
+#include <mutex>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -320,8 +321,14 @@ class CompiledDecodeNode;
 class Decoder {
  public:
   Decoder() {
-    ConstructDecodeGraph();
-    PopulatePerInstructionUnallocatedMap(&form_to_unalloc_);
+    std::lock_guard<std::mutex> guard(decoder_mtx_);
+
+    if (compiled_decoder_root_ == NULL) {
+      ConstructDecodeGraph();
+
+      VIXL_ASSERT(form_to_unalloc_.size() == 0);
+      PopulatePerInstructionUnallocatedMap(&form_to_unalloc_);
+    }
   }
 
   // Top-level wrappers around the actual decoding function.
@@ -399,15 +406,16 @@ class Decoder {
 
   // Root node for the compiled decoder graph, stored here to avoid a map lookup
   // for every instruction decoded.
-  CompiledDecodeNode* compiled_decoder_root_;
+  inline static CompiledDecodeNode* compiled_decoder_root_ = NULL;
+  inline static std::mutex decoder_mtx_;
 
   // Map of node names to DecodeNodes.
-  std::map<std::string, DecodeNode> decode_nodes_;
+  inline static std::map<std::string, DecodeNode> decode_nodes_;
 
   // Map from instruction form strings to a mask/value of encodings for that
   // form.
   using FormToUnallocMap = std::unordered_multimap<uint32_t, uint64_t>;
-  FormToUnallocMap form_to_unalloc_;
+  inline static FormToUnallocMap form_to_unalloc_;
 
   static void PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm);
 };
