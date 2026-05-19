@@ -387,7 +387,7 @@ class Decoder {
   std::list<DecoderVisitor*>* visitors() { return &visitors_; }
 
   // Get a DecodeNode by name from the Decoder's map.
-  DecodeNode* GetDecodeNode(std::string name);
+  DecodeNode* GetDecodeNode(const std::string& name);
 
  private:
   // Decodes an instruction and calls the visitor functions registered with the
@@ -594,7 +594,9 @@ class DecodeNode {
 
   // Find and compile the DecodeNode named "name", and set it as the node for
   // the pattern "bits".
-  void CompileNodeForBits(Decoder* decoder, std::string name, uint32_t bits);
+  void CompileNodeForBits(Decoder* decoder,
+                          const std::string& name,
+                          uint32_t bits);
 
   // Get a pointer to an instruction method that extracts the instruction bits
   // specified by the mask argument, and returns those sampled bits as a
@@ -654,21 +656,11 @@ class DecodeNode {
 
  private:
   // Generate a mask and value pair from a pattern constructed from 0, 1 and x
-  // (don't care) 2-bit symbols.
-  // For example "10x1"_b should return mask = 0b1101, value = 0b1001.
+  // (don't care) 2-bit symbols and ordered by sampled bit position.
+  // The symbol corresponding to the lowest sample position is placed in the
+  // least-significant bits of the generated mask/value pair.
   typedef std::pair<Instr, Instr> MaskValuePair;
   MaskValuePair GenerateMaskValuePair(uint32_t pattern) const;
-
-  // Generate a pattern ordered by the bit positions sampled by this node.
-  // The symbol corresponding to the lowest sample position is placed in the
-  // least-significant bits of the result pattern.
-  // For example, a pattern of "1x0"_b expected when sampling bits 31, 1 and 30
-  // returns the pattern "x01"_b; bit 1 should be 'x', bit 30 '0' and bit 31
-  // '1'.
-  // This output makes comparisons easier between the pattern and bits sampled
-  // from an instruction using the fast "compress" algorithm. See
-  // Instruction::Compress().
-  uint32_t GenerateOrderedPattern(uint32_t pattern) const;
 
   // Generate a mask with a bit set at each sample position.
   uint32_t GenerateSampledBitsMask() const;

@@ -55,12 +55,14 @@ void Decoder::AddDecodeNode(const DecodeNode& node) {
   }
 }
 
-DecodeNode* Decoder::GetDecodeNode(std::string name) {
+DecodeNode* Decoder::GetDecodeNode(const std::string& name) {
+#ifdef VIXL_DEBUG
   if (decode_nodes_.count(name) != 1) {
     std::string msg = "Can't find decode node " + name + ".\n";
     VIXL_ABORT_WITH_MSG(msg.c_str());
   }
-  return &decode_nodes_[name];
+#endif
+  return &decode_nodes_.at(name);
 }
 
 void Decoder::ConstructDecodeGraph() {
@@ -1007,7 +1009,7 @@ const std::vector<uint8_t> DecodeNode::kEmptySampledBits;
 const std::vector<DecodePattern> DecodeNode::kEmptyPatternTable;
 
 void DecodeNode::CompileNodeForBits(Decoder* decoder,
-                                    std::string name,
+                                    const std::string& name,
                                     uint32_t bits) {
   DecodeNode* n = decoder->GetDecodeNode(name);
   VIXL_ASSERT(n != NULL);
@@ -1328,8 +1330,7 @@ CompiledDecodeNode* DecodeNode::Compile(Decoder* decoder) {
     // has a corresponding mask and value for the pattern.
     std::vector<MaskValuePair> matches;
     for (size_t i = 0; i < pattern_table_.size(); i++) {
-      matches.push_back(GenerateMaskValuePair(
-          GenerateOrderedPattern(pattern_table_[i].pattern)));
+      matches.push_back(GenerateMaskValuePair(pattern_table_[i].pattern));
     }
 
     BitExtractFn bit_extract_fn =
@@ -1385,16 +1386,6 @@ void CompiledDecodeNode::Decode(const Instruction* instr,
 
 DecodeNode::MaskValuePair DecodeNode::GenerateMaskValuePair(
     uint32_t pattern) const {
-  uint32_t mask = 0, value = 0;
-  for (size_t i = 0; i < GetPatternLength(pattern); i++) {
-    PatternSymbol sym = GetSymbolAt(pattern, i);
-    mask = (mask << 1) | ((sym == PatternSymbol::kSymbolX) ? 0 : 1);
-    value = (value << 1) | (static_cast<uint32_t>(sym) & 1);
-  }
-  return std::make_pair(mask, value);
-}
-
-uint32_t DecodeNode::GenerateOrderedPattern(uint32_t pattern) const {
   const std::vector<uint8_t>& sampled_bits = GetSampledBits();
   uint64_t temp = 0xffffffffffffffff;
 
@@ -1406,25 +1397,20 @@ uint32_t DecodeNode::GenerateOrderedPattern(uint32_t pattern) const {
     temp |= static_cast<uint64_t>(GetSymbolAt(pattern, i)) << shift;
   }
 
-  // Iterate over temp and extract new pattern ordered by sample position.
-  uint32_t result = kEndOfPattern;  // End of pattern marker.
-
-  // Iterate over the pattern one symbol (two bits) at a time.
+  // Iterate over temp in sample position order, constructing mask/value.
+  uint32_t mask = 0, value = 0;
   for (int i = 62; i >= 0; i -= 2) {
     uint32_t sym = (temp >> i) & kPatternSymbolMask;
-
-    // If this is a valid symbol, shift into the result.
     if (sym != kEndOfPattern) {
-      result = (result << 2) | sym;
+      PatternSymbol pattern_symbol = static_cast<PatternSymbol>(sym);
+      mask =
+          (mask << 1) | ((pattern_symbol == PatternSymbol::kSymbolX) ? 0 : 1);
+      value = (value << 1) | (sym & 1);
     }
   }
 
-  // The length of the ordered pattern must be the same as the input pattern,
-  // and the number of sampled bits.
-  VIXL_ASSERT(GetPatternLength(result) == GetPatternLength(pattern));
-  VIXL_ASSERT(GetPatternLength(result) == sampled_bits.size());
-
-  return result;
+  VIXL_ASSERT(GetPatternLength(pattern) == sampled_bits.size());
+  return std::make_pair(mask, value);
 }
 
 uint32_t DecodeNode::GenerateSampledBitsMask() const {
