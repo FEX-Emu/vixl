@@ -309,116 +309,7 @@ class DecoderVisitor {
   const VisitorConstness constness_;
 };
 
-class DecodeNode;
-class CompiledDecodeNode;
-
-// The instruction decoder is constructed from a graph of decode nodes. At each
-// node, a number of bits are sampled from the instruction being decoded. The
-// resulting value is used to look up the next node in the graph, which then
-// samples other bits, and moves to other decode nodes. Eventually, a visitor
-// node is reached, and the corresponding visitor function is called, which
-// handles the instruction.
-class Decoder {
- public:
-  Decoder() {
-    std::lock_guard<std::mutex> guard(decoder_mtx_);
-
-    if (compiled_decoder_root_ == NULL) {
-      ConstructDecodeGraph();
-
-      VIXL_ASSERT(form_to_unalloc_.size() == 0);
-      PopulatePerInstructionUnallocatedMap(&form_to_unalloc_);
-    }
-  }
-
-  // Top-level wrappers around the actual decoding function.
-  void Decode(const Instruction* instr);
-  void Decode(Instruction* instr);
-
-  // Decode all instructions from start (inclusive) to end (exclusive).
-  template <typename T>
-  void Decode(T start, T end) {
-    for (T instr = start; instr < end; instr = instr->GetNextInstruction()) {
-      Decode(instr);
-    }
-  }
-
-  // Register a new visitor class with the decoder.
-  // Decode() will call the corresponding visitor method from all registered
-  // visitor classes when decoding reaches the leaf node of the instruction
-  // decode tree.
-  // Visitors are called in order.
-  // A visitor can be registered multiple times.
-  //
-  //   d.AppendVisitor(V1);
-  //   d.AppendVisitor(V2);
-  //   d.PrependVisitor(V2);
-  //   d.AppendVisitor(V3);
-  //
-  //   d.Decode(i);
-  //
-  // will call in order visitor methods in V2, V1, V2, V3.
-  void AppendVisitor(DecoderVisitor* visitor);
-  void PrependVisitor(DecoderVisitor* visitor);
-  // These helpers register `new_visitor` before or after the first instance of
-  // `registered_visiter` in the list.
-  // So if
-  //   V1, V2, V1, V2
-  // are registered in this order in the decoder, calls to
-  //   d.InsertVisitorAfter(V3, V1);
-  //   d.InsertVisitorBefore(V4, V2);
-  // will yield the order
-  //   V1, V3, V4, V2, V1, V2
-  //
-  // For more complex modifications of the order of registered visitors, one can
-  // directly access and modify the list of visitors via the `visitors()'
-  // accessor.
-  void InsertVisitorBefore(DecoderVisitor* new_visitor,
-                           DecoderVisitor* registered_visitor);
-  void InsertVisitorAfter(DecoderVisitor* new_visitor,
-                          DecoderVisitor* registered_visitor);
-
-  // Remove all instances of a previously registered visitor class from the list
-  // of visitors stored by the decoder.
-  void RemoveVisitor(DecoderVisitor* visitor);
-
-  void VisitNamedInstruction(const Instruction* instr, const std::string& name);
-
-  std::list<DecoderVisitor*>* visitors() { return &visitors_; }
-
-  // Get a DecodeNode by name from the Decoder's map.
-  DecodeNode* GetDecodeNode(const std::string& name);
-
- private:
-  // Decodes an instruction and calls the visitor functions registered with the
-  // Decoder class.
-  void DecodeInstruction(const Instruction* instr);
-
-  // Add an initialised DecodeNode to the decode_node_ map.
-  void AddDecodeNode(const DecodeNode& node);
-
-  // Visitors are registered in a list.
-  std::list<DecoderVisitor*> visitors_;
-
-  // Compile the dynamically generated decode graph based on the static
-  // information in kDecodeMapping and kVisitorNodes.
-  void ConstructDecodeGraph();
-
-  // Root node for the compiled decoder graph, stored here to avoid a map lookup
-  // for every instruction decoded.
-  inline static CompiledDecodeNode* compiled_decoder_root_ = NULL;
-  inline static std::mutex decoder_mtx_;
-
-  // Map of node names to DecodeNodes.
-  inline static std::map<std::string, DecodeNode> decode_nodes_;
-
-  // Map from instruction form strings to a mask/value of encodings for that
-  // form.
-  using FormToUnallocMap = std::unordered_multimap<uint32_t, uint64_t>;
-  inline static FormToUnallocMap form_to_unalloc_;
-
-  static void PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm);
-};
+class Decoder;
 
 typedef void (Decoder::*DecodeFnPtr)(const Instruction*);
 typedef uint32_t (Instruction::*BitExtractFn)(void) const;
@@ -693,6 +584,114 @@ class DecodeNode {
   // Pointer to the compiled version of this node. Is this node hasn't been
   // compiled yet, this pointer is NULL.
   CompiledDecodeNode* compiled_node_;
+};
+
+// The instruction decoder is constructed from a graph of decode nodes. At each
+// node, a number of bits are sampled from the instruction being decoded. The
+// resulting value is used to look up the next node in the graph, which then
+// samples other bits, and moves to other decode nodes. Eventually, a visitor
+// node is reached, and the corresponding visitor function is called, which
+// handles the instruction.
+class Decoder {
+ public:
+  Decoder() {
+    std::lock_guard<std::mutex> guard(decoder_mtx_);
+
+    if (compiled_decoder_root_ == NULL) {
+      ConstructDecodeGraph();
+
+      VIXL_ASSERT(form_to_unalloc_.size() == 0);
+      PopulatePerInstructionUnallocatedMap(&form_to_unalloc_);
+    }
+  }
+
+  // Top-level wrappers around the actual decoding function.
+  void Decode(const Instruction* instr);
+  void Decode(Instruction* instr);
+
+  // Decode all instructions from start (inclusive) to end (exclusive).
+  template <typename T>
+  void Decode(T start, T end) {
+    for (T instr = start; instr < end; instr = instr->GetNextInstruction()) {
+      Decode(instr);
+    }
+  }
+
+  // Register a new visitor class with the decoder.
+  // Decode() will call the corresponding visitor method from all registered
+  // visitor classes when decoding reaches the leaf node of the instruction
+  // decode tree.
+  // Visitors are called in order.
+  // A visitor can be registered multiple times.
+  //
+  //   d.AppendVisitor(V1);
+  //   d.AppendVisitor(V2);
+  //   d.PrependVisitor(V2);
+  //   d.AppendVisitor(V3);
+  //
+  //   d.Decode(i);
+  //
+  // will call in order visitor methods in V2, V1, V2, V3.
+  void AppendVisitor(DecoderVisitor* visitor);
+  void PrependVisitor(DecoderVisitor* visitor);
+  // These helpers register `new_visitor` before or after the first instance of
+  // `registered_visiter` in the list.
+  // So if
+  //   V1, V2, V1, V2
+  // are registered in this order in the decoder, calls to
+  //   d.InsertVisitorAfter(V3, V1);
+  //   d.InsertVisitorBefore(V4, V2);
+  // will yield the order
+  //   V1, V3, V4, V2, V1, V2
+  //
+  // For more complex modifications of the order of registered visitors, one can
+  // directly access and modify the list of visitors via the `visitors()'
+  // accessor.
+  void InsertVisitorBefore(DecoderVisitor* new_visitor,
+                           DecoderVisitor* registered_visitor);
+  void InsertVisitorAfter(DecoderVisitor* new_visitor,
+                          DecoderVisitor* registered_visitor);
+
+  // Remove all instances of a previously registered visitor class from the list
+  // of visitors stored by the decoder.
+  void RemoveVisitor(DecoderVisitor* visitor);
+
+  void VisitNamedInstruction(const Instruction* instr, const std::string& name);
+
+  std::list<DecoderVisitor*>* visitors() { return &visitors_; }
+
+  // Get a DecodeNode by name from the Decoder's map.
+  DecodeNode* GetDecodeNode(const std::string& name);
+
+ private:
+  // Decodes an instruction and calls the visitor functions registered with the
+  // Decoder class.
+  void DecodeInstruction(const Instruction* instr);
+
+  // Add an initialised DecodeNode to the decode_node_ map.
+  void AddDecodeNode(const DecodeNode& node);
+
+  // Visitors are registered in a list.
+  std::list<DecoderVisitor*> visitors_;
+
+  // Compile the dynamically generated decode graph based on the static
+  // information in kDecodeMapping and kVisitorNodes.
+  void ConstructDecodeGraph();
+
+  // Root node for the compiled decoder graph, stored here to avoid a map lookup
+  // for every instruction decoded.
+  inline static CompiledDecodeNode* compiled_decoder_root_ = NULL;
+  inline static std::mutex decoder_mtx_;
+
+  // Map of node names to DecodeNodes.
+  inline static std::unordered_map<std::string, DecodeNode> decode_nodes_;
+
+  // Map from instruction form strings to a mask/value of encodings for that
+  // form.
+  using FormToUnallocMap = std::unordered_multimap<uint32_t, uint64_t>;
+  inline static FormToUnallocMap form_to_unalloc_;
+
+  static void PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm);
 };
 
 }  // namespace aarch64
