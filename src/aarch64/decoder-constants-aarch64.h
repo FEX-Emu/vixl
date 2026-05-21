@@ -9679,7 +9679,7 @@ static const DecodeMapping kDecodeMapping[] = {
     },
   },
 
-  { "Root",
+  { "_Root",
     {31, 29, 28, 27, 26, 25, 24, 21, 15, 14},
     { {"00000000xx"_b, "_nqmnzp"},
       {"0000100000"_b, "_rzzxsn"},

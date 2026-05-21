@@ -355,7 +355,7 @@ class CompiledDecodeNode {
   // function that extracts the bits to be sampled.
   CompiledDecodeNode(BitExtractFn bit_extract_fn, size_t decode_table_size)
       : bit_extract_fn_(bit_extract_fn),
-        instruction_name_("node"),
+        instruction_name_(""),
         decode_table_size_(decode_table_size) {
     decode_table_ = new CompiledDecodeNode*[decode_table_size_];
     memset(decode_table_, 0, decode_table_size_ * sizeof(decode_table_[0]));
@@ -382,10 +382,11 @@ class CompiledDecodeNode {
   // function.
   void Decode(const Instruction* instr, Decoder* decoder) const;
 
-  // A leaf node is a wrapper for a visitor function.
+  // A leaf node represents a completely decoded instruction.
   bool IsLeafNode() const {
-    VIXL_ASSERT(((instruction_name_ == "node") && (bit_extract_fn_ != NULL)) ||
-                ((instruction_name_ != "node") && (bit_extract_fn_ == NULL)));
+    VIXL_ASSERT(
+        ((instruction_name_.length() == 0) && (bit_extract_fn_ != NULL)) ||
+        ((instruction_name_.length() > 0) && (bit_extract_fn_ == NULL)));
     return bit_extract_fn_ == NULL;
   }
 
@@ -409,8 +410,8 @@ class CompiledDecodeNode {
   // sampled by this node. Set to NULL for leaf nodes.
   const BitExtractFn bit_extract_fn_;
 
-  // Visitor function that handles the instruction identified. Set only for
-  // leaf nodes, where no extra decoding is required, otherwise NULL.
+  // For leaf nodes, the name of the instruction this node represents.
+  // Otherwise, an empty string.
   std::string instruction_name_;
 
   // Mapping table from instruction bits to next decode stage.
@@ -431,7 +432,6 @@ class DecodeNode {
   explicit DecodeNode(const std::string& iname)
       : name_(iname),
         sampled_bits_(DecodeNode::kEmptySampledBits),
-        instruction_name_(iname),
         pattern_table_(DecodeNode::kEmptyPatternTable),
         compiled_node_(NULL) {}
 
@@ -439,7 +439,6 @@ class DecodeNode {
   explicit DecodeNode(const DecodeMapping& map)
       : name_(map.name),
         sampled_bits_(map.sampled_bits),
-        instruction_name_("node"),
         pattern_table_(map.mapping),
         compiled_node_(NULL) {
     // With the current two bits per symbol encoding scheme, the maximum pattern
@@ -463,9 +462,10 @@ class DecodeNode {
   // Get the number of bits sampled from the instruction by this node.
   size_t GetSampledBitsCount() const { return sampled_bits_.size(); }
 
-  // A leaf node is a DecodeNode that wraps the visitor function for the
-  // identified instruction class.
-  bool IsLeafNode() const { return instruction_name_ != "node"; }
+  // A leaf node is a DecodeNode that represents a completely decoded
+  // instruction, indicated by name_. If name_ begins with '_', this node
+  // represents an intermediate decoding step.
+  bool IsLeafNode() const { return name_[0] != '_'; }
 
   std::string GetName() const { return name_; }
 
@@ -480,7 +480,7 @@ class DecodeNode {
   // Create a CompiledDecodeNode wrapping a visitor function. No decoding is
   // required for this node; the visitor function is called instead.
   void CreateVisitorNode() {
-    compiled_node_ = new CompiledDecodeNode(instruction_name_);
+    compiled_node_ = new CompiledDecodeNode(GetName());
   }
 
   // Find and compile the DecodeNode named "name", and set it as the node for
@@ -566,16 +566,14 @@ class DecodeNode {
   BitExtractFn GetBitExtractFunctionHelper(uint32_t x, uint32_t y);
 
   // Name of this decoder node, used to construct edges in the decode graph.
+  // If this begins with "_", this is an intermediate decoding node, otherwise
+  // it's a leaf node, representing the instruction in name_.
   std::string name_;
 
   // Vector of bits sampled from an instruction to determine which node to look
   // up next in the decode process.
   const std::vector<uint8_t>& sampled_bits_;
   static const std::vector<uint8_t> kEmptySampledBits;
-
-  // For leaf nodes, this is the name of the instruction form that the node
-  // represents. For other nodes, this is always set to "node".
-  std::string instruction_name_;
 
   // Source mapping from bit pattern to name of next decode stage.
   const std::vector<DecodePattern>& pattern_table_;

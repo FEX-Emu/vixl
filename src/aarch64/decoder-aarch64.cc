@@ -86,7 +86,7 @@ void Decoder::ConstructDecodeGraph() {
   AddDecodeNode(DecodeNode("unallocated"));
 
   // Compile the graph from the root.
-  compiled_decoder_root_ = GetDecodeNode("Root")->Compile(this);
+  compiled_decoder_root_ = GetDecodeNode("_Root")->Compile(this);
 }
 
 void Decoder::AppendVisitor(DecoderVisitor* new_visitor) {
@@ -1329,8 +1329,9 @@ CompiledDecodeNode* DecodeNode::Compile(Decoder* decoder) {
     // For each pattern in pattern_table_, create an entry in matches that
     // has a corresponding mask and value for the pattern.
     std::vector<MaskValuePair> matches;
+    matches.resize(pattern_table_.size());
     for (size_t i = 0; i < pattern_table_.size(); i++) {
-      matches.push_back(GenerateMaskValuePair(pattern_table_[i].pattern));
+      matches[i] = GenerateMaskValuePair(pattern_table_[i].pattern);
     }
 
     BitExtractFn bit_extract_fn =
