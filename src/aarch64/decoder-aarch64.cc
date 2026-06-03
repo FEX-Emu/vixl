@@ -4137,23 +4137,33 @@ CompiledDecodeNode* Decoder::TryCompileOptimisedDecodeTable(
   size_t table_size = d.mapping.size();
   size_t sampled_bits_count = d.sampled_bits.size();
   if ((table_size <= 2) && (sampled_bits_count > 1)) {
-    // TODO: support 'x' in this optimisation by dropping the sampled bit
-    // positions before making the mask/value.
-    if (!PatternContainsSymbol(d.mapping[0].pattern, PatternSymbol::kSymbolX) &&
-        (table_size == 1)) {
+    if (table_size == 1) {
       // A pattern table consisting of a fixed pattern with no x's, and an
       // "otherwise" or absent case. Optimise this into an instruction mask and
       // value test.
       uint32_t single_decode_mask = 0;
       uint32_t single_decode_value = 0;
-      const std::vector<uint8_t>& bits = d.sampled_bits;
+      auto [sampled_mask, sampled_value] =
+          GenerateMaskValuePair(d.mapping[0].pattern);
+      const std::vector<uint8_t>& sampled_bits = d.sampled_bits;
 
-      // Construct the instruction mask and value from the pattern.
-      VIXL_ASSERT(bits.size() == GetPatternLength(d.mapping[0].pattern));
-      for (size_t i = 0; i < bits.size(); i++) {
-        single_decode_mask |= 1U << bits[i];
-        if (GetSymbolAt(d.mapping[0].pattern, i) == PatternSymbol::kSymbol1) {
-          single_decode_value |= 1U << bits[i];
+      // Only optimize when no sampled bit is don't-care.
+      VIXL_ASSERT(sampled_bits_count < 32);
+      uint32_t full_sample_mask =
+          (1U << static_cast<uint32_t>(sampled_bits_count)) - 1;
+      if (sampled_mask != full_sample_mask) {
+        return NULL;
+      }
+
+      // Construct the instruction mask and value from sampled mask/value.
+      for (size_t i = 0; i < sampled_bits.size(); i++) {
+        uint32_t sampled_bit =
+            static_cast<uint32_t>(sampled_bits_count - i - 1);
+        if ((sampled_mask & (1U << sampled_bit)) != 0) {
+          single_decode_mask |= 1U << sampled_bits[i];
+        }
+        if ((sampled_value & (1U << sampled_bit)) != 0) {
+          single_decode_value |= 1U << sampled_bits[i];
         }
       }
       BitExtractFn bit_extract_fn =
@@ -4198,11 +4208,10 @@ CompiledDecodeNode* Decoder::Compile(uint32_t hash) {
   // has a corresponding mask and value for the pattern.
   std::vector<MaskValuePair> matches(d.mapping.size());
   for (size_t i = 0; i < d.mapping.size(); i++) {
-    matches[i] = GenerateMaskValuePair(d.sampled_bits, d.mapping[i].pattern);
+    matches[i] = GenerateMaskValuePair(d.mapping[i].pattern);
   }
 
-  BitExtractFn bit_extract_fn =
-      GetBitExtractFunction(GenerateSampledBitsMask(d.sampled_bits));
+  BitExtractFn bit_extract_fn = GetBitExtractFunction(d.sampled_bits_mask);
 
   // Create a compiled node that contains a table with an entry for every bit
   // pattern.
@@ -4257,41 +4266,10 @@ void CompiledDecodeNode::Decode(const Instruction* instr,
   }
 }
 
-Decoder::MaskValuePair Decoder::GenerateMaskValuePair(
-    const std::vector<uint8_t>& sampled_bits, uint32_t pattern) const {
-  uint64_t temp = 0xffffffffffffffff;
-
-  // Place symbols into the field of set bits. Symbols are two bits wide and
-  // take values 0, 1 or 2, so 3 will represent "no symbol".
-  for (size_t i = 0; i < sampled_bits.size(); i++) {
-    int shift = sampled_bits[i] * 2;
-    temp ^= static_cast<uint64_t>(kEndOfPattern) << shift;
-    temp |= static_cast<uint64_t>(GetSymbolAt(pattern, i)) << shift;
-  }
-
-  // Iterate over temp in sample position order, constructing mask/value.
-  uint32_t mask = 0, value = 0;
-  for (int i = 62; i >= 0; i -= 2) {
-    uint32_t sym = (temp >> i) & kPatternSymbolMask;
-    if (sym != kEndOfPattern) {
-      PatternSymbol pattern_symbol = static_cast<PatternSymbol>(sym);
-      mask =
-          (mask << 1) | ((pattern_symbol == PatternSymbol::kSymbolX) ? 0 : 1);
-      value = (value << 1) | (sym & 1);
-    }
-  }
-
-  VIXL_ASSERT(GetPatternLength(pattern) == sampled_bits.size());
+Decoder::MaskValuePair Decoder::GenerateMaskValuePair(uint64_t pattern) const {
+  uint32_t mask = pattern >> 32;
+  uint32_t value = pattern & 0xffffffff;
   return std::make_pair(mask, value);
-}
-
-uint32_t Decoder::GenerateSampledBitsMask(
-    const std::vector<uint8_t>& sampled_bits) const {
-  uint32_t mask = 0;
-  for (int bit : sampled_bits) {
-    mask |= 1 << bit;
-  }
-  return mask;
 }
 
 }  // namespace aarch64

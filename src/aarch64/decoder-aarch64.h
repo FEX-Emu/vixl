@@ -27,6 +27,7 @@
 #ifndef VIXL_AARCH64_DECODER_AARCH64_H_
 #define VIXL_AARCH64_DECODER_AARCH64_H_
 
+#include <initializer_list>
 #include <list>
 #include <map>
 #include <mutex>
@@ -324,14 +325,13 @@ struct VisitorNode {
 // compilation stage. After compilation, the decoder is embodied in the graph
 // of CompiledDecodeNodes pointer to by compiled_decoder_root_.
 
-// A DecodePattern maps a pattern of set/unset/don't care (1, 0, x) bits encoded
-// as uint32_t to the hash of its handler name.
-// The encoding uses two bits per symbol: 0 => 0b00, 1 => 0b01, x => 0b10.
-// 0b11 marks the edge of the most-significant bits of the pattern, which is
-// required to determine the length. For example, the pattern "1x01"_b is
-// encoded in a uint32_t as 0b11_01_10_00_01.
+// A DecodePattern maps a pattern of set/unset/don't care (1, 0, x) bits to the
+// hash of its handler name.
+// Patterns are encoded as packed mask/value in a uint64_t:
+//   pattern = (mask << 32) | value
+// where each character contributes one bit in sample-order.
 struct DecodePattern {
-  uint32_t pattern;
+  uint64_t pattern;
   uint32_t handler;
 };
 
@@ -339,7 +339,17 @@ struct DecodePattern {
 // handler, and a mapping from the pattern that those sampled bits match to the
 // corresponding hash of the name of a node.
 struct DecodeMapping {
+  static constexpr uint32_t GenerateSampledBitsMask(
+      std::initializer_list<uint8_t> sampled_bits) {
+    uint32_t mask = 0;
+    for (uint8_t bit : sampled_bits) {
+      mask |= 1U << bit;
+    }
+    return mask;
+  }
+
   const std::vector<uint8_t> sampled_bits;
+  const uint32_t sampled_bits_mask;
   const std::vector<DecodePattern> mapping;
 };
 
@@ -503,17 +513,9 @@ class Decoder {
 
   bool IsLeafNode(uint32_t hash) { return hash_to_name_->count(hash) > 0; }
 
-  // Generate a mask and value pair from a pattern constructed from 0, 1 and x
-  // (don't care) 2-bit symbols and ordered by sampled bit position.
-  // The symbol corresponding to the lowest sample position is placed in the
-  // least-significant bits of the generated mask/value pair.
+  // Extract mask and value from a packed (mask << 32) | value pattern.
   using MaskValuePair = std::pair<Instr, Instr>;
-  MaskValuePair GenerateMaskValuePair(const std::vector<uint8_t>& sampled_bits,
-                                      uint32_t pattern) const;
-
-  // Generate a mask with a bit set at each sample position.
-  uint32_t GenerateSampledBitsMask(
-      const std::vector<uint8_t>& sampled_bits) const;
+  MaskValuePair GenerateMaskValuePair(uint64_t pattern) const;
 
   // Get a pointer to an instruction method that extracts the instruction bits
   // specified by the mask argument, and returns those sampled bits as a
@@ -529,36 +531,6 @@ class Decoder {
   // function gives a 1 result if (inst & mask == value), 0 otherwise.
   BitExtractFn GetBitExtractFunction(uint32_t mask, uint32_t value) {
     return GetBitExtractFunctionHelper(value, mask);
-  }
-
-  enum class PatternSymbol { kSymbol0 = 0, kSymbol1 = 1, kSymbolX = 2 };
-  static const uint32_t kEndOfPattern = 3;
-  static const uint32_t kPatternSymbolMask = 3;
-
-  size_t GetPatternLength(uint32_t pattern) const {
-    uint32_t hsb = HighestSetBitPosition(pattern);
-    // The pattern length is signified by two set bits in a two bit-aligned
-    // position. Ensure that the pattern has a highest set bit, it's at an odd
-    // bit position, and that the bit to the right of the hsb is also set.
-    VIXL_ASSERT(((hsb % 2) == 1) && (pattern >> (hsb - 1)) == kEndOfPattern);
-    return hsb / 2;
-  }
-
-  bool PatternContainsSymbol(uint32_t pattern, PatternSymbol symbol) const {
-    while ((pattern & kPatternSymbolMask) != kEndOfPattern) {
-      if (static_cast<PatternSymbol>(pattern & kPatternSymbolMask) == symbol)
-        return true;
-      pattern >>= 2;
-    }
-    return false;
-  }
-
-  PatternSymbol GetSymbolAt(uint32_t pattern, size_t pos) const {
-    size_t len = GetPatternLength(pattern);
-    VIXL_ASSERT((pos < 15) && (pos < len));
-    uint32_t shift = static_cast<uint32_t>(2 * (len - pos - 1));
-    uint32_t sym = (pattern >> shift) & kPatternSymbolMask;
-    return static_cast<PatternSymbol>(sym);
   }
 
  private:
