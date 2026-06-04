@@ -32,18 +32,18 @@ namespace aarch64 {
 //   '0' -> mask bit 1, value bit 0
 //   '1' -> mask bit 1, value bit 1
 //   'x' -> mask bit 0, value bit 0
-// The result is encoded as (mask << 32) | value.
-constexpr uint64_t str_to_mask_value_pair(const char* x,
+// The result is encoded as (mask << 16) | value.
+constexpr uint32_t str_to_mask_value_pair(const char* x,
                                           size_t s,
-                                          uint32_t mask,
-                                          uint32_t value) {
-  if (s == 0) return (static_cast<uint64_t>(mask) << 32) | value;
-  uint32_t next_mask = (mask << 1) | ((x[0] == 'x') ? 0 : 1);
-  uint32_t next_value = (value << 1) | ((x[0] == '1') ? 1 : 0);
+                                          uint16_t mask,
+                                          uint16_t value) {
+  if (s == 0) return (static_cast<uint32_t>(mask) << 16) | value;
+  uint16_t next_mask = (mask << 1) | ((x[0] == 'x') ? 0 : 1);
+  uint16_t next_value = (value << 1) | ((x[0] == '1') ? 1 : 0);
   return str_to_mask_value_pair(x + 1, s - 1, next_mask, next_value);
 }
 
-constexpr uint64_t operator""_b(const char* x, size_t s) {
+constexpr uint32_t operator""_b(const char* x, size_t s) {
   return str_to_mask_value_pair(x, s, 0, 0);
 }
 

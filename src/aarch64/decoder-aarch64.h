@@ -327,11 +327,11 @@ struct VisitorNode {
 
 // A DecodePattern maps a pattern of set/unset/don't care (1, 0, x) bits to the
 // hash of its handler name.
-// Patterns are encoded as packed mask/value in a uint64_t:
-//   pattern = (mask << 32) | value
+// Patterns are encoded as packed mask/value in a uint32_t:
+//   pattern = (mask << 16) | value
 // where each character contributes one bit in sample-order.
 struct DecodePattern {
-  uint64_t pattern;
+  uint32_t pattern;
   uint32_t handler;
 };
 
@@ -355,8 +355,8 @@ struct DecodeMapping {
 
 // For speed, before nodes can be used for decoding instructions, they must
 // be compiled. This converts the mapping "bit pattern strings to decoder name
-// string" stored in DecodeNodes to an array look up for the pointer to the next
-// node, stored in CompiledDecodeNodes. Compilation may also apply other
+// string" stored in kDecodeMapping to an array look up for the pointer to the
+// next node, stored in CompiledDecodeNodes. Compilation may also apply other
 // optimisations for simple decode patterns.
 class CompiledDecodeNode {
  public:
@@ -370,7 +370,7 @@ class CompiledDecodeNode {
     memset(decode_table_, 0, decode_table_size_ * sizeof(decode_table_[0]));
   }
 
-  // Constructor for wrappers around visitor functions. These require no
+  // Constructor for wrappers around decoded instructions. These require no
   // decoding, so no bit extraction function or decode table is assigned.
   explicit CompiledDecodeNode(uint32_t hash)
       : bit_extract_fn_(NULL),
@@ -430,7 +430,7 @@ class CompiledDecodeNode {
 // The instruction decoder is constructed from a graph of decode nodes. At each
 // node, a number of bits are sampled from the instruction being decoded. The
 // resulting value is used to look up the next node in the graph, which then
-// samples other bits, and moves to other decode nodes. Eventually, a visitor
+// samples other bits, and moves to other decode nodes. Eventually, a leaf
 // node is reached, and the corresponding visitor function is called, which
 // handles the instruction.
 class Decoder {
@@ -507,15 +507,18 @@ class Decoder {
 
   std::list<DecoderVisitor*>* visitors() { return &visitors_; }
 
+  // Compile the representation of the decoding tree stored in kDecodeMapping
+  // to a tree of CompiledDecodeNodes. Returns a pointer to the node at the
+  // root of the compiled tree (or subtree).
   CompiledDecodeNode* Compile(uint32_t hash);
 
   bool NodeIsCompiled(uint32_t hash) { return compiled_nodes_.count(hash) > 0; }
 
   bool IsLeafNode(uint32_t hash) { return hash_to_form_->count(hash) > 0; }
 
-  // Extract mask and value from a packed (mask << 32) | value pattern.
+  // Extract mask and value from a packed (mask << 16) | value pattern.
   using MaskValuePair = std::pair<Instr, Instr>;
-  MaskValuePair GenerateMaskValuePair(uint64_t pattern) const;
+  MaskValuePair GenerateMaskValuePair(uint32_t pattern) const;
 
   // Get a pointer to an instruction method that extracts the instruction bits
   // specified by the mask argument, and returns those sampled bits as a
@@ -550,8 +553,7 @@ class Decoder {
   inline static CompiledDecodeNode* compiled_decoder_root_ = NULL;
   inline static std::mutex decoder_mtx_;
 
-  // Map of node names to DecodeNodes.
-  //  inline static std::unordered_map<uint32_t, DecodeNode> decode_nodes_;
+  // Map of node name hashes to CompiledDecodeNodes.
   inline static std::unordered_map<uint32_t, CompiledDecodeNode*>
       compiled_nodes_;
 

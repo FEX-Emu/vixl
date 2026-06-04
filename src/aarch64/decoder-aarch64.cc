@@ -454,13 +454,15 @@ CompiledDecodeNode* Decoder::Compile(uint32_t hash) {
     return n;
   }
 
-  // For each pattern in pattern_table_, create an entry in matches that
+  // For each entry in the bit pattern table, create an entry in matches that
   // has a corresponding mask and value for the pattern.
   std::vector<MaskValuePair> matches(d.mapping.size());
   for (size_t i = 0; i < d.mapping.size(); i++) {
     matches[i] = GenerateMaskValuePair(d.mapping[i].pattern);
   }
 
+  // Get the bit extraction function for the bits sampled from the instruction
+  // by this node.
   BitExtractFn bit_extract_fn = GetBitExtractFunction(d.sampled_bits_mask);
 
   // Create a compiled node that contains a table with an entry for every bit
@@ -512,9 +514,9 @@ void CompiledDecodeNode::Decode(const Instruction* instr,
   }
 }
 
-Decoder::MaskValuePair Decoder::GenerateMaskValuePair(uint64_t pattern) const {
-  uint32_t mask = pattern >> 32;
-  uint32_t value = pattern & 0xffffffff;
+Decoder::MaskValuePair Decoder::GenerateMaskValuePair(uint32_t pattern) const {
+  uint32_t mask = pattern >> 16;
+  uint32_t value = pattern & 0xffff;
   return std::make_pair(mask, value);
 }
 
