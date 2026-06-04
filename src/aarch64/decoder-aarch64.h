@@ -439,15 +439,15 @@ class Decoder {
     std::lock_guard<std::mutex> guard(decoder_mtx_);
 
     if (compiled_decoder_root_ == NULL) {
-      VIXL_ASSERT(hash_to_name_ == NULL);
-      hash_to_name_ = GetHashToNameMap();
+      VIXL_ASSERT(hash_to_form_ == NULL);
+      hash_to_form_ = GetHashToFormMap();
 
       ConstructDecodeGraph();
 
       VIXL_ASSERT(form_to_unalloc_.size() == 0);
       PopulatePerInstructionUnallocatedMap(&form_to_unalloc_);
     } else {
-      VIXL_ASSERT(hash_to_name_ != NULL);
+      VIXL_ASSERT(hash_to_form_ != NULL);
       VIXL_ASSERT(form_to_unalloc_.size() > 0);
     }
   }
@@ -511,7 +511,7 @@ class Decoder {
 
   bool NodeIsCompiled(uint32_t hash) { return compiled_nodes_.count(hash) > 0; }
 
-  bool IsLeafNode(uint32_t hash) { return hash_to_name_->count(hash) > 0; }
+  bool IsLeafNode(uint32_t hash) { return hash_to_form_->count(hash) > 0; }
 
   // Extract mask and value from a packed (mask << 32) | value pattern.
   using MaskValuePair = std::pair<Instr, Instr>;
@@ -563,10 +563,10 @@ class Decoder {
   static void PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm);
 
   // Map from hash of instruction form to its string.
-  using HashToNameMap = std::unordered_map<uint32_t, std::string>;
-  inline static const HashToNameMap* hash_to_name_ = NULL;
+  using HashToFormMap = std::unordered_map<uint32_t, std::string>;
+  inline static const HashToFormMap* hash_to_form_ = NULL;
 
-  static const HashToNameMap* GetHashToNameMap();
+  static const HashToFormMap* GetHashToFormMap();
 
   // Helper function that returns a bit extracting function. If y is zero,
   // x is a bit extraction mask. Otherwise, y is the mask, and x is the value
