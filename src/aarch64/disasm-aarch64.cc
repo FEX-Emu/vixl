@@ -3259,7 +3259,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
       {"ivau, 'Xt", {"ic_sys_cr_systeminstrs"_h}},
       {"'{dcop}, 'Xt", {"dc_sys_cr_systeminstrs"_h}},
       {"'{pstatefield}, #'u1108", {"msr_si_pstate"_h}},
-      {"csync", {"psb_c_hints"_h, "tsb_hc_hints"_h}},
+      {"csync", {"psb_hc_hints"_h, "tsb_hc_hints"_h}},
       {"x16", {"chkfeat_hf_hints"_h}}};
 
   for (auto &itm : forms) {

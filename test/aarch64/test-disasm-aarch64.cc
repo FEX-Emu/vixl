@@ -3222,6 +3222,8 @@ TEST(hint) {
   COMPARE_MACRO(Hint(CSDB), "csdb");
   COMPARE_MACRO(Hint(42), "hint #42");
   COMPARE_MACRO(Hint(127), "hint #127");
+  COMPARE_MACRO(Hint(17), "psb csync");
+  COMPARE_MACRO(Hint(18), "tsb csync");
 
   COMPARE_MACRO(Yield(), "yield");
 
