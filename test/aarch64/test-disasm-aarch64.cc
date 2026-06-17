@@ -2067,6 +2067,39 @@ TEST(load_store_tr) {
   CLEANUP();
 }
 
+TEST(load_store_ld64_st64) {
+  SETUP();
+
+  // Not supported by the assembler; use dci().
+  COMPARE(dci(0xf83fd082), "ld64b x2, [x4]");
+  COMPARE(dci(0xf83fd3f6), "ld64b x22, [sp]");
+  COMPARE(dci(0xf83f9044), "st64b x4, [x2]");
+  COMPARE(dci(0xf83f93f6), "st64b x22, [sp]");
+  COMPARE(dci(0xf822b086), "st64bv x2, x6, [x4]");
+  COMPARE(dci(0xf83fb3f6), "st64bv xzr, x22, [sp]");
+  COMPARE(dci(0xf824a102), "st64bv0 x4, x2, [x8]");
+  COMPARE(dci(0xf83fa3f6), "st64bv0 xzr, x22, [sp]");
+
+  COMPARE_PREFIX(dci(0xf83fd3e7), "unallocated");  // ld64b
+  COMPARE_PREFIX(dci(0xf83fd3f8), "unallocated");  // ld64b
+  COMPARE_PREFIX(dci(0xf83fd3fe), "unallocated");  // ld64b
+  COMPARE_PREFIX(dci(0xf83fd3ff), "unallocated");  // ld64b
+  COMPARE_PREFIX(dci(0xf83f93e7), "unallocated");  // st64b
+  COMPARE_PREFIX(dci(0xf83f93f8), "unallocated");  // st64b
+  COMPARE_PREFIX(dci(0xf83f93fe), "unallocated");  // st64b
+  COMPARE_PREFIX(dci(0xf83f93ff), "unallocated");  // st64b
+  COMPARE_PREFIX(dci(0xf820b3e7), "unallocated");  // st64bv
+  COMPARE_PREFIX(dci(0xf820b3f8), "unallocated");  // st64bv
+  COMPARE_PREFIX(dci(0xf820b3fe), "unallocated");  // st64bv
+  COMPARE_PREFIX(dci(0xf820b3ff), "unallocated");  // st64bv
+  COMPARE_PREFIX(dci(0xf820a3e7), "unallocated");  // st64bv0
+  COMPARE_PREFIX(dci(0xf820a3f8), "unallocated");  // st64bv0
+  COMPARE_PREFIX(dci(0xf820a3fe), "unallocated");  // st64bv0
+  COMPARE_PREFIX(dci(0xf820a3ff), "unallocated");  // st64bv0
+
+  CLEANUP();
+}
+
 TEST(load_literal_macro) {
   SETUP();
 
@@ -4083,12 +4116,12 @@ TEST(architecture_features) {
   COMPARE_PREFIX(dci(0x6e80a400), "ummla");   // UMMLA_asimdsame2_G
 
   // ARMv8.7 - LS64
-  // COMPARE_PREFIX(dci(0xf83f9000), "st64b");   // ST64B_64L_memop
-  // COMPARE_PREFIX(dci(0xf83fd000), "ld64b");   // LD64B_64L_memop
+  COMPARE_PREFIX(dci(0xf83f9000), "st64b");  // ST64B_64L_memop
+  COMPARE_PREFIX(dci(0xf83fd000), "ld64b");  // LD64B_64L_memop
 
   // ARMv8.7 - LS64_V
-  // COMPARE_PREFIX(dci(0xf820a000), "st64bv0");   // ST64BV0_64_memop
-  // COMPARE_PREFIX(dci(0xf820b000), "st64bv");   // ST64BV_64_memop
+  COMPARE_PREFIX(dci(0xf820a000), "st64bv0");  // ST64BV0_64_memop
+  COMPARE_PREFIX(dci(0xf820b000), "st64bv");   // ST64BV_64_memop
 
   // ARMv8.7 - WFxT
   COMPARE_PREFIX(dci(0xd5031000), "wfet");  // WFET_only_systeminstrswithreg
