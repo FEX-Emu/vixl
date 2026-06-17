@@ -2830,6 +2830,17 @@ TEST(system_pauth) {
   CLEANUP();
 }
 
+TEST(system_wf) {
+  SETUP();
+
+  COMPARE(dci(0xd5031004), "wfet x4");
+  COMPARE(dci(0xd503101f), "wfet xzr");
+  COMPARE(dci(0xd5031022), "wfit x2");
+  COMPARE(dci(0xd503103f), "wfit xzr");
+
+  CLEANUP();
+}
+
 
 TEST(unreachable) {
   SETUP();
@@ -4080,8 +4091,8 @@ TEST(architecture_features) {
   // COMPARE_PREFIX(dci(0xf820b000), "st64bv");   // ST64BV_64_memop
 
   // ARMv8.7 - WFxT
-  // COMPARE_PREFIX(dci(0xd5031000), "wfet");   // WFET_only_systeminstrswithreg
-  // COMPARE_PREFIX(dci(0xd5031020), "wfit");   // WFIT_only_systeminstrswithreg
+  COMPARE_PREFIX(dci(0xd5031000), "wfet");  // WFET_only_systeminstrswithreg
+  COMPARE_PREFIX(dci(0xd5031020), "wfit");  // WFIT_only_systeminstrswithreg
 
   // TME
   // COMPARE_PREFIX(dci(0xd4600000), "tcancel");   // TCANCEL_EX_exception
