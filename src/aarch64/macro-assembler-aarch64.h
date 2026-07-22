@@ -2231,13 +2231,13 @@ class MacroAssembler : public Assembler, public MacroAssemblerInterface {
   }
   void Mrs(const Register& rt, SystemRegister sysreg) {
     VIXL_ASSERT(allow_macro_instructions_);
-    VIXL_ASSERT(!rt.IsZero());
+    VIXL_ASSERT(!rt.IsSP());
     SingleEmissionCheckScope guard(this);
     mrs(rt, sysreg);
   }
   void Msr(SystemRegister sysreg, const Register& rt) {
     VIXL_ASSERT(allow_macro_instructions_);
-    VIXL_ASSERT(!rt.IsZero());
+    VIXL_ASSERT(!rt.IsSP());
     SingleEmissionCheckScope guard(this);
     msr(sysreg, rt);
   }

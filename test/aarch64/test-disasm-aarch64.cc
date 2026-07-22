@@ -2730,6 +2730,7 @@ TEST(system_mrs) {
 
   COMPARE(mrs(x0, NZCV), "mrs x0, nzcv");
   COMPARE(mrs(x30, NZCV), "mrs x30, nzcv");
+  COMPARE(mrs(xzr, NZCV), "mrs xzr, nzcv");
   COMPARE(mrs(x15, FPCR), "mrs x15, fpcr");
   COMPARE(mrs(x20, RNDR), "mrs x20, rndr");
   COMPARE(mrs(x5, RNDRRS), "mrs x5, rndrrs");
@@ -2748,6 +2749,7 @@ TEST(system_msr) {
 
   COMPARE(msr(NZCV, x0), "msr nzcv, x0");
   COMPARE(msr(NZCV, x30), "msr nzcv, x30");
+  COMPARE(msr(NZCV, xzr), "msr nzcv, xzr");
   COMPARE(msr(FPCR, x15), "msr fpcr, x15");
 
   // Test msr that use system registers we haven't named.

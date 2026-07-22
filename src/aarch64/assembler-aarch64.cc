@@ -3255,6 +3255,7 @@ void Assembler::mvn(const Register& rd, const Operand& operand) {
 
 
 void Assembler::mrs(const Register& xt, SystemRegister sysreg) {
+  VIXL_ASSERT(!xt.IsSP());
   VIXL_ASSERT(xt.Is64Bits());
   VIXL_ASSERT(CPUHas(sysreg));
   Emit(MRS | ImmSystemRegister(sysreg) | Rt(xt));
@@ -3262,6 +3263,7 @@ void Assembler::mrs(const Register& xt, SystemRegister sysreg) {
 
 
 void Assembler::msr(SystemRegister sysreg, const Register& xt) {
+  VIXL_ASSERT(!xt.IsSP());
   VIXL_ASSERT(xt.Is64Bits());
   VIXL_ASSERT(CPUHas(sysreg));
   Emit(MSR | Rt(xt) | ImmSystemRegister(sysreg));
