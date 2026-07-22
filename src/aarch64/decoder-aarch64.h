@@ -348,7 +348,6 @@ struct DecodeMapping {
     return mask;
   }
 
-  const std::vector<uint8_t> sampled_bits;
   const uint32_t sampled_bits_mask;
   const std::vector<DecodePattern> mapping;
 };

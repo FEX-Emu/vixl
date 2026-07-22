@@ -392,16 +392,13 @@ CompiledDecodeNode* Decoder::TryCompileOptimisedDecodeTable(
   // EitherOr optimisation: if there are only one or two patterns in the table,
   // try to optimise the node to exploit that.
   size_t table_size = d.mapping.size();
-  size_t sampled_bits_count = d.sampled_bits.size();
+  size_t sampled_bits_count = CountSetBits(d.sampled_bits_mask);
   if ((table_size == 1) && (sampled_bits_count > 1)) {
     // A pattern table consisting of a pattern of two or more bits, no x's, and
     // a single handler case. Optimise this into an instruction mask and value
     // test.
-    uint32_t single_decode_mask = 0;
-    uint32_t single_decode_value = 0;
     auto [sampled_mask, sampled_value] =
         GenerateMaskValuePair(d.mapping[0].pattern);
-    const std::vector<uint8_t>& sampled_bits = d.sampled_bits;
 
     // Only optimize when no sampled bit is don't-care.
     VIXL_ASSERT(sampled_bits_count < 32);
@@ -411,18 +408,20 @@ CompiledDecodeNode* Decoder::TryCompileOptimisedDecodeTable(
       return n;
     }
 
-    // Construct the instruction mask and value from sampled mask/value.
-    for (size_t i = 0; i < sampled_bits.size(); i++) {
-      uint32_t sampled_bit = static_cast<uint32_t>(sampled_bits_count - i - 1);
-      if ((sampled_mask & (1U << sampled_bit)) != 0) {
-        single_decode_mask |= 1U << sampled_bits[i];
-      }
-      if ((sampled_value & (1U << sampled_bit)) != 0) {
-        single_decode_value |= 1U << sampled_bits[i];
+    // Construct the post-mask value for the entire instruction from the bits
+    // sampled.
+    uint32_t post_mask_value = 0;
+    for (int i = 0; i < 32; i++) {
+      if ((d.sampled_bits_mask & (1U << i)) != 0) {
+        if ((sampled_value & 1) != 0) {
+          post_mask_value |= 1U << i;
+        }
+        sampled_value >>= 1;
       }
     }
+
     BitExtractFn bit_extract_fn =
-        GetBitExtractFunction(single_decode_mask, single_decode_value);
+        GetBitExtractFunction(d.sampled_bits_mask, post_mask_value);
 
     // Create a compiled node that contains a two entry table for the
     // either/or cases.
@@ -454,33 +453,27 @@ CompiledDecodeNode* Decoder::Compile(uint32_t hash) {
     return n;
   }
 
-  // For each entry in the bit pattern table, create an entry in matches that
-  // has a corresponding mask and value for the pattern.
-  std::vector<MaskValuePair> matches(d.mapping.size());
-  for (size_t i = 0; i < d.mapping.size(); i++) {
-    matches[i] = GenerateMaskValuePair(d.mapping[i].pattern);
-  }
-
   // Get the bit extraction function for the bits sampled from the instruction
   // by this node.
   BitExtractFn bit_extract_fn = GetBitExtractFunction(d.sampled_bits_mask);
 
   // Create a compiled node that contains a table with an entry for every bit
   // pattern.
-  size_t table_size = 1U << d.sampled_bits.size();
+  size_t table_size = 1U << CountSetBits(d.sampled_bits_mask);
   n = new CompiledDecodeNode(bit_extract_fn, table_size);
 
   // Iterate through all of the bits in this node's handler table, use the
-  // matches vector to determine which node is next in decoding, and set the
+  // mapping table to determine which node is next in decoding, and set the
   // table entry for those bits to the compiled node.
   for (uint32_t bits = 0; bits < table_size; bits++) {
     // The default next node is the unallocated instruction, used when there is
-    // no match in the matches vector.
+    // no match in the mapping table.
     VIXL_ASSERT(NodeIsCompiled("unallocated"_h));
     CompiledDecodeNode* bits_node = compiled_nodes_["unallocated"_h];
 
-    for (size_t i = 0; i < matches.size(); i++) {
-      if ((bits & matches[i].first) == matches[i].second) {
+    for (size_t i = 0; i < d.mapping.size(); i++) {
+      MaskValuePair match = GenerateMaskValuePair(d.mapping[i].pattern);
+      if ((bits & match.first) == match.second) {
         // Only one instruction class should match for each value of bits, so
         // if we get here, the node pointed to should still be unallocated.
         VIXL_ASSERT(n->GetNodeForBits(bits) == NULL);
