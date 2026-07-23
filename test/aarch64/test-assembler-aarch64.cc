@@ -11435,11 +11435,10 @@ TEST(stlurb_stlurh_strlur) {
 
 
 TEST(unaligned_single_copy_atomicity) {
-  uint64_t data0[] = {0x1010101010101010, 0x1010101010101010};
-  uint64_t dst[] = {0x0000000000000000, 0x0000000000000000};
-
-  uint64_t* data0_aligned = AlignUp(data0, kAtomicAccessGranule);
-  uint64_t* dst_aligned = AlignUp(dst, kAtomicAccessGranule);
+  alignas(kAtomicAccessGranule)
+      uint64_t data0[] = {0x1010101010101010, 0x1010101010101010};
+  alignas(kAtomicAccessGranule)
+      uint64_t dst[] = {0x0000000000000000, 0x0000000000000000};
 
   CPUFeatures features(CPUFeatures::kAtomics,
                        CPUFeatures::kLORegions,
@@ -11453,10 +11452,9 @@ TEST(unaligned_single_copy_atomicity) {
   __ Mov(x1, 0x456789abcdef0123);
   __ Mov(x2, 0x89abcdef01234567);
   __ Mov(x3, 0xcdef0123456789ab);
-  __ Mov(x18, reinterpret_cast<uintptr_t>(data0_aligned));
-  __ Mov(x19, reinterpret_cast<uintptr_t>(dst_aligned));
+  __ Mov(x18, reinterpret_cast<uintptr_t>(data0));
+  __ Mov(x19, reinterpret_cast<uintptr_t>(dst));
   __ Mov(x20, x18);
-  __ Mov(x21, x19);
 
   for (unsigned i = 0; i < kAtomicAccessGranule; i++) {
     __ Stxrb(w0, w1, MemOperand(x20));
@@ -11609,7 +11607,6 @@ TEST(unaligned_single_copy_atomicity) {
     }
 
     __ Add(x20, x20, 1);
-    __ Add(x21, x21, 1);
   }
   END();
 
@@ -11656,17 +11653,17 @@ static __attribute__((noinline)) void CheckAlignFailHelper(
 }
 
 #define CHECK_ALIGN_FAIL(add_i, expr) \
-  CheckAlignFailHelper((add_i),       \
-                       data0_aligned, \
-                       dst_aligned,   \
-                       [&](MacroAssembler& masm) { expr; })
+  CheckAlignFailHelper((add_i), data0, dst, [&](MacroAssembler& masm) { expr; })
 
 TEST(unaligned_single_copy_atomicity_negative_test) {
-  uint64_t data0[] = {0x1010101010101010, 0x1010101010101010};
-  uint64_t dst[] = {0x0000000000000000, 0x0000000000000000};
-
-  uint64_t* data0_aligned = AlignUp(data0, kAtomicAccessGranule);
-  uint64_t* dst_aligned = AlignUp(dst, kAtomicAccessGranule);
+  alignas(kAtomicAccessGranule) uint64_t data0[] = {0x1010101010101010,
+                                                    0x1010101010101010,
+                                                    0x1010101010101010,
+                                                    0x1010101010101010};
+  alignas(kAtomicAccessGranule) uint64_t dst[] = {0x0000000000000000,
+                                                  0x0000000000000000,
+                                                  0x0000000000000000,
+                                                  0x0000000000000000};
 
   for (unsigned i = 0; i < kAtomicAccessGranule; i++) {
     if (i > (kAtomicAccessGranule - kHRegSizeInBytes)) {
