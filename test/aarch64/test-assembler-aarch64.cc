@@ -31,6 +31,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
 #include <sys/mman.h>
 
 #include "test-runner.h"
@@ -11622,32 +11623,43 @@ TEST(unaligned_single_copy_atomicity) {
 
 #if defined(VIXL_NEGATIVE_TESTING) && defined(VIXL_INCLUDE_SIMULATOR_AARCH64)
 
-#define CHECK_ALIGN_FAIL(i, expr)                                              \
-  {                                                                            \
-    CPUFeatures features(CPUFeatures::kAtomics,                                \
-                         CPUFeatures::kLORegions,                              \
-                         CPUFeatures::kRCpc,                                   \
-                         CPUFeatures::kRCpcImm);                               \
-    features.Combine(CPUFeatures::kUSCAT);                                     \
-    SETUP_WITH_FEATURES(features);                                             \
-    START();                                                                   \
-    __ Mov(x0, 0x0123456789abcdef);                                            \
-    __ Mov(x1, 0x456789abcdef0123);                                            \
-    __ Mov(x2, 0x89abcdef01234567);                                            \
-    __ Mov(x3, 0xcdef0123456789ab);                                            \
-    __ Mov(x20, reinterpret_cast<uintptr_t>(data0_aligned));                   \
-    __ Mov(x21, reinterpret_cast<uintptr_t>(dst_aligned));                     \
-    __ Add(x20, x20, i);                                                       \
-    __ Add(x21, x21, i);                                                       \
-    expr;                                                                      \
-    END();                                                                     \
-    if (CAN_RUN()) {                                                           \
-      /* We can't detect kUSCAT with the CPUFeaturesAuditor so it fails the */ \
-      /* seen check. */                                                        \
-      MUST_FAIL_WITH_MESSAGE(RUN_WITHOUT_SEEN_FEATURE_CHECK(),                 \
-                             "ALIGNMENT EXCEPTION");                           \
-    }                                                                          \
+using AlignFailEmitter = std::function<void(MacroAssembler&)>;
+
+static __attribute__((noinline)) void CheckAlignFailHelper(
+    unsigned add_offset,
+    uint64_t* data0_aligned,
+    uint64_t* dst_aligned,
+    const AlignFailEmitter& emit) {
+  CPUFeatures features(CPUFeatures::kAtomics,
+                       CPUFeatures::kLORegions,
+                       CPUFeatures::kRCpc,
+                       CPUFeatures::kRCpcImm);
+  features.Combine(CPUFeatures::kUSCAT);
+  SETUP_WITH_FEATURES(features);
+  START();
+  __ Mov(x0, 0x0123456789abcdef);
+  __ Mov(x1, 0x456789abcdef0123);
+  __ Mov(x2, 0x89abcdef01234567);
+  __ Mov(x3, 0xcdef0123456789ab);
+  __ Mov(x20, reinterpret_cast<uintptr_t>(data0_aligned));
+  __ Mov(x21, reinterpret_cast<uintptr_t>(dst_aligned));
+  __ Add(x20, x20, add_offset);
+  __ Add(x21, x21, add_offset);
+  emit(masm);
+  END();
+  if (CAN_RUN()) {
+    // We can't detect kUSCAT with the CPUFeaturesAuditor so it fails the
+    // seen check.
+    MUST_FAIL_WITH_MESSAGE(RUN_WITHOUT_SEEN_FEATURE_CHECK(),
+                           "ALIGNMENT EXCEPTION");
   }
+}
+
+#define CHECK_ALIGN_FAIL(add_i, expr) \
+  CheckAlignFailHelper((add_i),       \
+                       data0_aligned, \
+                       dst_aligned,   \
+                       [&](MacroAssembler& masm) { expr; })
 
 TEST(unaligned_single_copy_atomicity_negative_test) {
   uint64_t data0[] = {0x1010101010101010, 0x1010101010101010};
