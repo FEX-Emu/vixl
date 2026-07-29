@@ -8219,15 +8219,8 @@ class MacroAssembler : public Assembler, public MacroAssemblerInterface {
 
   LiteralPool* GetLiteralPool() { return &literal_pool_; }
 
-// Support for simulated runtime calls.
+  // Support for simulated runtime calls.
 
-// `CallRuntime` requires variadic templating, that is only available from
-// C++11.
-#if __cplusplus >= 201103L
-#define VIXL_HAS_MACROASSEMBLER_RUNTIME_CALL_SUPPORT
-#endif  // #if __cplusplus >= 201103L
-
-#ifdef VIXL_HAS_MACROASSEMBLER_RUNTIME_CALL_SUPPORT
   template <typename R, typename... P>
   void CallRuntimeHelper(R (*function)(P...), RuntimeCallType call_type);
 
@@ -8240,7 +8233,6 @@ class MacroAssembler : public Assembler, public MacroAssemblerInterface {
   void TailCallRuntime(R (*function)(P...)) {
     CallRuntimeHelper(function, kTailCallRuntime);
   }
-#endif  // #ifdef VIXL_HAS_MACROASSEMBLER_RUNTIME_CALL_SUPPORT
 
  protected:
   void BlockLiteralPool() { literal_pool_.Block(); }
@@ -8959,15 +8951,12 @@ class SimulationCPUFeaturesScope {
 };
 
 
-// Variadic templating is only available from C++11.
-#ifdef VIXL_HAS_MACROASSEMBLER_RUNTIME_CALL_SUPPORT
-
 // `R` stands for 'return type', and `P` for 'parameter types'.
 template <typename R, typename... P>
 void MacroAssembler::CallRuntimeHelper(R (*function)(P...),
                                        RuntimeCallType call_type) {
   if (generate_simulator_code_) {
-#ifdef VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT
+#ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
     uintptr_t runtime_call_wrapper_address = reinterpret_cast<uintptr_t>(
         &(Simulator::RuntimeCallStructHelper<R, P...>::Wrapper));
     uintptr_t function_address = reinterpret_cast<uintptr_t>(function);
@@ -8992,7 +8981,7 @@ void MacroAssembler::CallRuntimeHelper(R (*function)(P...),
     VIXL_ASSERT(GetSizeOfCodeGeneratedSince(&start) == kRuntimeCallLength);
 #else
     VIXL_UNREACHABLE();
-#endif  // #ifdef VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT
+#endif
   } else {
     UseScratchRegisterScope temps(this);
     Register temp = temps.AcquireX();
@@ -9005,8 +8994,6 @@ void MacroAssembler::CallRuntimeHelper(R (*function)(P...),
     }
   }
 }
-
-#endif  // #ifdef VIXL_HAS_MACROASSEMBLER_RUNTIME_CALL_SUPPORT
 
 }  // namespace aarch64
 

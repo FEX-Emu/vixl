@@ -15232,7 +15232,6 @@ void Simulator::DoPrintf(const Instruction* instr) {
 }
 
 
-#ifdef VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT
 void Simulator::DoRuntimeCall(const Instruction* instr) {
   VIXL_STATIC_ASSERT(kRuntimeCallAddressSize == sizeof(uintptr_t));
   // The appropriate `Simulator::SimulateRuntimeCall()` wrapper and the function
@@ -15278,12 +15277,6 @@ void Simulator::DoRuntimeCall(const Instruction* instr) {
   }
   WritePc(reinterpret_cast<Instruction*>(addr));
 }
-#else
-void Simulator::DoRuntimeCall(const Instruction* instr) {
-  USE(instr);
-  VIXL_UNREACHABLE();
-}
-#endif
 
 
 void Simulator::DoConfigureCPUFeatures(const Instruction* instr) {

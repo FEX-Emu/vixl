@@ -29,12 +29,6 @@
 #include "aarch64/abi-aarch64.h"
 #include "test-utils-aarch64.h"
 
-#if (__cplusplus >= 201103L) && !defined(VIXL_HAS_ABI_SUPPORT)
-#error "C++11 should be sufficient to provide ABI support."
-#endif  // #if (__cplusplus >= 201103L) && !defined(VIXL_HAS_ABI_SUPPORT)
-
-#ifdef VIXL_HAS_ABI_SUPPORT
-
 #define TEST(name) TEST_(AARCH64_ABI_##name)
 
 namespace vixl {
@@ -111,5 +105,3 @@ TEST(abi) {
 }
 }  // namespace aarch64
 }  // namespace vixl
-
-#endif  // VIXL_HAS_ABI_SUPPORT

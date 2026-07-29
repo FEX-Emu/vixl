@@ -5900,9 +5900,7 @@ TEST(ImplicitCheckMops) {
 #undef __
 #define __ masm->
 
-#if defined(VIXL_INCLUDE_SIMULATOR_AARCH64) &&                 \
-    defined(VIXL_HAS_ABI_SUPPORT) && __cplusplus >= 201103L && \
-    (defined(__clang__) || GCC_VERSION_OR_NEWER(4, 9, 1))
+#ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
 
 // Generate a function that stores zero to a hard-coded address.
 Instruction* GenerateStoreZero(MacroAssembler* masm, int32_t* target) {

@@ -13873,22 +13873,6 @@ TEST(generic_operand) {
 
 // Test feature detection of calls to runtime functions.
 
-// C++11 should be sufficient to provide simulated runtime calls, except for a
-// GCC bug before 4.9.1.
-#if defined(VIXL_INCLUDE_SIMULATOR_AARCH64) && (__cplusplus >= 201103L) && \
-    (defined(__clang__) || GCC_VERSION_OR_NEWER(4, 9, 1)) &&               \
-    !defined(VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT)
-#error \
-    "C++11 should be sufficient to provide support for simulated runtime calls."
-#endif  // #if defined(VIXL_INCLUDE_SIMULATOR_AARCH64) && ...
-
-#if (__cplusplus >= 201103L) && \
-    !defined(VIXL_HAS_MACROASSEMBLER_RUNTIME_CALL_SUPPORT)
-#error \
-    "C++11 should be sufficient to provide support for `MacroAssembler::CallRuntime()`."
-#endif  // #if (__cplusplus >= 201103L) && ...
-
-#ifdef VIXL_HAS_MACROASSEMBLER_RUNTIME_CALL_SUPPORT
 int32_t runtime_call_add_one(int32_t a) { return a + 1; }
 
 double runtime_call_add_doubles(double a, double b, double c) {
@@ -13941,15 +13925,6 @@ uint16_t test_uint16_t(uint16_t x) { return x; }
 
 TEST(runtime_calls) {
   SETUP_WITH_FEATURES(CPUFeatures::kFP);
-
-#ifndef VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT
-  if (masm.GenerateSimulatorCode()) {
-    // This configuration is unsupported and a `VIXL_UNREACHABLE()` would fire
-    // while trying to generate `CallRuntime`. This configuration should only be
-    // reachable with C++11 and a (buggy) version of GCC pre-4.9.1.
-    return;
-  }
-#endif
 
   START();
 
@@ -14050,8 +14025,6 @@ TEST(runtime_calls) {
 
   END();
 
-#if defined(VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT) || \
-    !defined(VIXL_INCLUDE_SIMULATOR_AARCH64)
   if (CAN_RUN()) {
     RUN();
 
@@ -14065,7 +14038,6 @@ TEST(runtime_calls) {
     ASSERT_EQUAL_64(0, x24);
     ASSERT_EQUAL_32(1, w25);
   }
-#endif  // #if defined(VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT) || ...
 }
 
 #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
@@ -14136,7 +14108,6 @@ TEST(branch_interception) {
   }
 }
 #endif  // #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
-#endif  // #ifdef VIXL_HAS_MACROASSEMBLER_RUNTIME_CALL_SUPPORT
 
 
 TEST(optimised_mov_register) {

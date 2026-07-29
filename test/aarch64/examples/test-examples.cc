@@ -587,8 +587,6 @@ TEST(literal_example) {
 }
 
 
-#ifdef VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT
-
 // This is an approximation of the result that works for the ranges tested
 // below.
 #define RUNTIME_CALLS_EXPECTED(A, B) ((A + B) * 4)
@@ -614,8 +612,6 @@ TEST(runtime_calls) {
   RUNTIME_CALLS_DOTEST(1, -2);
   RUNTIME_CALLS_DOTEST(123, 456);
 }
-
-#endif  // VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT
 
 TEST(sve_strlen) {
   START();

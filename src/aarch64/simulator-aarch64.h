@@ -30,7 +30,9 @@
 #include <memory>
 #include <mutex>
 #include <random>
+#include <tuple>
 #include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include "../cpu-features.h"
@@ -45,16 +47,6 @@
 #include "simulator-constants-aarch64.h"
 
 #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
-
-// These are only used for the ABI feature, and depend on checks performed for
-// it.
-#ifdef VIXL_HAS_ABI_SUPPORT
-#include <tuple>
-#if __cplusplus >= 201402L
-// Required for `std::index_sequence`
-#include <utility>
-#endif
-#endif
 
 // The hosts that Simulator running on may not have these flags defined.
 #ifndef PROT_BTI
@@ -1299,8 +1291,6 @@ class Simulator : public DecoderVisitor {
   void RunFrom(const Instruction* first);
 
 
-#if defined(VIXL_HAS_ABI_SUPPORT) && __cplusplus >= 201103L && \
-    (defined(_MSC_VER) || defined(__clang__) || GCC_VERSION_OR_NEWER(4, 9, 1))
   // Templated `RunFrom` version taking care of passing arguments and returning
   // the result value.
   // This allows code like:
@@ -1353,7 +1343,6 @@ class Simulator : public DecoderVisitor {
       simulator->RunFrom(code);
     }
   };
-#endif
 
   // Execution ends when the PC hits this address.
   static const Instruction* kEndOfSimAddress;
@@ -2972,51 +2961,11 @@ class Simulator : public DecoderVisitor {
   }
   void ResetSeenFeatures() { cpu_features_auditor_.ResetSeenFeatures(); }
 
-// Runtime call emulation support.
-// It requires VIXL's ABI features, and C++11 or greater.
-// Also, the initialisation of the tuples in RuntimeCall(Non)Void is incorrect
-// in GCC before 4.9.1: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=51253
-#if defined(VIXL_HAS_ABI_SUPPORT) && __cplusplus >= 201103L && \
-    (defined(_MSC_VER) || defined(__clang__) || GCC_VERSION_OR_NEWER(4, 9, 1))
-
-#define VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT
-
-// The implementation of the runtime call helpers require the functionality
-// provided by `std::index_sequence`. It is only available from C++14, but
-// we want runtime call simulation to work from C++11, so we emulate if
-// necessary.
-#if __cplusplus >= 201402L
+  // Runtime call emulation support.
   template <std::size_t... I>
   using local_index_sequence = std::index_sequence<I...>;
   template <typename... P>
   using __local_index_sequence_for = std::index_sequence_for<P...>;
-#else
-  // Emulate the behaviour of `std::index_sequence` and
-  // `std::index_sequence_for`.
-  // Naming follow the `std` names, prefixed with `emulated_`.
-  template <size_t... I>
-  struct emulated_index_sequence {};
-
-  // A recursive template to create a sequence of indexes.
-  // The base case (for `N == 0`) is declared outside of the class scope, as
-  // required by C++.
-  template <std::size_t N, size_t... I>
-  struct emulated_make_index_sequence_helper
-      : emulated_make_index_sequence_helper<N - 1, N - 1, I...> {};
-
-  template <std::size_t N>
-  struct emulated_make_index_sequence : emulated_make_index_sequence_helper<N> {
-  };
-
-  template <typename... P>
-  struct emulated_index_sequence_for
-      : emulated_make_index_sequence<sizeof...(P)> {};
-
-  template <std::size_t... I>
-  using local_index_sequence = emulated_index_sequence<I...>;
-  template <typename... P>
-  using __local_index_sequence_for = emulated_index_sequence_for<P...>;
-#endif
 
   // Expand the argument tuple and perform the call.
   template <typename R, typename... P, std::size_t... I>
@@ -3069,7 +3018,6 @@ class Simulator : public DecoderVisitor {
       simulator->RuntimeCallVoid(function);
     }
   };
-#endif
 
   // Configure the simulated value of 'VL', which is the size of a Z register.
   // Because this cannot occur during a program's lifetime, this function also
@@ -5697,14 +5645,6 @@ class Simulator : public DecoderVisitor {
     }
   }
 };
-
-#if defined(VIXL_HAS_SIMULATED_RUNTIME_CALL_SUPPORT) && __cplusplus < 201402L
-// Base case of the recursive template used to emulate C++14
-// `std::index_sequence`.
-template <size_t... I>
-struct Simulator::emulated_make_index_sequence_helper<0, I...>
-    : Simulator::emulated_index_sequence<I...> {};
-#endif
 
 template <typename R, typename... P>
 void MetaDataDepot::BranchInterception<R, P...>::operator()(

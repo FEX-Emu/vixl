@@ -45,8 +45,8 @@ Requirements
 To build VIXL the following software is required:
 
  1. Python 3.8+
- 2. SCons 2.0
- 3. GCC 4.8+ or Clang 4.0+
+ 2. SCons 3.1+
+ 3. GCC 9.4+ or Clang 10.0+
 
 A 64-bit host machine is required, implementing an LP64 data model. VIXL has
 been tested using GCC on AArch64 Debian, GCC and Clang on amd64 Ubuntu
@@ -58,9 +58,6 @@ To run the code formatting stages of the tests, the following software is also r
  2. clang-tidy 11+
 
 Refer to the 'Usage' section for details.
-
-Note that in Ubuntu 18.04, clang-tidy-4.0 will only work if the clang-4.0
-package is also installed.
 
 Versioning
 ==========
@@ -218,10 +215,9 @@ with VIXL, in both release and debug mode. It is a useful script for verifying
 that all of VIXL's dependencies are in place and that VIXL is working as it
 should.
 
-By default, `tools/test.py` tests code formatting using `clang-format-4.0`,
-and performs static analysis using `clang-tidy-4.0`. If you don't have these
-tools, disable the test using `--noclang-format` or `--noclang-tidy`,
-respectively.
+By default, `tools/test.py` tests code formatting using `clang-format`, and
+performs static analysis using `clang-tidy`. If you don't have these tools,
+disable the test using `--noclang-format` or `--noclang-tidy`, respectively.
 
 Also note that the tests for the tracing features depend upon external `diff`
 and `sed` tools. If these tools are not available in `PATH`, these tests will
