@@ -496,14 +496,15 @@ void CompiledDecodeNode::Decode(const Instruction* instr,
   if (IsLeafNode()) {
     // If this node is a leaf, call the registered visitor function.
     VIXL_ASSERT(decoder != NULL);
-    decoder->VisitNamedInstruction(instr, hash_);
+    decoder->VisitNamedInstruction(instr, GetHash());
   } else {
     // Otherwise, using the sampled bit extractor for this node, look up the
     // next node in the decode tree, and call its Decode method.
-    VIXL_ASSERT(bit_extract_fn_ != NULL);
-    VIXL_ASSERT((instr->*bit_extract_fn_)() < decode_table_size_);
-    VIXL_ASSERT(decode_table_[(instr->*bit_extract_fn_)()] != NULL);
-    decode_table_[(instr->*bit_extract_fn_)()]->Decode(instr, decoder);
+    BitExtractFn bit_extract_fn = GetBitExtractFunction();
+    uint32_t bits = (instr->*bit_extract_fn)();
+    VIXL_ASSERT(bits < decode_table_size_);
+    VIXL_ASSERT(decode_table_[bits] != NULL);
+    decode_table_[bits]->Decode(instr, decoder);
   }
 }
 

@@ -362,9 +362,7 @@ class CompiledDecodeNode {
   // Constructor for decode node, containing a decode table and pointer to a
   // function that extracts the bits to be sampled.
   CompiledDecodeNode(BitExtractFn bit_extract_fn, size_t decode_table_size)
-      : bit_extract_fn_(bit_extract_fn),
-        hash_(0),
-        decode_table_size_(decode_table_size) {
+      : bit_extract_fn_(bit_extract_fn), decode_table_size_(decode_table_size) {
     decode_table_ = new CompiledDecodeNode*[decode_table_size_];
     memset(decode_table_, 0, decode_table_size_ * sizeof(decode_table_[0]));
   }
@@ -372,10 +370,7 @@ class CompiledDecodeNode {
   // Constructor for wrappers around decoded instructions. These require no
   // decoding, so no bit extraction function or decode table is assigned.
   explicit CompiledDecodeNode(uint32_t hash)
-      : bit_extract_fn_(NULL),
-        hash_(hash),
-        decode_table_(NULL),
-        decode_table_size_(0) {}
+      : bit_extract_fn_(NULL), decode_table_(NULL), hash_(hash) {}
 
   ~CompiledDecodeNode() VIXL_NEGATIVE_TESTING_ALLOW_EXCEPTION {
     // Free the decode table, if this is a compiled, non-leaf node.
@@ -391,11 +386,7 @@ class CompiledDecodeNode {
   void Decode(const Instruction* instr, Decoder* decoder) const;
 
   // A leaf node represents a completely decoded instruction.
-  bool IsLeafNode() const {
-    VIXL_ASSERT(((hash_ == 0) && (bit_extract_fn_ != NULL)) ||
-                ((hash_ > 0) && (bit_extract_fn_ == NULL)));
-    return hash_ > 0;
-  }
+  bool IsLeafNode() const { return bit_extract_fn_ == NULL; }
 
   // Get a pointer to the next node required in the decode process, based on the
   // bits sampled by the current node.
@@ -413,17 +404,30 @@ class CompiledDecodeNode {
   }
 
  private:
+  BitExtractFn GetBitExtractFunction() const {
+    VIXL_ASSERT(decode_table_size_ > 0);
+    VIXL_ASSERT(bit_extract_fn_ != NULL);
+    return bit_extract_fn_;
+  }
+
+  uint32_t GetHash() const {
+    VIXL_ASSERT(bit_extract_fn_ == NULL);
+    return hash_;
+  }
+
   // Pointer to an instantiated template function for extracting the bits
   // sampled by this node. Set to NULL for leaf nodes.
   const BitExtractFn bit_extract_fn_;
 
-  // For leaf nodes, the hash of the name of the instruction this node
-  // represents. Otherwise, zero.
-  uint32_t hash_;
-
   // Mapping table from instruction bits to next decode stage.
   CompiledDecodeNode** decode_table_;
-  const size_t decode_table_size_;
+
+  // If this is a leaf node, there is no decode table, so reuse the size storage
+  // for the hash of the leaf node's instruction form.
+  union {
+    const size_t decode_table_size_;
+    const uint32_t hash_;
+  };
 };
 
 // The instruction decoder is constructed from a graph of decode nodes. At each
