@@ -234,12 +234,14 @@ def AliasedListVariable(name, help, default_value, allowed_values, aliasing):
   help = '%s (all|auto|comma-separated list) (any combination from [%s])' % \
          (help, ', '.join(allowed_values))
 
-  def validator(name, value, env):
-    # Here list has been converted to space separated strings.
-    if value == '': return  # auto
-    for v in value.split():
+  def validator(name, values, env):
+    # Higher version of scons passes values as list already
+    # For lower version, split them by space first
+    if isinstance(values, str):
+      values = values.split()
+    for v in values:
       if v not in allowed_values:
-        raise UserError('Invalid value for %s: %s' % (name, value))
+        raise UserError('Invalid value for %s: %s' % (name, values))
 
   def converter(value):
     if value == 'auto': return []
