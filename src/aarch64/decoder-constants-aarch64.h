@@ -43,7 +43,7 @@ constexpr uint64_t str_to_mask_value_pair(const char* x,
   return str_to_mask_value_pair(x + 1, s - 1, next_mask, next_value);
 }
 
-constexpr uint64_t operator"" _b(const char* x, size_t s) {
+constexpr uint64_t operator""_b(const char* x, size_t s) {
   return str_to_mask_value_pair(x, s, 0, 0);
 }
 
