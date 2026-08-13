@@ -40,7 +40,7 @@ class InstructionReporter : public DecoderVisitor {
 
   void Visit(Metadata *metadata, const Instruction *instr) VIXL_OVERRIDE {
     USE(instr);
-    instr_form_ = (*metadata)["form"];
+    instr_form_ = metadata->form;
   }
 
   std::string MoveForm() { return std::move(instr_form_); }

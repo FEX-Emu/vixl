@@ -3432,14 +3432,14 @@ void Disassembler::VisitUnallocated(const Instruction *instr) {
 }
 
 void Disassembler::Visit(Metadata *metadata, const Instruction *instr) {
-  VIXL_ASSERT(metadata->count("form") > 0);
+  VIXL_ASSERT(!metadata->form.empty());
   // Check for unallocated encodings.
-  if (metadata->count("unallocated") > 0) {
+  if (metadata->unallocated) {
     VisitUnallocated(instr);
     return;
   }
 
-  std::string form = (*metadata)["form"];
+  std::string form = metadata->form;
   form_hash_ = Hash(form.c_str());
 
   // Find the alias of the decoded instruction, if any.

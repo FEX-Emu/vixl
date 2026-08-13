@@ -114,7 +114,8 @@ void Decoder::RemoveVisitor(DecoderVisitor* visitor) {
 void Decoder::VisitNamedInstruction(const Instruction* instr,
                                     uint32_t form_hash) {
   VIXL_ASSERT(hash_to_form_->count(form_hash) == 1);
-  Metadata m = {{"form", hash_to_form_->at(form_hash)}};
+  metadata_.form = hash_to_form_->at(form_hash);
+  metadata_.unallocated = false;
 
   // If an encoding is unallocated for this form, add the information to the
   // metadata.
@@ -124,14 +125,14 @@ void Decoder::VisitNamedInstruction(const Instruction* instr,
     uint32_t mask = itu->second >> 32;
     uint32_t value = itu->second & 0xffffffff;
     if (instr->Mask(mask) == value) {
-      m.insert({"unallocated", ""});
+      metadata_.unallocated = true;
       break;
     }
   }
 
   std::list<DecoderVisitor*>::iterator it;
   for (it = visitors_.begin(); it != visitors_.end(); it++) {
-    (*it)->Visit(&m, instr);
+    (*it)->Visit(&metadata_, instr);
   }
 }
 

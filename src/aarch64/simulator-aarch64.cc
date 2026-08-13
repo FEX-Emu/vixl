@@ -2304,14 +2304,14 @@ void Simulator::PrintTakenBranch(const Instruction* target) {
 
 
 void Simulator::Visit(Metadata* metadata, const Instruction* instr) {
-  VIXL_ASSERT(metadata->count("form") > 0);
+  VIXL_ASSERT(!metadata->form.empty());
   // Check for unallocated encodings.
-  if (metadata->count("unallocated") > 0) {
+  if (metadata->unallocated) {
     VisitUnallocated(instr);
     return;
   }
 
-  std::string form = (*metadata)["form"];
+  std::string form = metadata->form;
   form_hash_ = Hash(form.c_str());
   const FormToVisitorFnMap* fv = Simulator::GetFormToVisitorFnMap();
   FormToVisitorFnMap::const_iterator it = fv->find(form_hash_);

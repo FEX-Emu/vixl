@@ -29,7 +29,6 @@
 
 #include <initializer_list>
 #include <list>
-#include <map>
 #include <mutex>
 #include <string>
 #include <unordered_map>
@@ -284,7 +283,10 @@
 namespace vixl {
 namespace aarch64 {
 
-using Metadata = std::map<std::string, std::string>;
+struct Metadata {
+  std::string form;
+  bool unallocated = false;
+};
 
 // The Visitor interface consists only of the Visit() method. User classes
 // that inherit from this one must provide an implementation of the method.
@@ -546,6 +548,7 @@ class Decoder {
 
   // Visitors are registered in a list.
   std::list<DecoderVisitor*> visitors_;
+  Metadata metadata_;
 
   // Compile the dynamically generated decode graph based on the static
   // information in kDecodeMapping.

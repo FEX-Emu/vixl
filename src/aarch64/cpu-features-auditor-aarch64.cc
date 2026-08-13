@@ -26,6 +26,8 @@
 
 #include "cpu-features-auditor-aarch64.h"
 
+#include <map>
+
 #include "cpu-features.h"
 #include "globals-vixl.h"
 #include "utils-vixl.h"
@@ -1553,8 +1555,8 @@ void CPUFeaturesAuditor::VisitUnimplemented(const Instruction* instr) {
 }
 
 void CPUFeaturesAuditor::Visit(Metadata* metadata, const Instruction* instr) {
-  VIXL_ASSERT(metadata->count("form") > 0);
-  const std::string& form = (*metadata)["form"];
+  VIXL_ASSERT(!metadata->form.empty());
+  const std::string& form = metadata->form;
   form_hash_ = Hash(form.c_str());
   const FormToVisitorFnMap* fv = CPUFeaturesAuditor::GetFormToVisitorFnMap();
   FormToVisitorFnMap::const_iterator it = fv->find(form_hash_);
