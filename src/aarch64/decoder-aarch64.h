@@ -405,15 +405,31 @@ class CompiledDecodeNode {
     decode_table_[bits] = n;
   }
 
+  void AddUnallocatedMaskValue(uint64_t mv) {
+    VIXL_ASSERT(IsLeafNode());
+    unallocated_masks_.push_back(mv);
+  }
+
+  bool IsUnallocated(const Instruction* instr) {
+    for (uint64_t mv : unallocated_masks_) {
+      uint32_t mask = mv >> 32;
+      uint32_t value = mv & 0xffffffff;
+      if (instr->Mask(mask) == value) {
+        return true;
+      }
+    }
+    return false;
+  }
+
  private:
   BitExtractFn GetBitExtractFunction() const {
-    VIXL_ASSERT(decode_table_size_ > 0);
+    VIXL_ASSERT(!IsLeafNode());
     VIXL_ASSERT(bit_extract_fn_ != NULL);
     return bit_extract_fn_;
   }
 
   uint32_t GetHash() const {
-    VIXL_ASSERT(bit_extract_fn_ == NULL);
+    VIXL_ASSERT(IsLeafNode());
     return hash_;
   }
 
@@ -430,6 +446,8 @@ class CompiledDecodeNode {
     const size_t decode_table_size_;
     const uint32_t hash_;
   };
+
+  std::vector<uint64_t> unallocated_masks_;
 };
 
 // The instruction decoder is constructed from a graph of decode nodes. At each
@@ -448,12 +466,9 @@ class Decoder {
       hash_to_form_ = GetHashToFormMap();
 
       ConstructDecodeGraph();
-
-      VIXL_ASSERT(form_to_unalloc_.size() == 0);
-      PopulatePerInstructionUnallocatedMap(&form_to_unalloc_);
+      PopulateGraphUnallocatedFields();
     } else {
       VIXL_ASSERT(hash_to_form_ != NULL);
-      VIXL_ASSERT(form_to_unalloc_.size() > 0);
     }
   }
 
@@ -563,12 +578,7 @@ class Decoder {
   inline static std::unordered_map<uint32_t, CompiledDecodeNode*>
       compiled_nodes_;
 
-  // Map from instruction form strings to a mask/value of encodings for that
-  // form.
-  using FormToUnallocMap = std::unordered_multimap<uint32_t, uint64_t>;
-  inline static FormToUnallocMap form_to_unalloc_;
-
-  static void PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm);
+  static void PopulateGraphUnallocatedFields();
 
   // Map from hash of instruction form to its string.
   using HashToFormMap = std::unordered_map<uint32_t, std::string>;

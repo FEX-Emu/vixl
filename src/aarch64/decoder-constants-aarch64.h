@@ -13889,16 +13889,15 @@ const Decoder::HashToFormMap* Decoder::GetHashToFormMap() {
   return &m;
 }
 
-void Decoder::PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm) {
+void Decoder::PopulateGraphUnallocatedFields() {
   using UnallocToFormMap =
       std::unordered_map<uint64_t, std::unordered_set<uint32_t>>;
 
   // Map from mask/value (as uint64) to instruction form. Given an encoding,
   // if, after applying the bitmask (top 32 bits), the resulting encoding equals
   // bottom 32 bits, then the encoding is unallocated for the instructions
-  // indexed by the mask/value. On object construction, this is used to build a
-  // map from instruction to mask/value, allowing fast lookup during
-  // disassembly.
+  // indexed by the mask/value. On graph construction, this is used to populate
+  // the unallocated data fields of each leaf node.
   static const UnallocToFormMap forms =
       {{0x00000001'00000001,
         {"casp_cp32_ldstexcl"_h,
@@ -14728,7 +14727,7 @@ void Decoder::PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm) {
   for (auto& itm : forms) {
     const std::unordered_set<uint32_t>& s = forms.at(itm.first);
     for (const uint32_t& its : s) {
-      ftm->insert(std::make_pair(its, itm.first));
+      compiled_nodes_.at(its)->AddUnallocatedMaskValue(itm.first);
     }
   }
 }
