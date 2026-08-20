@@ -3329,10 +3329,10 @@ void Simulator::Simulate_ZdaT_PgM_ZnTb(const Instruction* instr) {
 
   switch (form_hash_) {
     case "sadalp_z_p_z"_h:
-      sadalp(vform, result, zn);
+      sadalp(vform, result, zn, zda);
       break;
     case "uadalp_z_p_z"_h:
-      uadalp(vform, result, zn);
+      uadalp(vform, result, zn, zda);
       break;
     default:
       VIXL_UNIMPLEMENTED();
@@ -7808,10 +7808,10 @@ void Simulator::VisitNEON2RegMisc(const Instruction* instr) {
       uaddlp(vf_lp, rd, rn);
       break;
     case "sadalp_asimdmisc_p"_h:
-      sadalp(vf_lp, rd, rn);
+      sadalp(vf_lp, rd, rn, rd);
       break;
     case "uadalp_asimdmisc_p"_h:
-      uadalp(vf_lp, rd, rn);
+      uadalp(vf_lp, rd, rn, rd);
       break;
     case "not_asimdmisc_r"_h:
       not_(vf_log, rd, rn);

@@ -3725,8 +3725,8 @@ class Simulator : public DecoderVisitor {
   LogicVRegister addlp(VectorFormat vform,
                        LogicVRegister dst,
                        const LogicVRegister& src,
-                       bool is_signed,
-                       bool do_accumulate);
+                       const LogicVRegister& acc,
+                       bool is_signed);
   LogicVRegister saddlp(VectorFormat vform,
                         LogicVRegister dst,
                         const LogicVRegister& src);
@@ -3735,10 +3735,12 @@ class Simulator : public DecoderVisitor {
                         const LogicVRegister& src);
   LogicVRegister sadalp(VectorFormat vform,
                         LogicVRegister dst,
-                        const LogicVRegister& src);
+                        const LogicVRegister& src,
+                        const LogicVRegister& acc);
   LogicVRegister uadalp(VectorFormat vform,
                         LogicVRegister dst,
-                        const LogicVRegister& src);
+                        const LogicVRegister& src,
+                        const LogicVRegister& acc);
   LogicVRegister ror(VectorFormat vform,
                      LogicVRegister dst,
                      const LogicVRegister& src,

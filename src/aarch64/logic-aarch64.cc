@@ -2455,8 +2455,8 @@ LogicVRegister Simulator::rev64(VectorFormat vform,
 LogicVRegister Simulator::addlp(VectorFormat vform,
                                 LogicVRegister dst,
                                 const LogicVRegister& src,
-                                bool is_signed,
-                                bool do_accumulate) {
+                                const LogicVRegister& acc,
+                                bool is_signed) {
   VectorFormat vformsrc = VectorFormatHalfWidthDoubleLanes(vform);
   VIXL_ASSERT(LaneSizeInBitsFromFormat(vformsrc) <= kSRegSize);
 
@@ -2465,17 +2465,16 @@ LogicVRegister Simulator::addlp(VectorFormat vform,
   for (int i = 0; i < lane_count; i++) {
     if (is_signed) {
       result[i] = static_cast<uint64_t>(src.Int(vformsrc, 2 * i) +
-                                        src.Int(vformsrc, 2 * i + 1));
+                                        src.Int(vformsrc, 2 * i + 1) +
+                                        acc.Int(vform, i));
     } else {
-      result[i] = src.Uint(vformsrc, 2 * i) + src.Uint(vformsrc, 2 * i + 1);
+      result[i] = src.Uint(vformsrc, 2 * i) + src.Uint(vformsrc, 2 * i + 1) +
+                  acc.Uint(vform, i);
     }
   }
 
   dst.ClearForWrite(vform);
   for (int i = 0; i < lane_count; ++i) {
-    if (do_accumulate) {
-      result[i] += dst.Uint(vform, i);
-    }
     dst.SetUint(vform, i, result[i]);
   }
 
@@ -2486,28 +2485,36 @@ LogicVRegister Simulator::addlp(VectorFormat vform,
 LogicVRegister Simulator::saddlp(VectorFormat vform,
                                  LogicVRegister dst,
                                  const LogicVRegister& src) {
-  return addlp(vform, dst, src, true, false);
+  bool is_signed = true;
+  SimVRegister zero;
+  return addlp(vform, dst, src, zero, is_signed);
 }
 
 
 LogicVRegister Simulator::uaddlp(VectorFormat vform,
                                  LogicVRegister dst,
                                  const LogicVRegister& src) {
-  return addlp(vform, dst, src, false, false);
+  bool is_signed = false;
+  SimVRegister zero;
+  return addlp(vform, dst, src, zero, is_signed);
 }
 
 
 LogicVRegister Simulator::sadalp(VectorFormat vform,
                                  LogicVRegister dst,
-                                 const LogicVRegister& src) {
-  return addlp(vform, dst, src, true, true);
+                                 const LogicVRegister& src,
+                                 const LogicVRegister& acc) {
+  bool is_signed = true;
+  return addlp(vform, dst, src, acc, is_signed);
 }
 
 
 LogicVRegister Simulator::uadalp(VectorFormat vform,
                                  LogicVRegister dst,
-                                 const LogicVRegister& src) {
-  return addlp(vform, dst, src, false, true);
+                                 const LogicVRegister& src,
+                                 const LogicVRegister& acc) {
+  bool is_signed = false;
+  return addlp(vform, dst, src, acc, is_signed);
 }
 
 LogicVRegister Simulator::ror(VectorFormat vform,

@@ -2142,11 +2142,11 @@ TEST_SVE(sve2_integer_pairwise_add_accumulate_long) {
   if (CAN_RUN()) {
     RUN();
     uint32_t expected_hashes[] = {
-        0xb2f95c3d,  // vl128
-        0xa4189170,  // vl256
-        0xfca732cb,  // vl512
-        0x9aec54d6,  // vl1024
-        0x113951bc,  // vl2048
+        0xfe7df5dd,  // vl128
+        0x90babdc0,  // vl256
+        0x51819c91,  // vl512
+        0x756bcc0d,  // vl1024
+        0x8319d70e,  // vl2048
     };
     ASSERT_EQUAL_64(expected_hashes[WhichPowerOf2(
                         core.GetSVELaneCount(kQRegSize))],
