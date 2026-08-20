@@ -14538,7 +14538,7 @@ void Decoder::PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm) {
          "saddw_asimddiff_w"_h,
          "ssubw_asimddiff_w"_h,
          "uaddw_asimddiff_w"_h,
-         "usubw_asimddiff_w"_h
+         "usubw_asimddiff_w"_h,
          "addhn_asimddiff_n"_h,
          "raddhn_asimddiff_n"_h,
          "rsubhn_asimddiff_n"_h,
@@ -14580,7 +14580,7 @@ void Decoder::PopulatePerInstructionUnallocatedMap(FormToUnallocMap* ftm) {
          "st4_asisdlsep_i4_i"_h,
          "st4_asisdlsep_r4_r"_h}},
        {0x40004000'00004000, {"ext_asimdext_only"_h}},
-       {0x400f0000'00080000, {"dup_asimdins_dv_v"_h, "dup_asimdins_dr_d"_h}},
+       {0x400f0000'00080000, {"dup_asimdins_dv_v"_h, "dup_asimdins_dr_r"_h}},
        {0x40400000'00000000,
         {"fmaxnmv_asimdall_only_sd"_h,
          "fminnmv_asimdall_only_sd"_h,
