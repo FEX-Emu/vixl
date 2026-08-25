@@ -980,7 +980,6 @@ void Simulator::ExtractFromSimVRegister(VectorFormat vform,
                                         SimPRegister& pd,
                                         SimVRegister vreg) {
   SimVRegister zero;
-  dup_immediate(kFormatVnB, zero, 0);
   SVEIntCompareVectorsHelper(ne,
                              vform,
                              pd,
@@ -2576,7 +2575,6 @@ void Simulator::Simulate_ZdH_PgM_ZnS(const Instruction* instr) {
   SimVRegister& zn = ReadVRegister(instr->GetRn());
   SimVRegister result, zd_b, zero;
 
-  zero.Clear();
   pack_even_elements(kFormatVnH, zd_b, zd);
 
   switch (form_hash_) {
@@ -2605,7 +2603,6 @@ void Simulator::Simulate_ZdS_PgM_ZnD(const Instruction* instr) {
   SimVRegister& zn = ReadVRegister(instr->GetRn());
   SimVRegister result, zero, zd_b;
 
-  zero.Clear();
   pack_even_elements(kFormatVnS, zd_b, zd);
 
   switch (form_hash_) {
@@ -2921,7 +2918,6 @@ void Simulator::SimulateSVENarrow(const Instruction* instr) {
   } else {
     // Zero odd elements, replace even elements with the results.
     SimVRegister zero;
-    zero.Clear();
     zip1(vform, zd, result, zero);
   }
 }
@@ -3120,7 +3116,6 @@ void Simulator::SimulateSVEAddSubHigh(const Instruction* instr) {
   } else {
     // Zero odd elements, replace even elements with the results.
     SimVRegister zero;
-    zero.Clear();
     zip1(vform, zd, result, zero);
   }
 }
@@ -3460,7 +3455,6 @@ void Simulator::Simulate_ZdaT_ZnTb_ZmTb(const Instruction* instr) {
   SimVRegister& zn = ReadVRegister(instr->GetRn());
 
   SimVRegister zero, zn_b, zm_b, zn_t, zm_t;
-  zero.Clear();
 
   VectorFormat vform_half = VectorFormatHalfWidth(vform);
   uzp1(vform_half, zn_b, zn, zero);
@@ -11029,7 +11023,6 @@ void Simulator::VisitSVEFPCompareWithZero(const Instruction* instr) {
 
   SimVRegister result;
   SimVRegister zeros;
-  dup_immediate(kFormatVnD, zeros, 0);
 
   switch (instr->Mask(SVEFPCompareWithZeroMask)) {
     case FCMEQ_p_p_z0:
@@ -13848,7 +13841,6 @@ void Simulator::VisitSVEUnpackPredicateElements(const Instruction* instr) {
 
   SimVRegister temp = Simulator::ExpandToSimVRegister(pn);
   SimVRegister zero;
-  dup_immediate(kFormatVnB, zero, 0);
 
   switch (instr->Mask(SVEUnpackPredicateElementsMask)) {
     case PUNPKHI_p_p:

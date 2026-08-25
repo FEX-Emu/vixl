@@ -2764,7 +2764,6 @@ LogicVRegister Simulator::cadd(VectorFormat vform,
   SimVRegister src1_r, src1_i;
   SimVRegister src2_r, src2_i;
   SimVRegister zero;
-  zero.Clear();
   uzp1(vform, src1_r, src1, zero);
   uzp2(vform, src1_i, src1, zero);
   uzp1(vform, src2_r, src2, zero);
@@ -2803,7 +2802,6 @@ LogicVRegister Simulator::cmla(VectorFormat vform,
   SimVRegister src2_a, src2_b;
   SimVRegister srca_i, srca_r;
   SimVRegister zero, temp;
-  zero.Clear();
 
   if ((rot == 0) || (rot == 180)) {
     uzp1(vform, src1_a, src1, zero);
@@ -3086,7 +3084,6 @@ LogicVRegister Simulator::mov_zeroing(VectorFormat vform,
                                       const SimPRegister& pg,
                                       const LogicVRegister& src) {
   SimVRegister zero;
-  dup_immediate(vform, zero, 0);
   return sel(vform, dst, pg, src, zero);
 }
 
@@ -4115,7 +4112,6 @@ LogicVRegister Simulator::sqrdcmlah(VectorFormat vform,
   SimVRegister src2_a, src2_b;
   SimVRegister srca_i, srca_r;
   SimVRegister zero, temp;
-  zero.Clear();
 
   if ((rot == 0) || (rot == 180)) {
     uzp1(vform, src1_a, src1, zero);
@@ -5216,18 +5212,14 @@ LogicVRegister Simulator::fcmp_zero(VectorFormat vform,
                                     LogicVRegister dst,
                                     const LogicVRegister& src,
                                     Condition cond) {
-  SimVRegister temp;
+  SimVRegister temp, zero;
   if (LaneSizeInBitsFromFormat(vform) == kHRegSize) {
-    LogicVRegister zero_reg =
-        dup_immediate(vform, temp, Float16ToRawbits(SimFloat16(0.0)));
-    fcmp<SimFloat16>(vform, dst, src, zero_reg, cond);
+    fcmp<SimFloat16>(vform, dst, src, zero, cond);
   } else if (LaneSizeInBitsFromFormat(vform) == kSRegSize) {
-    LogicVRegister zero_reg = dup_immediate(vform, temp, FloatToRawbits(0.0));
-    fcmp<float>(vform, dst, src, zero_reg, cond);
+    fcmp<float>(vform, dst, src, zero, cond);
   } else {
     VIXL_ASSERT(LaneSizeInBitsFromFormat(vform) == kDRegSize);
-    LogicVRegister zero_reg = dup_immediate(vform, temp, DoubleToRawbits(0.0));
-    fcmp<double>(vform, dst, src, zero_reg, cond);
+    fcmp<double>(vform, dst, src, zero, cond);
   }
   return dst;
 }
@@ -6682,7 +6674,6 @@ LogicVRegister Simulator::FTMaddHelper(VectorFormat vform,
                                        uint64_t coeff_pos,
                                        uint64_t coeff_neg) {
   SimVRegister zero;
-  dup_immediate(kFormatVnB, zero, 0);
 
   SimVRegister cf;
   SimVRegister cfn;
@@ -7793,7 +7784,6 @@ LogicVRegister Simulator::pack_odd_elements(VectorFormat vform,
                                             LogicVRegister dst,
                                             const LogicVRegister& src) {
   SimVRegister zero;
-  zero.Clear();
   return uzp2(vform, dst, src, zero);
 }
 
@@ -7801,7 +7791,6 @@ LogicVRegister Simulator::pack_even_elements(VectorFormat vform,
                                              LogicVRegister dst,
                                              const LogicVRegister& src) {
   SimVRegister zero;
-  zero.Clear();
   return uzp1(vform, dst, src, zero);
 }
 
