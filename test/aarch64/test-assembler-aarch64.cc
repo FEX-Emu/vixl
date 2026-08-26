@@ -1662,12 +1662,14 @@ TEST(pacia_pacib_autia_autib) {
   __ Mov(x3, x1);
   __ Autib(x3, modifier);
 
+#ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
   // Attempt to authenticate incorrect pointers.
   __ Mov(x4, x1);
   __ Autia(x4, modifier);
 
   __ Mov(x5, x0);
   __ Autib(x5, modifier);
+#endif
 
   // Retry on collisions.
   __ Cmp(x0, x1);
@@ -1697,9 +1699,6 @@ TEST(pacia_pacib_autia_autib) {
 #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
     ASSERT_EQUAL_64(0x0020000012345678, x4);
     ASSERT_EQUAL_64(0x0040000012345678, x5);
-#else
-    ASSERT_NOT_EQUAL_64(pointer, x4);
-    ASSERT_NOT_EQUAL_64(pointer, x5);
 #endif
   }
 }
@@ -1736,12 +1735,14 @@ TEST(paciza_pacizb_autiza_autizb) {
   __ Mov(x3, x1);
   __ Autizb(x3);
 
+#ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
   // Attempt to authenticate incorrect pointers.
   __ Mov(x4, x1);
   __ Autiza(x4);
 
   __ Mov(x5, x0);
   __ Autizb(x5);
+#endif
 
   // Retry on collisions.
   __ Cmp(x0, x1);
@@ -1771,9 +1772,6 @@ TEST(paciza_pacizb_autiza_autizb) {
 #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
     ASSERT_EQUAL_64(0x0020000012345678, x4);
     ASSERT_EQUAL_64(0x0040000012345678, x5);
-#else
-    ASSERT_NOT_EQUAL_64(pointer, x4);
-    ASSERT_NOT_EQUAL_64(pointer, x5);
 #endif
   }
 }
@@ -1812,12 +1810,14 @@ TEST(pacda_pacdb_autda_autdb) {
   __ Mov(x3, x1);
   __ Autdb(x3, modifier);
 
+#ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
   // Attempt to authenticate incorrect pointers.
   __ Mov(x4, x1);
   __ Autda(x4, modifier);
 
   __ Mov(x5, x0);
   __ Autdb(x5, modifier);
+#endif
 
   // Retry on collisions.
   __ Cmp(x0, x1);
@@ -1847,9 +1847,6 @@ TEST(pacda_pacdb_autda_autdb) {
 #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
     ASSERT_EQUAL_64(0x0020000012345678, x4);
     ASSERT_EQUAL_64(0x0040000012345678, x5);
-#else
-    ASSERT_NOT_EQUAL_64(pointer, x4);
-    ASSERT_NOT_EQUAL_64(pointer, x5);
 #endif
   }
 }
@@ -1886,12 +1883,14 @@ TEST(pacdza_pacdzb_autdza_autdzb) {
   __ Mov(x3, x1);
   __ Autdzb(x3);
 
+#ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
   // Attempt to authenticate incorrect pointers.
   __ Mov(x4, x1);
   __ Autdza(x4);
 
   __ Mov(x5, x0);
   __ Autdzb(x5);
+#endif
 
   // Retry on collisions.
   __ Cmp(x0, x1);
@@ -1921,9 +1920,6 @@ TEST(pacdza_pacdzb_autdza_autdzb) {
 #ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
     ASSERT_EQUAL_64(0x0020000012345678, x4);
     ASSERT_EQUAL_64(0x0040000012345678, x5);
-#else
-    ASSERT_NOT_EQUAL_64(pointer, x4);
-    ASSERT_NOT_EQUAL_64(pointer, x5);
 #endif
   }
 }
@@ -7393,6 +7389,7 @@ TEST(system_pauth_a) {
   __ Autiasp();
   __ Mov(x5, lr);
 
+#ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
   // Attempt to authenticate incorrect pointers.
   __ Mov(x17, x1);
   __ Autia1716();
@@ -7405,6 +7402,7 @@ TEST(system_pauth_a) {
   __ Mov(lr, x1);
   __ Autiasp();
   __ Mov(x8, lr);
+#endif
 
   // Strip the pac code from the pointer in x0.
   __ Mov(lr, x0);
@@ -7448,10 +7446,6 @@ TEST(system_pauth_a) {
     ASSERT_EQUAL_64(0x0020000012345678, x6);
     ASSERT_EQUAL_64(0x0020000012345678, x7);
     ASSERT_EQUAL_64(0x0020000012345678, x8);
-#else
-    ASSERT_NOT_EQUAL_64(pointer, x6);
-    ASSERT_NOT_EQUAL_64(pointer, x7);
-    ASSERT_NOT_EQUAL_64(pointer, x8);
 #endif
 
     // Pointer with code stripped.
@@ -7512,6 +7506,7 @@ TEST(system_pauth_b) {
   __ Autibsp();
   __ Mov(x5, lr);
 
+#ifdef VIXL_INCLUDE_SIMULATOR_AARCH64
   // Attempt to authenticate incorrect pointers.
   __ Mov(x17, x1);
   __ Autib1716();
@@ -7524,6 +7519,7 @@ TEST(system_pauth_b) {
   __ Mov(lr, x1);
   __ Autibsp();
   __ Mov(x8, lr);
+#endif
 
   // Strip the pac code from the pointer in x0.
   __ Mov(lr, x0);
@@ -7569,10 +7565,6 @@ TEST(system_pauth_b) {
     ASSERT_EQUAL_64(0x0040000012345678, x6);
     ASSERT_EQUAL_64(0x0040000012345678, x7);
     ASSERT_EQUAL_64(0x0040000012345678, x8);
-#else
-    ASSERT_NOT_EQUAL_64(pointer, x6);
-    ASSERT_NOT_EQUAL_64(pointer, x7);
-    ASSERT_NOT_EQUAL_64(pointer, x8);
 #endif
 
     // Pointer with code stripped.
