@@ -4006,6 +4006,12 @@ TEST(neon_2regmisc) {
   NEON_FORMAT_LIST_LP(DISASM_INST)
 #undef DISASM_INST
 
+  // Unallocated encodings regression tests.
+  COMPARE(dci(0x4ee029f8), "unallocated (Unallocated)");  // saddlp
+  COMPARE(dci(0x6ee02bc6), "unallocated (Unallocated)");  // uaddlp
+  COMPARE(dci(0x4ee069be), "unallocated (Unallocated)");  // sadalp
+  COMPARE(dci(0x6ee06b90), "unallocated (Unallocated)");  // uadalp
+
   CLEANUP();
 }
 
@@ -4532,6 +4538,14 @@ TEST(neon_shift_immediate) {
   COMPARE_MACRO(Fcvtzu(h8, h6, 13), "fcvtzu h8, h6, #13");
   COMPARE_MACRO(Fcvtzu(s8, s6, 13), "fcvtzu s8, s6, #13");
   COMPARE_MACRO(Fcvtzu(d8, d6, 34), "fcvtzu d8, d6, #34");
+
+  // Unallocated encodings regression tests.
+  COMPARE(dci(0x0f405400), "unallocated (Unallocated)");  // shl
+  COMPARE(dci(0x2f405400), "unallocated (Unallocated)");  // sli
+  COMPARE(dci(0x0f407400), "unallocated (Unallocated)");  // sqshl
+  COMPARE(dci(0x2f5a6491), "unallocated (Unallocated)");  // sqshlu
+  COMPARE(dci(0x2f77773e), "unallocated (Unallocated)");  // uqshl
+
   CLEANUP();
 }
 
