@@ -436,11 +436,6 @@ bool SVEMemOperand::IsPlainRegister() const {
 
 GenericOperand::GenericOperand(const CPURegister& reg)
     : cpu_register_(reg), mem_op_size_(0) {
-  if (reg.IsQ()) {
-    VIXL_ASSERT(reg.GetSizeInBits() > static_cast<int>(kXRegSize));
-    // Support for Q registers is not implemented yet.
-    VIXL_UNIMPLEMENTED();
-  }
 }
 
 
