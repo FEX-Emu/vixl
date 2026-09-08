@@ -1183,7 +1183,7 @@ void Disassembler::PopulateFormToStringMap(FormToStringMap *fts) {
         "fmulx_asisdsamefp16_only"_h,
         "frecps_asisdsamefp16_only"_h,
         "frsqrts_asisdsamefp16_only"_h}},
-      {"'Hd, 'Hn, 'Vf.h['<u11_2119 u2322 lsr>]",
+      {"'Hd, 'Hn, 'Vf.h['u11_2120]",
        {"fmla_asisdelem_rh_h"_h,
         "fmls_asisdelem_rh_h"_h,
         "fmul_asisdelem_rh_h"_h,
