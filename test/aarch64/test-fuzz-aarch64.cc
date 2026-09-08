@@ -40,7 +40,7 @@ namespace aarch64 {
 
 static void FuzzHelper(std::string mode, int step_size, int offset, int shift) {
   Decoder decoder;
-  PrintDisassembler disasm(stdout);
+  Disassembler disasm;
   Instruction buffer[kInstructionSize];
 
   if (mode == "disasm") {
