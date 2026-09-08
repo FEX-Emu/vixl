@@ -60,7 +60,8 @@ void ExecuteMemory(byte* buffer, size_t size, int byte_offset) {
 
   USE(size);
 
-#if defined(__aarch64__) && defined(VIXL_INCLUDE_TARGET_AARCH64)
+#if (defined(__aarch64__) || defined(__arm64ec__)) && \
+    defined(VIXL_INCLUDE_TARGET_AARCH64)
   aarch64::CPU::EnsureIAndDCacheCoherency(buffer, size);
 #elif defined(__arm__) && \
     (defined(VIXL_INCLUDE_TARGET_A32) || defined(VIXL_INCLUDE_TARGET_T32))
