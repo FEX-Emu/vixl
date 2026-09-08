@@ -2544,6 +2544,8 @@ TEST(neon_fp_byelement) {
   COMPARE_MACRO(Fmul(v0.V2D(), v1.V2D(), v31.D(), 1),
                 "fmul v0.2d, v1.2d, v31.d[1]");
   COMPARE_MACRO(Fmul(h0, h1, v2.H(), 0), "fmul h0, h1, v2.h[0]");
+  COMPARE_MACRO(Fmul(h0, h1, v15.H(), 0), "fmul h0, h1, v15.h[0]");
+  COMPARE_MACRO(Fmul(h0, h1, v15.H(), 2), "fmul h0, h1, v15.h[2]");
   COMPARE_MACRO(Fmul(s0, s1, v2.S(), 0), "fmul s0, s1, v2.s[0]");
   COMPARE_MACRO(Fmul(s0, s1, v31.S(), 0), "fmul s0, s1, v31.s[0]");
   COMPARE_MACRO(Fmul(d0, d1, v2.D(), 0), "fmul d0, d1, v2.d[0]");
@@ -2566,6 +2568,8 @@ TEST(neon_fp_byelement) {
   COMPARE_MACRO(Fmla(v0.V2D(), v1.V2D(), v31.D(), 1),
                 "fmla v0.2d, v1.2d, v31.d[1]");
   COMPARE_MACRO(Fmla(h0, h1, v2.H(), 0), "fmla h0, h1, v2.h[0]");
+  COMPARE_MACRO(Fmls(h0, h1, v15.H(), 0), "fmls h0, h1, v15.h[0]");
+  COMPARE_MACRO(Fmls(h0, h1, v15.H(), 2), "fmls h0, h1, v15.h[2]");
   COMPARE_MACRO(Fmla(s0, s1, v2.S(), 0), "fmla s0, s1, v2.s[0]");
   COMPARE_MACRO(Fmla(s0, s1, v31.S(), 0), "fmla s0, s1, v31.s[0]");
   COMPARE_MACRO(Fmla(d0, d1, v2.D(), 0), "fmla d0, d1, v2.d[0]");
@@ -2588,6 +2592,8 @@ TEST(neon_fp_byelement) {
   COMPARE_MACRO(Fmls(v0.V2D(), v1.V2D(), v31.D(), 1),
                 "fmls v0.2d, v1.2d, v31.d[1]");
   COMPARE_MACRO(Fmls(h0, h1, v2.H(), 0), "fmls h0, h1, v2.h[0]");
+  COMPARE_MACRO(Fmls(h0, h1, v15.H(), 0), "fmls h0, h1, v15.h[0]");
+  COMPARE_MACRO(Fmls(h0, h1, v15.H(), 2), "fmls h0, h1, v15.h[2]");
   COMPARE_MACRO(Fmls(s0, s1, v2.S(), 0), "fmls s0, s1, v2.s[0]");
   COMPARE_MACRO(Fmls(s0, s1, v31.S(), 0), "fmls s0, s1, v31.s[0]");
   COMPARE_MACRO(Fmls(d0, d1, v2.D(), 0), "fmls d0, d1, v2.d[0]");
@@ -2610,6 +2616,8 @@ TEST(neon_fp_byelement) {
   COMPARE_MACRO(Fmulx(v0.V2D(), v1.V2D(), v31.D(), 1),
                 "fmulx v0.2d, v1.2d, v31.d[1]");
   COMPARE_MACRO(Fmulx(h0, h1, v2.H(), 0), "fmulx h0, h1, v2.h[0]");
+  COMPARE_MACRO(Fmulx(h0, h1, v15.H(), 0), "fmulx h0, h1, v15.h[0]");
+  COMPARE_MACRO(Fmulx(h0, h1, v15.H(), 2), "fmulx h0, h1, v15.h[2]");
   COMPARE_MACRO(Fmulx(s0, s1, v2.S(), 0), "fmulx s0, s1, v2.s[0]");
   COMPARE_MACRO(Fmulx(s0, s1, v31.S(), 0), "fmulx s0, s1, v31.s[0]");
   COMPARE_MACRO(Fmulx(d0, d1, v2.D(), 0), "fmulx d0, d1, v2.d[0]");

@@ -3465,6 +3465,8 @@ TEST(sve_mem_32bit_gather_and_unsized_contiguous) {
   // Load and broadcast data to vector.
   COMPARE(ld1rb(z2.VnH(), p0.Zeroing(), SVEMemOperand(x30, 0)),
           "ld1rb {z2.h}, p0/z, [x30]");
+  COMPARE(ld1rb(z2.VnH(), p0.Zeroing(), SVEMemOperand(x30, 42)),
+          "ld1rb {z2.h}, p0/z, [x30, #42]");
   COMPARE(ld1rb(z14.VnS(), p2.Zeroing(), SVEMemOperand(x11, 63)),
           "ld1rb {z14.s}, p2/z, [x11, #63]");
   COMPARE(ld1rb(z27.VnD(), p1.Zeroing(), SVEMemOperand(x29, 2)),
@@ -3473,6 +3475,8 @@ TEST(sve_mem_32bit_gather_and_unsized_contiguous) {
           "ld1rb {z0.b}, p3/z, [sp, #59]");
   COMPARE(ld1rh(z19.VnH(), p5.Zeroing(), SVEMemOperand(x1, 0)),
           "ld1rh {z19.h}, p5/z, [x1]");
+  COMPARE(ld1rh(z19.VnH(), p5.Zeroing(), SVEMemOperand(x1, 42)),
+          "ld1rh {z19.h}, p5/z, [x1, #42]");
   COMPARE(ld1rh(z4.VnS(), p7.Zeroing(), SVEMemOperand(x29, 126)),
           "ld1rh {z4.s}, p7/z, [x29, #126]");
   COMPARE(ld1rh(z24.VnD(), p0.Zeroing(), SVEMemOperand(sp, 78)),
@@ -3485,6 +3489,8 @@ TEST(sve_mem_32bit_gather_and_unsized_contiguous) {
           "ld1rd {z19.d}, p7/z, [x14, #504]");
   COMPARE(ld1rsb(z16.VnH(), p1.Zeroing(), SVEMemOperand(x29, 0)),
           "ld1rsb {z16.h}, p1/z, [x29]");
+  COMPARE(ld1rsb(z16.VnH(), p1.Zeroing(), SVEMemOperand(x29, 42)),
+          "ld1rsb {z16.h}, p1/z, [x29, #42]");
   COMPARE(ld1rsb(z8.VnS(), p6.Zeroing(), SVEMemOperand(sp, 33)),
           "ld1rsb {z8.s}, p6/z, [sp, #33]");
   COMPARE(ld1rsb(z25.VnD(), p2.Zeroing(), SVEMemOperand(x18, 63)),
