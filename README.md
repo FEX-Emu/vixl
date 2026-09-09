@@ -36,8 +36,17 @@ Licence
 This software is covered by the licence described in the [LICENCE](LICENCE)
 file.
 
-Contributions, as pull requests or via other means, are accepted under the terms
-of the same [LICENCE](LICENCE).
+
+Contributions
+=============
+
+Contributions are accepted as merge requests for this repository, but fork
+creation is disabled by default. You can request that they are enabled for your
+account - see [this user guide][contrib-guide].
+
+Contributions are accepted under the terms of the [LICENCE](LICENCE) mentioned
+above.
+
 
 Requirements
 ============
@@ -248,3 +257,6 @@ aarch32_examples` or `scons aarch64_examples` from the root directory, or use
 
 [getting-started-aarch64]: doc/aarch64/getting-started-aarch64.md
                            "Introduction to VIXL for AArch64."
+
+[contrib-guide]: https://gitlab.arm.com/groups/documentation/-/wikis/user-guide#requesting-fork-permissions
+                 "Requesting Fork Permissions."
